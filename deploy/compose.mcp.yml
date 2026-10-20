@@ -1,0 +1,33 @@
+# The hosted MCP service, written to merge into the production compose file.
+# Standalone smoke test: docker compose -f deploy/compose.mcp.yml up --build
+# In production: copy the `mcp` service into the prod compose, set BUILDINGACTIVITY_API_URL
+# to the API service on the compose network, and route mcp.buildingactivity.com to it
+# (deploy/Caddyfile.mcp). See docs/hosted.md.
+services:
+  mcp:
+    image: ghcr.io/recursive-capital-inc/buildingactivity-mcp:${MCP_TAG:-latest}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      # The API as the MCP container reaches it. In prod: the API service, e.g. http://api:8451
+      BUILDINGACTIVITY_API_URL: ${MCP_API_URL:-https://api.buildingactivity.com}
+      BUILDINGACTIVITY_MCP_ALLOWED_HOSTS: mcp.buildingactivity.com
+      # Trust X-Forwarded-* only from the reverse proxy on the compose network.
+      FORWARDED_ALLOW_IPS: "*"
+    expose:
+      - "8765"
+    ports:
+      - "127.0.0.1:${MCP_PORT:-8765}:8765"   # local smoke test only; drop in prod
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}

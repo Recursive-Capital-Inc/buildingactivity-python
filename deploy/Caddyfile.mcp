@@ -1,0 +1,14 @@
+# Reverse proxy block for the hosted MCP server. A client that cannot send headers puts
+# its key in the URL (/mcp/<key>), so this site must not write request URIs to any log.
+mcp.buildingactivity.com {
+	log {
+		output discard
+	}
+	encode gzip
+	reverse_proxy mcp:8765 {
+		flush_interval -1
+		transport http {
+			read_timeout 120s
+		}
+	}
+}
