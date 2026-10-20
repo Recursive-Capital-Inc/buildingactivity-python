@@ -27,7 +27,8 @@ DESCRIPTION = (
     "same filters. Reference: https://buildingactivity.com/api"
 )
 # Markers of build machinery that must never reach the public package.
-LEAKS = (r"\.db\b", r"scratch", r"/Volumes[/]", r"127\.0\.0\.1", r"localhost", r"permit[_]intel",
+LEAKS = (r"\.db\b", r"scratch", r"/Volumes[/]", r"127\.0\.0\.1", r"localhost",
+         r"permit[ _-]?intel(?!-Signature)",
          r"index\.serve", r"\bunit \d+ scratch", r"examples\.db")
 _DOC_REF = re.compile(r"\s*See docs/[\w./-]+\.md\.?")
 # Build-unit names that slipped into API descriptions (report them to the API; this only
@@ -64,6 +65,11 @@ def public_spec(raw):
     spec["info"] = {"title": TITLE, "version": (raw.get("info") or {}).get("version", "1"),
                     "description": DESCRIPTION}
     return spec
+
+
+# Known exception: the webhook signature header the API sends today is named
+# X-PermitIntel-Signature. It is part of the API contract, so the description keeps it until
+# the API renames the header (reported to the API owners); every other spelling is refused.
 
 
 def leaks(spec):

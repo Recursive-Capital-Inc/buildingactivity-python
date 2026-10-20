@@ -480,8 +480,8 @@ def permit_history(api, a):
 
 
 @tool("search_contractors",
-      "Find contractors by area, name, license, trade tags or activity window. With "
-      "license, looks the license number up directly.",
+      "Find contractors by area, name, trade tags or activity window. Or give license "
+      "(with optional state, nothing else) to look one license up.",
       {"geo_id": GEO_ID, "name": _s("name words, 3+ characters"),
        "license": _s("license number (exact)"),
        "state": _s("two-letter state", pattern="^[A-Za-z]{2}$"),
@@ -492,6 +492,11 @@ def permit_history(api, a):
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_contractors(api, a):
     if a.get("license"):
+        extra = sorted(set(a) - {"license", "state"})
+        if extra:
+            raise ToolError("validation_error", f"license looks one license up and takes only "
+                            f"state; drop {', '.join(extra)} or search without license",
+                            extra[0])
         r = _fetch(api, "/v1/contractors/lookup", {"license": a["license"],
                                                    "state": a.get("state")})
     else:

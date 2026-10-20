@@ -47,6 +47,13 @@ def test_bundled_spec_matches_the_api():
         f"python -m buildingactivity.cli.specsync --from {source}")
 
 
+@pytest.mark.parametrize("text", ["Permit Intel", "permit-intel", "PermitIntel key",
+                                  "X-PermitIntel-Key"])
+def test_codename_spellings_are_leaks(text):
+    assert specsync.leaks({"d": text})
+    assert not specsync.leaks({"d": "signed with X-PermitIntel-Signature"})
+
+
 def test_specsync_refuses_internal_markers(tmp_path, monkeypatch):
     raw = json.loads(specsync.bundled_path().read_text())
     raw["paths"]["/v1/usage"]["get"]["description"] = "built from scratch index.serve.db"

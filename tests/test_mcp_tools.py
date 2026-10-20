@@ -267,6 +267,12 @@ def test_contractor_license_goes_to_lookup():
     assert not err and srv.calls[0][0] == "/v1/contractors/lookup"
     assert srv.calls[0][1] == {"license": "215233", "state": "CA"}
     assert out["items"][0]["license"] == "215233"
+    # a license lookup cannot honour search filters, so it refuses them instead of dropping them
+    srv = FixtureServer()
+    out, err = T.call_tool("search_contractors", {"license": "215233", "geo_id": "cty_06041"},
+                           api(srv))
+    assert err and out["error"]["type"] == "validation_error"
+    assert out["error"]["param"] == "geo_id" and not srv.calls
 
 
 # ---- token budget ----------------------------------------------------------------------
@@ -488,6 +494,7 @@ def test_http_key_in_the_url_path_for_clients_without_headers():
         r = c.post(f"/mcp/{KEY}", json=CALL, headers={**HDR, "X-API-Key": "other"})
         assert r.status_code == 200
         assert c.post("/mcp/a/b", json=CALL, headers=HDR).status_code in (401, 404)
+        assert c.post("/mcp/k\u00e9y\u4e2d", json=CALL, headers=HDR).status_code == 401
         assert c.get("/healthz").json()["ok"] is True
     assert {call[2]["X-API-Key"] for call in srv.calls} == {KEY}
 

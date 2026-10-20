@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     strategy:
       fail-fast: false
       matrix:
@@ -22,7 +22,7 @@ jobs:
       - run: pytest -q
   cli-only:
     # The CLI must work with requests alone; MCP transport tests skip without the extra.
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -32,7 +32,7 @@ jobs:
       - run: pytest -q tests/test_cli.py tests/test_spec.py
       - run: buildingactivity --version && buildingactivity schema permits search > /dev/null
   package:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,7 +54,7 @@ jobs:
           print(whl, "ok:", len(names), "files")
           EOF
   image:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t buildingactivity-mcp:ci .

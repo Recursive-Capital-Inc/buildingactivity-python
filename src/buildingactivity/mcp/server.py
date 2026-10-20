@@ -118,11 +118,15 @@ class RequireKey:
                 return
             key = path[len(self.path) + 1:].strip("/") if path.startswith(
                 self.path + "/") else ""
-            if key and "/" not in key:
+            try:
+                key_bytes = key.encode("ascii") if key and "/" not in key else b""
+            except UnicodeEncodeError:  # no real key is non-ASCII: treat as no key
+                key_bytes, scope = b"", dict(scope, path=self.path + "/invalid")
+            if key_bytes:
                 scope = dict(scope, path=self.path, raw_path=self.path.encode(),
                              headers=[*(h for h in scope.get("headers") or []
                                         if h[0].lower() != b"x-api-key"),
-                                      (b"x-api-key", key.encode("latin-1"))])
+                                      (b"x-api-key", key_bytes)])
             headers = {k.decode("latin-1").lower(): v.decode("latin-1")
                        for k, v in scope.get("headers") or []}
             if self.require and not request_key(headers):

@@ -70,7 +70,7 @@ Every tool answers one JSON object (MCP text content):
 | `search_permits` | `GET /v1/permits/search` | 10 (at most 50) | `address_id`, `property_id`, `geo_id`, `q`, `tags`, `status`, `contractor`, `contractor_id`, `date_from`/`date_to` (event date: issued, else applied, else record date), issued and applied ranges, `min_value`, `sort` (default `issued_desc`), `include_count` |
 | `get_permit` | `GET /v1/permits/{id}` | 1 | adds owner, applicant, license, APN, coordinates, day counts |
 | `permit_history` | `GET /v1/permits/{id}/history` | 20 | status and field changes since 2026-10-12 |
-| `search_contractors` | `/v1/contractors/search` or `/lookup` | 10 | `license` goes to the license lookup |
+| `search_contractors` | `/v1/contractors/search` or `/lookup` | 10 | `license` (with optional `state`, no other filter) goes to the license lookup |
 | `get_contractor` | `GET /v1/contractors/{id}` | 1 | license health and activity |
 | `geo_lookup` | `GET /v1/geo/search` | 5 | names to `geo_id` values for the area filters |
 | `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown |
