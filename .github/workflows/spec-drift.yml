@@ -1,0 +1,29 @@
+name: Spec drift
+# Keeps the generated CLI current: renders the live API's /openapi.json with specsync and
+# opens a PR when spec.json differs. Runs once the repo variable SPEC_URL is set
+# (https://api.buildingactivity.com/openapi.json when the API is public).
+on:
+  schedule:
+    - cron: "17 13 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  sync:
+    if: vars.SPEC_URL != ''
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[mcp,dev]"
+      - run: python -m buildingactivity.cli.specsync --from "${{ vars.SPEC_URL }}"
+      - run: pytest -q
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: spec-sync
+          commit-message: "Refresh spec.json from the live API"
+          title: "Refresh spec.json from the live API"
+          body: "Automated: `python -m buildingactivity.cli.specsync --from ${{ vars.SPEC_URL }}`; tests passed on the refreshed spec."

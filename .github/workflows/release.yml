@@ -1,0 +1,74 @@
+name: Release
+# Publishes to PyPI with trusted publishing (no API token stored anywhere) when a GitHub
+# release is published, and pushes the hosted MCP image to GHCR. The tag must equal the
+# version in pyproject.toml (v0.1.0 for 0.1.0). Manual runs publish to TestPyPI only.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tag matches the package version
+        if: github.event_name == 'release'
+        run: |
+          v=$(python -c 'import tomllib;print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')
+          test "${GITHUB_REF_NAME}" = "v$v" || { echo "tag ${GITHUB_REF_NAME} != v$v"; exit 1; }
+      - run: pip install build twine && python -m build && twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+  testpypi:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+  pypi:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+  image:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          img=ghcr.io/recursive-capital-inc/buildingactivity-mcp
+          docker build -t "$img:${GITHUB_REF_NAME#v}" -t "$img:latest" .
+          docker push "$img:${GITHUB_REF_NAME#v}" && docker push "$img:latest"

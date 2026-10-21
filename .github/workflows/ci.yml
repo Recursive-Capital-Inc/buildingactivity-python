@@ -1,0 +1,68 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[mcp,dev]"
+      - run: ruff check .
+      - run: pytest -q
+  cli-only:
+    # The CLI must work with requests alone; MCP transport tests skip without the extra.
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e . pytest
+      - run: pytest -q tests/test_cli.py tests/test_spec.py
+      - run: buildingactivity --version && buildingactivity schema permits search > /dev/null
+  package:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine check --strict dist/*
+      - name: Wheel holds only the two clients and the spec
+        run: |
+          python - <<'EOF'
+          import glob, zipfile
+          whl, = glob.glob("dist/*.whl")
+          names = {n for n in zipfile.ZipFile(whl).namelist() if not n.split("/")[0].endswith(".dist-info")}
+          want = {"buildingactivity/" + p for p in (
+              "__init__.py", "cli/__init__.py", "cli/__main__.py", "cli/main.py", "cli/specsync.py",
+              "cli/spec.json", "mcp/__init__.py", "mcp/__main__.py", "mcp/server.py", "mcp/tools.py")}
+          assert names == want, sorted(names ^ want)
+          print(whl, "ok:", len(names), "files")
+          EOF
+  image:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t buildingactivity-mcp:ci .
+      - name: Health and the 401 without a key
+        run: |
+          docker run -d --name mcp -p 8765:8765 buildingactivity-mcp:ci
+          for i in $(seq 1 20); do curl -fs http://127.0.0.1:8765/healthz && break; sleep 1; done
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Host: mcp.buildingactivity.com' \
+            -H 'Content-Type: application/json' -d '{}' http://127.0.0.1:8765/mcp)
+          test "$code" = 401
+          docker rm -f mcp

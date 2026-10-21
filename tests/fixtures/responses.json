@@ -1,0 +1,2199 @@
+{
+ "GET /v1/addresses/search": {
+  "body": {
+   "items": [
+    {
+     "address_id": "adr_vuoc6a72qoqzzmubcrva",
+     "county_fips": "06041",
+     "formatted": "50 BARBAREE WAY, TIBURON, CA 94920",
+     "id": "adr_vuoc6a72qoqzzmubcrva",
+     "id_basis": "zip/zip",
+     "jurisdiction_id": null,
+     "lat": 37.8960567,
+     "lon": -122.5001881,
+     "match": "prefix",
+     "parts": {
+      "city": "TIBURON",
+      "house_number": "50",
+      "postdirectional": null,
+      "predirectional": null,
+      "state": "CA",
+      "street_name": "BARBAREE",
+      "suffix": "WAY",
+      "unit": null,
+      "zip5": "94920"
+     },
+     "permit_count": 220,
+     "street_line": "50 BARBAREE WAY"
+    },
+    {
+     "address_id": "adr_ovcvayhbs7qhkel3ln3a",
+     "county_fips": "06041",
+     "formatted": "50 BARBAREE WAY DOCK A, TIBURON, CA 94920",
+     "id": "adr_ovcvayhbs7qhkel3ln3a",
+     "id_basis": "zip/zip",
+     "jurisdiction_id": null,
+     "lat": 37.8960301,
+     "lon": -122.5001615,
+     "match": "prefix",
+     "parts": {
+      "city": "TIBURON",
+      "house_number": "50",
+      "postdirectional": null,
+      "predirectional": null,
+      "state": "CA",
+      "street_name": "BARBAREE WAY DOCK A",
+      "suffix": null,
+      "unit": null,
+      "zip5": "94920"
+     },
+     "permit_count": 2,
+     "street_line": "50 BARBAREE WAY DOCK A"
+    }
+   ],
+   "query": {
+    "q": "50 BARBAREE",
+    "state": "CA",
+    "street_line": "50 BARBAREE",
+    "zip5": null
+   },
+   "resolution": "matched"
+  }
+ },
+ "GET /v1/changes": {
+  "body": {
+   "has_more": true,
+   "items": [
+    {
+     "backfill": false,
+     "observed_at": "2026-10-16T00:50:18Z",
+     "permit": {
+      "address": "20743 W PALO VERDE DR",
+      "agency": "buckeye_az",
+      "city": "BUCKEYE",
+      "contractor_name": null,
+      "county": "Maricopa",
+      "date_applied": "2026-09-25",
+      "date_issued": "2026-10-05",
+      "description": "INSTALLATION OF ROOF MOUNTED PHOTOVOLTAIC SYSTEM 8.910 KW DC / 11.500 KW AC AND INSTALLATION OF (1) TESLA ENERGY STORAGE UNIT 13.5 KWH PER APPROVED PLANS",
+      "permit_class": "electrical",
+      "permit_number": "ELECR-26-0817",
+      "permit_type": "Photovoltaic - Residential Electrical Permit / Photovoltaic System",
+      "record_id": "ELECR-26-0817",
+      "source_url": "https://egselfservice.buckeyeaz.gov/EnerGov_Prod/SelfService#/permit/430af803-b7ac-44a6-97fb-c97cf5b6749c",
+      "state": "AZ",
+      "status": "Issued",
+      "status_code": "issued",
+      "value_usd": null,
+      "work_type": "solar_pv",
+      "zip5": "85396"
+     },
+     "permit_id": "pmt_twondnh5ucrhote5maxq",
+     "seq": 5848841637105,
+     "type": "permit.created"
+    },
+    {
+     "backfill": false,
+     "observed_at": "2026-10-16T00:50:18Z",
+     "permit": {
+      "address": "24165 W HUNTINGTON DR",
+      "agency": "buckeye_az",
+      "city": "BUCKEYE",
+      "contractor_name": null,
+      "county": "Maricopa",
+      "date_applied": "2026-09-24",
+      "date_issued": "2026-10-07",
+      "description": "INSTALLATION OF ROOF MOUNTED PHOTOVOLTAIC SYSTEM WITH A TESLA POWERWALL 3 AND BACKUP SWITCH 12.300 KW DC / 11.500 KW AC PER APPROVED PLANS",
+      "permit_class": "electrical",
+      "permit_number": "ELECR-26-0808",
+      "permit_type": "Photovoltaic - Residential Electrical Permit / Photovoltaic System",
+      "record_id": "ELECR-26-0808",
+      "source_url": "https://egselfservice.buckeyeaz.gov/EnerGov_Prod/SelfService#/permit/e51d9d82-87dd-46c7-8e98-d8856601245c",
+      "state": "AZ",
+      "status": "Issued",
+      "status_code": "issued",
+      "value_usd": null,
+      "work_type": "solar_pv",
+      "zip5": "85326"
+     },
+     "permit_id": "pmt_fkw4th7qwtih3swo3j3q",
+     "seq": 5848841637111,
+     "type": "permit.created"
+    }
+   ],
+   "meta": {
+    "history_start": "2026-10-12",
+    "latest_seq": 11630847492395,
+    "published_through": "2026-10-20T03:16:41Z"
+   },
+   "next_cursor": "5848841637111",
+   "size": 2
+  }
+ },
+ "GET /v1/contractors/lookup": {
+  "body": {
+   "items": [
+    {
+     "avg_job_value": 6587.88,
+     "business_address": {
+      "city": "PETALUMA",
+      "street": "719 SOUTHPOINT BLVD",
+      "zip": "94954"
+     },
+     "classification_derived": [
+      "electrical",
+      "general_engineering_contractor",
+      "hvac"
+     ],
+     "dba": "ONGARO & SONS",
+     "entity_confidence": 1.0,
+     "entity_type": "Corporation",
+     "first_permit_date": "2014-01-14",
+     "id": "ctr_73devkcy7vpjbrgu77vq",
+     "kind": "license",
+     "last_permit_date": "2026-10-16",
+     "legal_name": "ONGARO ERNEST & SONS INC",
+     "license": {
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": "25000",
+       "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+       "type": "contractor bond"
+      },
+      "classes": [
+       "C-4",
+       "C10",
+       "C16"
+      ],
+      "expiration_date": "01/31/2028",
+      "issue_date": "02/13/1963",
+      "number": "215233",
+      "source": "cslb",
+      "state": "CA",
+      "status": "CLEAR",
+      "status_class": "active",
+      "status_date": "10/01/2026",
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+       "effective": "10/01/2026",
+       "expires": "10/01/2027"
+      }
+     },
+     "license_health": {
+      "active": true,
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": 25000,
+       "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+       "on_file": true,
+       "type": "contractor bond"
+      },
+      "expiration_date": "2028-01-31",
+      "expired": false,
+      "source": "cslb",
+      "status": "CLEAR",
+      "status_class": "active",
+      "suspensions": [],
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+       "effective": "2026-10-01",
+       "exempt": false,
+       "expired": false,
+       "expires": "2027-10-01"
+      }
+     },
+     "links": {
+      "permits": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq/permits",
+      "self": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq"
+     },
+     "name": "ONGARO & SONS",
+     "permit_count": 2278,
+     "phone": "7075793511",
+     "state": "CA",
+     "total_job_value": 14994016.08,
+     "value_permit_count": 2276
+    }
+   ],
+   "size": 1
+  }
+ },
+ "GET /v1/contractors/search": {
+  "body": {
+   "items": [
+    {
+     "avg_job_value": 6587.88,
+     "business_address": {
+      "city": "PETALUMA",
+      "street": "719 SOUTHPOINT BLVD",
+      "zip": "94954"
+     },
+     "classification_derived": [
+      "electrical",
+      "general_engineering_contractor",
+      "hvac"
+     ],
+     "dba": "ONGARO & SONS",
+     "entity_confidence": 1.0,
+     "entity_type": "Corporation",
+     "first_permit_date": "2014-01-14",
+     "id": "ctr_73devkcy7vpjbrgu77vq",
+     "kind": "license",
+     "last_permit_date": "2026-10-16",
+     "legal_name": "ONGARO ERNEST & SONS INC",
+     "license": {
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": "25000",
+       "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+       "type": "contractor bond"
+      },
+      "classes": [
+       "C-4",
+       "C10",
+       "C16"
+      ],
+      "expiration_date": "01/31/2028",
+      "issue_date": "02/13/1963",
+      "number": "215233",
+      "source": "cslb",
+      "state": "CA",
+      "status": "CLEAR",
+      "status_class": "active",
+      "status_date": "10/01/2026",
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+       "effective": "10/01/2026",
+       "expires": "10/01/2027"
+      }
+     },
+     "license_health": {
+      "active": true,
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": 25000,
+       "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+       "on_file": true,
+       "type": "contractor bond"
+      },
+      "expiration_date": "2028-01-31",
+      "expired": false,
+      "source": "cslb",
+      "status": "CLEAR",
+      "status_class": "active",
+      "suspensions": [],
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+       "effective": "2026-10-01",
+       "exempt": false,
+       "expired": false,
+       "expires": "2027-10-01"
+      }
+     },
+     "links": {
+      "permits": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq/permits",
+      "self": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq"
+     },
+     "name": "ONGARO & SONS",
+     "permit_count": 2278,
+     "phone": "7075793511",
+     "scoped": {
+      "last_permit": "2026-10-16",
+      "permits": 2276,
+      "status_tally": {
+       "unknown": 2276
+      },
+      "tag_tally": {
+       "accessory_structure": 8,
+       "addition": 2,
+       "adu": 8,
+       "bathroom": 3,
+       "battery_storage": 12,
+       "data_center": 3,
+       "electrical": 228,
+       "electrical_service": 149,
+       "ev_charger": 18,
+       "fence_wall": 2,
+       "generator": 10,
+       "heat_pump": 121,
+       "hvac": 1203,
+       "kitchen": 4,
+       "multifamily": 3,
+       "new_construction": 2,
+       "patio_deck": 4,
+       "plumbing": 597,
+       "pool_and_hot_tub": 3,
+       "remodel": 11,
+       "repipe": 169,
+       "solar": 19,
+       "tenant_improvement": 1,
+       "water_heater": 488,
+       "window_door": 1
+      },
+      "value_sum": 14988084.0
+     },
+     "state": "CA",
+     "total_job_value": 14994016.08,
+     "value_permit_count": 2276
+    },
+    {
+     "avg_job_value": 13560.34,
+     "business_address": {
+      "city": "NOVATO",
+      "street": "24 DIGITAL DRIVE",
+      "zip": "94949"
+     },
+     "classification_derived": [
+      "concrete_and_paving",
+      "hvac",
+      "plumbing"
+     ],
+     "dba": null,
+     "entity_confidence": 1.0,
+     "entity_type": "Limited Liability",
+     "first_permit_date": "2014-04-23",
+     "id": "ctr_mrbmyi45ngyny3u74gla",
+     "kind": "license",
+     "last_permit_date": "2026-10-16",
+     "legal_name": null,
+     "license": {
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": "25000",
+       "insurer": "WESTERN SURETY COMPANY",
+       "type": "contractor bond"
+      },
+      "classes": [
+       "C12",
+       "C20",
+       "C36"
+      ],
+      "expiration_date": "12/31/2026",
+      "issue_date": "04/14/1994",
+      "number": "687489",
+      "source": "cslb",
+      "state": "CA",
+      "status": "CLEAR",
+      "status_class": "active",
+      "status_date": "02/09/2026",
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / CAROLINA CASUALTY INSURANCE COMPANY",
+       "effective": "02/09/2026",
+       "expires": "02/09/2027"
+      }
+     },
+     "license_health": {
+      "active": true,
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": 25000,
+       "insurer": "WESTERN SURETY COMPANY",
+       "on_file": true,
+       "type": "contractor bond"
+      },
+      "expiration_date": "2026-12-31",
+      "expired": false,
+      "source": "cslb",
+      "status": "CLEAR",
+      "status_class": "active",
+      "suspensions": [],
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / CAROLINA CASUALTY INSURANCE COMPANY",
+       "effective": "2026-02-09",
+       "exempt": false,
+       "expired": false,
+       "expires": "2027-02-09"
+      }
+     },
+     "links": {
+      "permits": "/v1/contractors/ctr_mrbmyi45ngyny3u74gla/permits",
+      "self": "/v1/contractors/ctr_mrbmyi45ngyny3u74gla"
+     },
+     "name": "PETER LEVI PLUMBING LLC",
+     "permit_count": 1381,
+     "phone": "4154547771",
+     "scoped": {
+      "last_permit": "2026-10-16",
+      "permits": 948,
+      "status_tally": {
+       "unknown": 948
+      },
+      "tag_tally": {
+       "accessory_structure": 1,
+       "adu": 1,
+       "bathroom": 4,
+       "electrical": 27,
+       "electrical_service": 1,
+       "heat_pump": 59,
+       "hvac": 498,
+       "kitchen": 1,
+       "multifamily": 2,
+       "new_construction": 1,
+       "patio_deck": 2,
+       "plumbing": 325,
+       "remodel": 12,
+       "repipe": 58,
+       "roofing": 1,
+       "water_heater": 273,
+       "window_door": 1
+      },
+      "value_sum": 12857017.0
+     },
+     "state": "CA",
+     "total_job_value": 12868767.0,
+     "value_permit_count": 949
+    },
+    {
+     "avg_job_value": 7283.1,
+     "business_address": {
+      "city": "SOQUEL",
+      "street": "2652 RESEARCH PARK DRIVE",
+      "zip": "95073"
+     },
+     "classification_derived": [
+      "electrical",
+      "general_engineering_contractor",
+      "hvac"
+     ],
+     "dba": null,
+     "entity_confidence": 1.0,
+     "entity_type": "Corporation",
+     "first_permit_date": "2015-09-28",
+     "id": "ctr_2zxzpvjuny4vagwmi75a",
+     "kind": "license",
+     "last_permit_date": "2026-10-15",
+     "legal_name": null,
+     "license": {
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": "25000",
+       "insurer": "PLATTE RIVER INSURANCE COMPANY",
+       "type": "contractor bond"
+      },
+      "classes": [
+       "A",
+       "C10",
+       "C20"
+      ],
+      "expiration_date": "12/31/2027",
+      "issue_date": "12/09/1985",
+      "number": "483881",
+      "source": "cslb",
+      "state": "CA",
+      "status": "CLEAR",
+      "status_class": "active",
+      "status_date": "10/01/2026",
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / REDWOOD FIRE AND CASUALTY INSURANCE CO",
+       "effective": "10/01/2026",
+       "expires": "10/01/2027"
+      }
+     },
+     "license_health": {
+      "active": true,
+      "as_of": "2026-10-18",
+      "bond": {
+       "amount": 25000,
+       "insurer": "PLATTE RIVER INSURANCE COMPANY",
+       "on_file": true,
+       "type": "contractor bond"
+      },
+      "expiration_date": "2027-12-31",
+      "expired": false,
+      "source": "cslb",
+      "status": "CLEAR",
+      "status_class": "active",
+      "suspensions": [],
+      "workers_comp": {
+       "coverage": "Workers' Compensation Insurance / REDWOOD FIRE AND CASUALTY INSURANCE CO",
+       "effective": "2026-10-01",
+       "exempt": false,
+       "expired": false,
+       "expires": "2027-10-01"
+      }
+     },
+     "links": {
+      "permits": "/v1/contractors/ctr_2zxzpvjuny4vagwmi75a/permits",
+      "self": "/v1/contractors/ctr_2zxzpvjuny4vagwmi75a"
+     },
+     "name": "BELLOWS PLUMBING HEATING & AIR INC",
+     "permit_count": 682,
+     "phone": "9314777150",
+     "scoped": {
+      "last_permit": "2026-10-15",
+      "permits": 638,
+      "status_tally": {
+       "unknown": 638
+      },
+      "tag_tally": {
+       "accessory_structure": 2,
+       "addition": 1,
+       "adu": 4,
+       "bathroom": 1,
+       "electrical": 42,
+       "electrical_service": 13,
+       "fence_wall": 1,
+       "generator": 19,
+       "heat_pump": 120,
+       "hvac": 384,
+       "multifamily": 2,
+       "new_construction": 2,
+       "patio_deck": 13,
+       "plumbing": 81,
+       "pool_and_hot_tub": 1,
+       "remodel": 4,
+       "repipe": 9,
+       "roofing": 1,
+       "tenant_improvement": 2,
+       "warehouse": 1,
+       "water_heater": 72,
+       "window_door": 1
+      },
+      "value_sum": 4339466.0
+     },
+     "state": "CA",
+     "total_job_value": 4792278.0,
+     "value_permit_count": 658
+    }
+   ],
+   "next_cursor": "WzYzOCwiY3RyXzJ6eHpwdmp1bnk0dmFnd21pNzVhIiwiMDQ2ODkzZmMxMiJd",
+   "size": 3,
+   "sort": "permits_desc"
+  }
+ },
+ "GET /v1/contractors/{contractor_id}": {
+  "body": {
+   "avg_job_value": 6587.88,
+   "business_address": {
+    "city": "PETALUMA",
+    "street": "719 SOUTHPOINT BLVD",
+    "zip": "94954"
+   },
+   "classification_derived": [
+    "electrical",
+    "general_engineering_contractor",
+    "hvac"
+   ],
+   "dba": "ONGARO & SONS",
+   "entity_confidence": 1.0,
+   "entity_type": "Corporation",
+   "first_permit_date": "2014-01-14",
+   "id": "ctr_73devkcy7vpjbrgu77vq",
+   "kind": "license",
+   "last_permit_date": "2026-10-16",
+   "legal_name": "ONGARO ERNEST & SONS INC",
+   "license": {
+    "as_of": "2026-10-18",
+    "bond": {
+     "amount": "25000",
+     "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+     "type": "contractor bond"
+    },
+    "classes": [
+     "C-4",
+     "C10",
+     "C16"
+    ],
+    "expiration_date": "01/31/2028",
+    "issue_date": "02/13/1963",
+    "number": "215233",
+    "source": "cslb",
+    "state": "CA",
+    "status": "CLEAR",
+    "status_class": "active",
+    "status_date": "10/01/2026",
+    "workers_comp": {
+     "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+     "effective": "10/01/2026",
+     "expires": "10/01/2027"
+    }
+   },
+   "license_health": {
+    "active": true,
+    "as_of": "2026-10-18",
+    "bond": {
+     "amount": 25000,
+     "insurer": "MERCHANTS BONDING COMPANY (MUTUAL)",
+     "on_file": true,
+     "type": "contractor bond"
+    },
+    "expiration_date": "2028-01-31",
+    "expired": false,
+    "source": "cslb",
+    "status": "CLEAR",
+    "status_class": "active",
+    "suspensions": [],
+    "workers_comp": {
+     "coverage": "Workers' Compensation Insurance / AMTRUST INSURANCE COMPANY",
+     "effective": "2026-10-01",
+     "exempt": false,
+     "expired": false,
+     "expires": "2027-10-01"
+    }
+   },
+   "links": {
+    "permits": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq/permits",
+    "self": "/v1/contractors/ctr_73devkcy7vpjbrgu77vq"
+   },
+   "name": "ONGARO & SONS",
+   "permit_count": 2278,
+   "phone": "7075793511",
+   "state": "CA",
+   "total_job_value": 14994016.08,
+   "value_permit_count": 2276
+  }
+ },
+ "GET /v1/decisions/search": {
+  "body": {
+   "items": [
+    {
+     "address": null,
+     "address_id": null,
+     "applicant_name": null,
+     "body": "Department of Planning and Development",
+     "case_numbers": [
+      "Z-25-000158",
+      "Z245-150"
+     ],
+     "categories": [
+      "rezoning"
+     ],
+     "category": "rezoning",
+     "category_rules": [
+      "legistar.type:zoning_item"
+     ],
+     "category_source": "legistar.type:zoning_item",
+     "ceqa": null,
+     "county_id": "cty_48113",
+     "decision_date": "2027-01-12",
+     "decision_date_basis": "agenda",
+     "description": null,
+     "filed_date": "2026-06-02",
+     "id": "dec_nj6ldlibjised5x3v4kq",
+     "jurisdiction_basis": "council_city_name",
+     "jurisdiction_id": "jur_48-113-19000-00000",
+     "land_use": true,
+     "lat": null,
+     "location_text": null,
+     "lon": null,
+     "parcel_numbers": [],
+     "permit_id": null,
+     "place_name": "Dallas",
+     "projects": [],
+     "property_id": null,
+     "scale": {
+      "acres": null,
+      "large": false,
+      "mw": null,
+      "sqft": null,
+      "stated_value_usd": null,
+      "units": null
+     },
+     "source": "legistar",
+     "source_url": "https://cityofdallas.legistar.com/gateway.aspx?M=L&ID=25143",
+     "state": "TX",
+     "status": "Agenda Ready",
+     "subcategory": null,
+     "title": "A public hearing to receive comments regarding an application for and an ordinance granting an amendment to Planned Development Subdistrict No. 154 within Planned Development District No. 193, the Oak Lawn Special Purpose District, on property bounded by McKinney Avenue, North Akard Street, and North St. Paul Street   \r\nRecommendation of Staff:  Approval, subject to an amended development plan, amended landscape plan, and staff’s recommended amended conditions\r\nRecommendation of CPC: Approval, s",
+     "zip_code": null
+    },
+    {
+     "address": {
+      "match": "no_address_row",
+      "street_line": "18011 HILLCREST RD",
+      "text": "18011 Hillcrest Road"
+     },
+     "address_id": null,
+     "applicant_name": null,
+     "body": "Department of Planning and Development",
+     "case_numbers": [
+      "Z-26-000113"
+     ],
+     "categories": [
+      "rezoning"
+     ],
+     "category": "rezoning",
+     "category_rules": [
+      "legistar.type:zoning_item"
+     ],
+     "category_source": "legistar.type:zoning_item",
+     "ceqa": null,
+     "county_id": "cty_48113",
+     "decision_date": "2026-10-28",
+     "decision_date_basis": "agenda",
+     "description": null,
+     "filed_date": "2026-09-28",
+     "id": "dec_yxnf5iqolwp53m76whiq",
+     "jurisdiction_basis": "council_city_name",
+     "jurisdiction_id": "jur_48-113-19000-00000",
+     "land_use": true,
+     "lat": null,
+     "location_text": null,
+     "lon": null,
+     "parcel_numbers": [],
+     "permit_id": null,
+     "place_name": "Dallas",
+     "projects": [],
+     "property_id": null,
+     "scale": {
+      "acres": null,
+      "large": false,
+      "mw": null,
+      "sqft": null,
+      "stated_value_usd": null,
+      "units": null
+     },
+     "source": "legistar",
+     "source_url": "https://cityofdallas.legistar.com/gateway.aspx?M=L&ID=26326",
+     "state": "TX",
+     "status": "Agenda Ready",
+     "subcategory": null,
+     "title": "A public hearing to receive comments regarding an application for and an ordinance granting an amendment to Planned Development District No. 555 for private school uses, on the southwest corner of Frankford Road and Hillcrest Road, AKA 18011 Hillcrest Road\nRecommendation of Staff:  Approval, subject to an amended development plan, a traffic management plan, and conditions\nRecommendation of CPC:  Approval, subject to an amended development plan, a traffic management plan, and conditions\nZ-26-0001",
+     "zip_code": null
+    }
+   ],
+   "next_cursor": "WyIyMDI2LTEwLTI4IiwgImRlY195eG5mNWlxb2x3cDUzbTc2d2hpcSJd",
+   "size": 2,
+   "total_count": null
+  }
+ },
+ "GET /v1/geo/search": {
+  "body": {
+   "data": [
+    {
+     "href": "/v1/geo/counties/cty_06041",
+     "id": "cty_06041",
+     "level": "county",
+     "match": "name",
+     "name": "Marin County",
+     "state": "CA"
+    },
+    {
+     "href": "/v1/geo/jurisdictions/jur_06-041-99990-00000",
+     "id": "jur_06-041-99990-00000",
+     "level": "jurisdiction",
+     "match": "name",
+     "name": "Marin County Unincorporated Area",
+     "state": "CA"
+    }
+   ],
+   "query": "Marin",
+   "state": "CA"
+  }
+ },
+ "GET /v1/lists/tags": {
+  "body": {
+   "data": [
+    {
+     "description": "New principal building (house, townhome, apartment, manufactured home or commercial building); accessory structures and ADUs excluded",
+     "id": "new_construction",
+     "permits_count": 2945896,
+     "precision": 0.956,
+     "recall": 0.879,
+     "shovels_equivalent": "new_construction",
+     "status": "reliable"
+    },
+    {
+     "description": "Accessory dwelling unit, junior ADU or guest house",
+     "id": "adu",
+     "permits_count": 387655,
+     "precision": 1.0,
+     "recall": 1.0,
+     "shovels_equivalent": "adu",
+     "status": "beta"
+    },
+    {
+     "description": "Adds floor area to an existing building (room, story, enclosed porch or sunroom)",
+     "id": "addition",
+     "permits_count": 1332354,
+     "precision": 0.533,
+     "recall": 0.615,
+     "shovels_equivalent": "addition",
+     "status": "beta"
+    }
+   ],
+   "total": 33
+  }
+ },
+ "GET /v1/meta/coverage": {
+  "body": {
+   "agencies": 8,
+   "basis": "month of the first non-empty date_applied, date_issued, record_date; applied, issued and finaled count permits by the month of their own date",
+   "from": "2026-01",
+   "geo": {
+    "id": "cty_06041",
+    "level": "county"
+   },
+   "items": [
+    {
+     "available": true,
+     "criterion": "positive_value",
+     "field": "value",
+     "fill_pct": 0.224,
+     "filled": 2883,
+     "note": "value_usd > 0 on rows not flagged value_suspect",
+     "tier": "partial"
+    },
+    {
+     "available": false,
+     "criterion": "populated",
+     "field": "fees",
+     "fill_pct": 0.0,
+     "filled": 0,
+     "note": "fees are not collected in the index yet",
+     "tier": "missing"
+    },
+    {
+     "available": true,
+     "criterion": "populated",
+     "field": "contractor",
+     "fill_pct": 0.223,
+     "filled": 2872,
+     "note": "contractor name or license",
+     "tier": "partial"
+    }
+   ],
+   "permits_total": 12884,
+   "tiers": {
+    "missing": "fill_pct < 0.10",
+    "partial": "0.10 <= fill_pct < 0.80",
+    "reliable": "fill_pct >= 0.80",
+    "source": "https://docs.shovels.ai/api-reference/meta/get-coverage"
+   },
+   "to": "2026-09"
+  }
+ },
+ "GET /v1/metrics": {
+  "body": {
+   "basis": "month of the first non-empty date_applied, date_issued, record_date; applied, issued and finaled count permits by the month of their own date",
+   "data": [
+    {
+     "applied": 315,
+     "approval_days_p50": 0.0,
+     "construction_days_p50": null,
+     "contractors": 165,
+     "finaled": 0,
+     "issued": 523,
+     "month": "2026-07",
+     "permits": 2004,
+     "permits_with_value": 315,
+     "value_p50": 11562.0,
+     "value_sum": 6336777.0
+    },
+    {
+     "applied": 357,
+     "approval_days_p50": 0.0,
+     "construction_days_p50": null,
+     "contractors": 166,
+     "finaled": 0,
+     "issued": 513,
+     "month": "2026-08",
+     "permits": 1724,
+     "permits_with_value": 357,
+     "value_p50": 10299.0,
+     "value_sum": 6563554.0
+    },
+    {
+     "applied": 345,
+     "approval_days_p50": 0.0,
+     "construction_days_p50": null,
+     "contractors": 168,
+     "finaled": 0,
+     "issued": 535,
+     "month": "2026-09",
+     "permits": 1691,
+     "permits_with_value": 345,
+     "value_p50": 13000.0,
+     "value_sum": 6941611.0
+    }
+   ],
+   "filters": {
+    "class": "all",
+    "tag": "all"
+   },
+   "from": "2026-07",
+   "geo": {
+    "id": "cty_06041",
+    "level": "county"
+   },
+   "group_by": [
+    "month"
+   ],
+   "meta": {
+    "approximations": "rollup medians are count-weighted medians of agency medians; contractors adds per-agency (and per-month when rows are combined) distinct counts",
+    "rows": 3,
+    "truncated": false,
+    "undated_permits": null
+   },
+   "to": "2026-09"
+  }
+ },
+ "GET /v1/permits/search": {
+  "body": {
+   "items": [
+    {
+     "address": "5549 PT REYES-PETALUMA RD, PETALUMA, CA 94952",
+     "agency": "marincounty_ca",
+     "apn": "12504028",
+     "applicant_name": null,
+     "approval_days": 69,
+     "city": null,
+     "construction_days": null,
+     "contractor_license": null,
+     "contractor_name": null,
+     "county": "Marin",
+     "date_applied": "2026-08-05",
+     "date_finaled": null,
+     "date_issued": "2026-10-13",
+     "date_updated": "2026-10-13",
+     "description": "Ground-Mount Pv: 9.2kw Dc, 11.5kw Ac (13 Modules, 1 Dc-Coupled Inverter); Ess: 27kwh Ac (1 Battery, 1 Dc Expansion Unit)",
+     "description_derived": null,
+     "first_seen": "2026-10-14T09:36:15+00:00",
+     "id": "pmt_ni4l5ivjdonzmpjqlvua",
+     "is_construction": true,
+     "last_seen": "2026-10-18T10:20:43+00:00",
+     "lat": 38.1842223,
+     "lon": -122.6666515,
+     "owner_name": null,
+     "permit_class": "building",
+     "permit_number": "182717",
+     "permit_type": "RESIDENTIAL",
+     "project_name": null,
+     "record_date": "2026-10-13",
+     "record_id": "182717",
+     "source_url": "https://data.marincounty.gov/resource/mkbn-caye",
+     "source_url_kind": "portal",
+     "state": "CA",
+     "status": null,
+     "status_code": "unknown",
+     "total_days": null,
+     "value_suspect": false,
+     "value_usd": 72486.0,
+     "work_type": "solar_pv",
+     "zip5": null
+    },
+    {
+     "address": "503 B ST, POINT REYES STATION, CA 94956",
+     "agency": "marincounty_ca",
+     "apn": "11919601",
+     "applicant_name": null,
+     "approval_days": 92,
+     "city": null,
+     "construction_days": null,
+     "contractor_license": "905389",
+     "contractor_name": "AMERICAN SOLAR CORPORATION",
+     "county": "Marin",
+     "date_applied": "2026-05-19",
+     "date_finaled": null,
+     "date_issued": "2026-08-19",
+     "date_updated": "2026-08-19",
+     "description": "5.22kw Dc Roof-Mounted Pv Array W/ 15kwh Battery Ess Installation",
+     "description_derived": null,
+     "first_seen": "2026-10-14T05:38:59+00:00",
+     "id": "pmt_rau3e56jwcfwzbimzkma",
+     "is_construction": true,
+     "last_seen": "2026-10-18T10:22:08+00:00",
+     "lat": 38.0685848,
+     "lon": -122.8088689,
+     "owner_name": null,
+     "permit_class": "building",
+     "permit_number": "182337",
+     "permit_type": "COMMERCIAL",
+     "project_name": null,
+     "record_date": "2026-08-19",
+     "record_id": "182337",
+     "source_url": "https://data.marincounty.gov/resource/mkbn-caye",
+     "source_url_kind": "portal",
+     "state": "CA",
+     "status": null,
+     "status_code": "unknown",
+     "total_days": null,
+     "value_suspect": false,
+     "value_usd": 49412.0,
+     "work_type": "solar_pv",
+     "zip5": null
+    }
+   ],
+   "next_cursor": "WyIyMDI2LTA4LTE5IiwxNjQzNzU3NCwiYWJmN2EyZmVkMCJd",
+   "size": 2,
+   "sort": "issued_desc",
+   "total_count": {
+    "relation": "eq",
+    "value": 8
+   }
+  }
+ },
+ "GET /v1/permits/{permit_id}": {
+  "body": {
+   "address": "18 MORNING SUN AVE, MILL VALLEY, CA 94941",
+   "agency": "marincounty_ca",
+   "apn": "04812430",
+   "applicant_name": null,
+   "approval_days": 0,
+   "city": null,
+   "construction_days": null,
+   "contractor_license": null,
+   "contractor_name": "WEDGE ROOFING INC",
+   "county": "Marin",
+   "date_applied": "2026-10-16",
+   "date_finaled": null,
+   "date_issued": "2026-10-16",
+   "date_updated": "2026-10-16",
+   "description": null,
+   "description_derived": null,
+   "first_seen": "2026-10-17T07:53:27+00:00",
+   "id": "pmt_dzptshzmc6mlibuavdrq",
+   "is_construction": true,
+   "last_seen": "2026-10-18T10:20:43+00:00",
+   "lat": 37.8915856,
+   "lon": -122.5349097,
+   "owner_name": null,
+   "permit_class": "building",
+   "permit_number": "B48809",
+   "permit_type": "RESIDENTIAL",
+   "project_name": null,
+   "record_date": "2026-10-16",
+   "record_id": "B48809",
+   "source_url": "https://data.marincounty.gov/resource/mkbn-caye",
+   "source_url_kind": "portal",
+   "state": "CA",
+   "status": null,
+   "status_code": "unknown",
+   "total_days": null,
+   "value_suspect": false,
+   "value_usd": 79650.0,
+   "work_type": null,
+   "zip5": null
+  }
+ },
+ "GET /v1/permits/{permit_id}/history": {
+  "body": {
+   "items": [
+    {
+     "backfill": false,
+     "observed_at": "2026-10-18T14:11:19Z",
+     "seq": 9554279970582,
+     "type": "permit.created"
+    },
+    {
+     "field": "status",
+     "new": "Department Review Cycle 3",
+     "observed_at": "2026-10-19T16:31:10Z",
+     "old": "Respond and Resubmit",
+     "seq": 11144610169830,
+     "source_field": "status",
+     "type": "permit.changed"
+    }
+   ],
+   "meta": {
+    "history_start": "2026-10-12",
+    "latest_seq": 11630847492395,
+    "published_through": "2026-10-20T03:16:41Z"
+   },
+   "next_cursor": null,
+   "permit_id": "pmt_eb6tcugeh4nd4wbpaf2a",
+   "size": 2
+  }
+ },
+ "GET /v1/projects": {
+  "body": {
+   "items": [
+    {
+     "address": "16741 W VENTURA BLVD",
+     "apns": [
+      "2259011030"
+     ],
+     "applicants": [],
+     "city": null,
+     "contractors": [],
+     "earliest_item_date": "2026-10-06",
+     "earliest_permit_date": "2026-10-06",
+     "earliest_signal_date": null,
+     "geo": {
+      "county_ids": [
+       "cty_06037"
+      ],
+      "jurisdiction_ids": [
+       "jur_06-037-44000-00000"
+      ],
+      "metro_ids": [
+       "msa_31080"
+      ],
+      "states": [
+       "CA"
+      ]
+     },
+     "id": "prj_tiaqslsodzkpn4ggidcq",
+     "item_count": 1,
+     "latest_item_date": "2026-10-08",
+     "lead_days": null,
+     "link_confidence": null,
+     "max_permit_value_usd": 82944439.0,
+     "milestones": {
+      "permit_applied": "2026-10-06"
+     },
+     "name": "**10% HSAP FOR ZONING REVIEW ONLY (SB330)**New 168-unit mixed-use building including 13 units (15% of base density) for Very Low Income (\"VLI\") households and 13 units (15% of base density) for Low Income (\"LI\") households, plus an additional 8 LI units (for a total of 20% of the total proposed unit",
+     "owners": [],
+     "parties": [],
+     "permit_count": 1,
+     "scale_basis": [],
+     "signal_count": 0,
+     "source_urls": [
+      "https://data.lacity.org/resource/gwh9-jnip?config=losangeles_submitted_ca"
+     ],
+     "sources": [
+      "losangeles_submitted_ca"
+     ],
+     "stage": {
+      "changed_at": "2026-10-06",
+      "date": "2026-10-06",
+      "evidence_item_id": "pmt_hhpvrieappyeduhstpga",
+      "reason": "building permit on file",
+      "stage": "permit_applied"
+     },
+     "stage_notes": [],
+     "state": "CA",
+     "stated_value_usd": null,
+     "statuses": [
+      "PC Assigned"
+     ],
+     "types": [
+      "Bldg-New / Apartment"
+     ],
+     "updated_at": "2026-10-08",
+     "v0_project_id": "cluster:a6519e20149b",
+     "value_basis": "permit declared value",
+     "value_usd": 82944439.0
+    },
+    {
+     "address": "55 N LA CIENEGA BLVD",
+     "apns": [],
+     "applicants": [],
+     "city": "Beverly Hills",
+     "contractors": [],
+     "earliest_item_date": "2025-04-22",
+     "earliest_permit_date": "2026-10-01",
+     "earliest_signal_date": "2025-04-22",
+     "geo": {
+      "county_ids": [
+       "cty_06037"
+      ],
+      "jurisdiction_ids": [
+       "jur_06-037-06308-00000"
+      ],
+      "metro_ids": [
+       "msa_31080"
+      ],
+      "states": [
+       "CA"
+      ]
+     },
+     "id": "prj_drxydx7ulmdev7qg2ona",
+     "item_count": 5,
+     "latest_item_date": "2026-10-01",
+     "lead_days": 527,
+     "link_confidence": 0.85,
+     "max_permit_value_usd": 63000000.0,
+     "milestones": {
+      "in_review": "2025-04-22",
+      "permit_applied": "2026-10-01",
+      "permit_issued": "2026-10-01"
+     },
+     "name": "55 North La Cienega Boulevard - Development Plan Review and Density Bonus",
+     "owners": [],
+     "parties": [
+      {
+       "confidence": 0.95,
+       "item_count": 1,
+       "method": "structured",
+       "name": "Beverly Hills, City of",
+       "role": "lead_agency",
+       "source_field": "lead_agency",
+       "source_item_id": "sig_jykgpuqjvssfmjoq732q"
+      }
+     ],
+     "permit_count": 4,
+     "scale_basis": [],
+     "signal_count": 1,
+     "source_urls": [
+      "https://ceqanet.lci.ca.gov/2025041090/1",
+      "https://services5.arcgis.com/7CXE3aevo18HlHBC/arcgis/rest/services/Permit_Issued_All_Construction/FeatureServer/0"
+     ],
+     "sources": [
+      "beverlyhills_ca",
+      "ceqanet"
+     ],
+     "stage": {
+      "changed_at": "2026-10-01",
+      "date": "2026-10-01",
+      "evidence_item_id": "pmt_cirlfs2slx5kdqe3qcxq",
+      "reason": "permit issued (status Issued)",
+      "stage": "permit_issued"
+     },
+     "stage_notes": [],
+     "state": "CA",
+     "stated_value_usd": null,
+     "statuses": [
+      "Issued"
+     ],
+     "types": [
+      "ceqa_noe",
+      "Building (BS)",
+      "Mechanical (BS)"
+     ],
+     "updated_at": "2026-10-01",
+     "v0_project_id": "cluster:40eeaccc7a48",
+     "value_basis": "permit declared value",
+     "value_usd": 63000000.0
+    },
+    {
+     "address": "1950 S AVENUE OF THE STARS",
+     "apns": [
+      "4319002"
+     ],
+     "applicants": [],
+     "city": null,
+     "contractors": [],
+     "earliest_item_date": "2021-05-27",
+     "earliest_permit_date": "2021-05-27",
+     "earliest_signal_date": null,
+     "geo": {
+      "county_ids": [
+       "cty_06037"
+      ],
+      "jurisdiction_ids": [
+       "jur_06-037-44000-00000"
+      ],
+      "metro_ids": [
+       "msa_31080"
+      ],
+      "states": [
+       "CA"
+      ]
+     },
+     "id": "prj_eawjxctsyg2vpq4n2zza",
+     "item_count": 1,
+     "latest_item_date": "2026-09-15",
+     "lead_days": null,
+     "link_confidence": null,
+     "max_permit_value_usd": 100000000.0,
+     "milestones": {
+      "complete": "2026-09-15",
+      "permit_applied": "2021-05-27",
+      "permit_issued": "2021-05-27",
+      "under_construction": "2026-01-05"
+     },
+     "name": "Foundation only early start permit for new (Type IA) 36 story office building with retail stores and fitness center. Early start permit scope including: All concrete and steel construction below street level slab, not including the street level slab. Refer to comment for Early Start Foundation Only ",
+     "owners": [],
+     "parties": [],
+     "permit_count": 1,
+     "scale_basis": [],
+     "signal_count": 0,
+     "source_urls": [
+      "https://data.lacity.org/resource/pi9x-tg5x"
+     ],
+     "sources": [
+      "losangeles_ca"
+     ],
+     "stage": {
+      "changed_at": "2026-09-15",
+      "date": "2026-09-15",
+      "evidence_item_id": "pmt_usivsfl76ehkfxcs426q",
+      "reason": "permit finaled",
+      "stage": "complete"
+     },
+     "stage_notes": [],
+     "state": "CA",
+     "stated_value_usd": null,
+     "statuses": [
+      "Permit Finaled"
+     ],
+     "types": [
+      "Bldg-Alter/Repair / Commercial"
+     ],
+     "updated_at": "2026-09-15",
+     "v0_project_id": "cluster:2607e9564390",
+     "value_basis": "permit declared value",
+     "value_usd": 100000000.0
+    }
+   ],
+   "next_cursor": "WyIyMDI2LTA5LTE1IiwgMTEwLCAiMDU0MWNjNjE5YTU3Il0",
+   "size": 3,
+   "sort": "newest"
+  }
+ },
+ "GET /v1/projects/{project_id}": {
+  "body": {
+   "address": "55 N LA CIENEGA BLVD",
+   "apns": [],
+   "applicants": [],
+   "city": "Beverly Hills",
+   "contractors": [],
+   "earliest_item_date": "2025-04-22",
+   "earliest_permit_date": "2026-10-01",
+   "earliest_signal_date": "2025-04-22",
+   "geo": {
+    "county_ids": [
+     "cty_06037"
+    ],
+    "jurisdiction_ids": [
+     "jur_06-037-06308-00000"
+    ],
+    "metro_ids": [
+     "msa_31080"
+    ],
+    "states": [
+     "CA"
+    ]
+   },
+   "id": "prj_drxydx7ulmdev7qg2ona",
+   "item_count": 5,
+   "items": [
+    {
+     "acres": null,
+     "agency": "Beverly Hills, City of",
+     "apns": [],
+     "applicant": null,
+     "case_numbers": [],
+     "category": "ceqa_noe",
+     "date": "2025-04-22",
+     "dates": {
+      "event": null,
+      "filed": "2025-04-22"
+     },
+     "description": "The project consists of a Development Plan Review (DPR) and Density Bonus (DB) Permit associated with the development of a seven-story, 140 unit mixed-use development. 22 of the 150 residential units would be reserved for low income households. The Project includes 19,055 SF of ground floor commercial and includes three levels of subterranean parking for 172 parking spaces. The Project included three DB concessions for an additiona 41'-0\" in height, additional four stories, and reduction of rear yard setback and one waiver for a reduction of 18,200 SF of required outdoor living area. The overa",
+     "doc_type": "NOE",
+     "id": "sig_jykgpuqjvssfmjoq732q",
+     "jurisdiction": "Beverly Hills",
+     "kind": "ceqa",
+     "large": false,
+     "link": {
+      "basis": "same street address 55 LA CIENEGA BLVD",
+      "confidence": 0.85,
+      "linked_to": "pmt_fnfeyd7dnh27pe73nxha"
+     },
+     "location": "La Cienega Blvd and Wilshire Blvd; Beverly Hills; Los Angeles County; 90211",
+     "mw": null,
+     "parties": [
+      {
+       "confidence": 0.95,
+       "method": "structured",
+       "name": "Beverly Hills, City of",
+       "role": "lead_agency",
+       "source_field": "lead_agency",
+       "source_item_id": "sig_jykgpuqjvssfmjoq732q"
+      }
+     ],
+     "permit_id": null,
+     "size_basis": [],
+     "source": "ceqanet",
+     "source_url": "https://ceqanet.lci.ca.gov/2025041090/1",
+     "sqft": 19055.0,
+     "stage_evidence": [
+      {
+       "date": "2025-04-22",
+       "reason": "CEQA NOE filed: exempt from further environmental review (not an approval)",
+       "stage": "in_review"
+      }
+     ],
+     "state": "CA",
+     "stated_value_usd": null,
+     "status": null,
+     "title": "55 North La Cienega Boulevard - Development Plan Review and Density Bonus",
+     "units": 150.0
+    },
+    {
+     "address": "55 N LA CIENEGA BLVD",
+     "agency": "beverlyhills_ca",
+     "apn": null,
+     "applicant_name": null,
+     "city": "Beverly Hills",
+     "contractor_name": null,
+     "date": "2026-10-01",
+     "dates": {
+      "applied": null,
+      "finaled": null,
+      "issued": "2026-10-01",
+      "updated": "2026-10-01"
+     },
+     "description": "(E-PLAN) 100% STACKABLE DENSITY BONUS (AB 1287) 7-STORY MIXED USE PROJECT WITH 140 RESIDENTIAL UNITS, GROUND FLOOR COMMERCIAL, 3 LEVELS OF BELOW GRADE PARKING, OCCUPIABLE ROOF DECK WITH POOL, RESTROOMS, AMENITY SPACES, AND RESIDENTIAL OFFICE SPACES.",
+     "first_seen": "2026-10-10T14:24:20+00:00",
+     "grouped_by": "addr:beverlyhills_ca:55 N LA CIENEGA BLVD",
+     "id": "pmt_cirlfs2slx5kdqe3qcxq",
+     "kind": "permit",
+     "last_seen": "2026-10-18T10:20:34+00:00",
+     "link": {
+      "basis": "same street address 55 LA CIENEGA BLVD",
+      "confidence": 0.85,
+      "linked_to": "sig_jykgpuqjvssfmjoq732q"
+     },
+     "owner_name": null,
+     "parties": [],
+     "permit_id": "pmt_cirlfs2slx5kdqe3qcxq",
+     "permit_number": "BS2406886",
+     "permit_type": "Plumbing (BS)",
+     "record_id": "BS2406886",
+     "source_url": "https://services5.arcgis.com/7CXE3aevo18HlHBC/arcgis/rest/services/Permit_Issued_All_Construction/FeatureServer/0",
+     "stage_evidence": [
+      {
+       "date": "2026-10-01",
+       "reason": "building permit on file",
+       "stage": "permit_applied"
+      },
+      {
+       "date": "2026-10-01",
+       "reason": "permit issued (status Issued)",
+       "stage": "permit_issued"
+      }
+     ],
+     "state": "CA",
+     "status": "Issued",
+     "status_code": "issued",
+     "title": "(E-PLAN) 100% STACKABLE DENSITY BONUS (AB 1287) 7-STORY MIXED USE PROJECT WITH 140 RESIDENTIAL UNITS, GROUND FLOOR COMMERCIAL, 3 LEVELS OF BELOW GRADE PARKING, OCCUPIABLE ROOF DECK WITH POOL, RESTROOMS, AMENITY SPACES, AND RESIDENTIAL OFFICE SPACES.",
+     "value_usd": 63000000.0
+    },
+    {
+     "address": "55 N LA CIENEGA BLVD",
+     "agency": "beverlyhills_ca",
+     "apn": null,
+     "applicant_name": null,
+     "city": "Beverly Hills",
+     "contractor_name": null,
+     "date": "2026-10-01",
+     "dates": {
+      "applied": null,
+      "finaled": null,
+      "issued": "2026-10-01",
+      "updated": "2026-10-01"
+     },
+     "description": "(EPLAN) NEW 7-STORY MIXED USE W/140 RESIDENTIAL UNITS, GROUND FLOOR COMMERCIAL, 3 LEVELS OF BELOW GRADE PARKING, OCCUPIABLE ROOF DECK W/POOL, RESTROOMS, AMENITY SPACES, AND RESIDENTIAL OFFICE SPACES. 100% STACKABLE DENSITY BONUS (AB 1287)",
+     "first_seen": "2026-10-10T14:24:20+00:00",
+     "grouped_by": "addr:beverlyhills_ca:55 N LA CIENEGA BLVD",
+     "id": "pmt_fnfeyd7dnh27pe73nxha",
+     "kind": "permit",
+     "last_seen": "2026-10-18T10:20:34+00:00",
+     "link": {
+      "basis": "same street address 55 LA CIENEGA BLVD",
+      "confidence": 0.85,
+      "linked_to": "sig_jykgpuqjvssfmjoq732q"
+     },
+     "owner_name": null,
+     "parties": [],
+     "permit_id": "pmt_fnfeyd7dnh27pe73nxha",
+     "permit_number": "BS2406883",
+     "permit_type": "Building (BS)",
+     "record_id": "BS2406883",
+     "source_url": "https://services5.arcgis.com/7CXE3aevo18HlHBC/arcgis/rest/services/Permit_Issued_All_Construction/FeatureServer/0",
+     "stage_evidence": [
+      {
+       "date": "2026-10-01",
+       "reason": "building permit on file",
+       "stage": "permit_applied"
+      },
+      {
+       "date": "2026-10-01",
+       "reason": "permit issued (status Issued)",
+       "stage": "permit_issued"
+      }
+     ],
+     "state": "CA",
+     "status": "Issued",
+     "status_code": "issued",
+     "title": "(EPLAN) NEW 7-STORY MIXED USE W/140 RESIDENTIAL UNITS, GROUND FLOOR COMMERCIAL, 3 LEVELS OF BELOW GRADE PARKING, OCCUPIABLE ROOF DECK W/POOL, RESTROOMS, AMENITY SPACES, AND RESIDENTIAL OFFICE SPACES. 100% STACKABLE DENSITY BONUS (AB 1287)",
+     "value_usd": 63000000.0
+    }
+   ],
+   "latest_item_date": "2026-10-01",
+   "lead_days": 527,
+   "link_confidence": 0.85,
+   "max_permit_value_usd": 63000000.0,
+   "milestones": {
+    "in_review": "2025-04-22",
+    "permit_applied": "2026-10-01",
+    "permit_issued": "2026-10-01"
+   },
+   "name": "55 North La Cienega Boulevard - Development Plan Review and Density Bonus",
+   "owners": [],
+   "parties": [
+    {
+     "confidence": 0.95,
+     "item_count": 1,
+     "method": "structured",
+     "name": "Beverly Hills, City of",
+     "role": "lead_agency",
+     "source_field": "lead_agency",
+     "source_item_id": "sig_jykgpuqjvssfmjoq732q"
+    }
+   ],
+   "permit_count": 4,
+   "scale_basis": [],
+   "signal_count": 1,
+   "source_urls": [
+    "https://ceqanet.lci.ca.gov/2025041090/1",
+    "https://services5.arcgis.com/7CXE3aevo18HlHBC/arcgis/rest/services/Permit_Issued_All_Construction/FeatureServer/0"
+   ],
+   "sources": [
+    "beverlyhills_ca",
+    "ceqanet"
+   ],
+   "stage": {
+    "changed_at": "2026-10-01",
+    "date": "2026-10-01",
+    "evidence_item_id": "pmt_cirlfs2slx5kdqe3qcxq",
+    "reason": "permit issued (status Issued)",
+    "stage": "permit_issued"
+   },
+   "stage_history": [
+    {
+     "changed_at": "2026-10-01",
+     "date": "2026-10-01",
+     "evidence_item_id": "pmt_cirlfs2slx5kdqe3qcxq",
+     "observed_at": "2026-10-20T05:24:31+00:00",
+     "reason": "permit issued (status Issued)",
+     "stage": "permit_issued"
+    }
+   ],
+   "stage_notes": [],
+   "state": "CA",
+   "stated_value_usd": null,
+   "statuses": [
+    "Issued"
+   ],
+   "types": [
+    "ceqa_noe",
+    "Building (BS)",
+    "Mechanical (BS)"
+   ],
+   "updated_at": "2026-10-01",
+   "v0_project_id": "cluster:40eeaccc7a48",
+   "value_basis": "permit declared value",
+   "value_usd": 63000000.0
+  }
+ },
+ "GET /v1/properties/lookup": {
+  "body": {
+   "items": [
+    {
+     "address": {
+      "formatted": "50 BARBAREE WAY, TIBURON, CA 94920",
+      "parts": {
+       "city": "TIBURON",
+       "house_number": "50",
+       "postdirectional": null,
+       "predirectional": null,
+       "state": "CA",
+       "street_name": "BARBAREE",
+       "suffix": "WAY",
+       "zip5": "94920"
+      },
+      "street_line": "50 BARBAREE WAY"
+     },
+     "address_id": "adr_vuoc6a72qoqzzmubcrva",
+     "agencies": [
+      "marincounty_ca"
+     ],
+     "applicants": [],
+     "contractor_count": 9,
+     "contractors": [
+      {
+       "name": "GALLAHER COMPANY",
+       "source_permit_ids": [
+        "pmt_2zaqkgmsd4nzdw3tjsoa",
+        "pmt_5t2ow6mepljaysaar4sq",
+        "pmt_cdkrifwfewhqkcei5eqq"
+       ]
+      },
+      {
+       "name": "LOW POWER EV CHARGING INC",
+       "source_permit_ids": [
+        "pmt_3u566yz3nlnwua7qswga",
+        "pmt_azim3yamt3wbwi46635q",
+        "pmt_ispmvhmugbqkhu4usxza"
+       ]
+      }
+     ],
+     "county_fips": "06041",
+     "coverage": {
+      "agencies": [
+       "marincounty_ca"
+      ],
+      "jurisdiction_id": "06-041-99990-00000",
+      "jurisdiction_ids": [
+       "06-041-99990-00000"
+      ],
+      "tier": null
+     },
+     "first_seen": "2026-10-14T05:38:56+00:00",
+     "id": "prp_vuoc6a72qoqzzmubcrva",
+     "kind": "address",
+     "last_permit_date": "2026-09-18",
+     "lat": 37.8960567,
+     "lon": -122.5001881,
+     "owners": [],
+     "parcel_ids": [
+      "06041:05506128"
+     ],
+     "parties_basis": {
+      "permits_read": 10,
+      "selection": "latest_issuer_records",
+      "source": "permits",
+      "truncated": true
+     },
+     "permit_count": 220,
+     "state": "CA",
+     "statuses": [
+      "unknown"
+     ],
+     "tag_tally": {},
+     "tags": [],
+     "total_value_usd": 2839782.0
+    },
+    {
+     "address": {
+      "formatted": "60 BARBAREE WAY, TIBURON, CA 94920",
+      "parts": {
+       "city": "TIBURON",
+       "house_number": "60",
+       "postdirectional": null,
+       "predirectional": null,
+       "state": "CA",
+       "street_name": "BARBAREE",
+       "suffix": "WAY",
+       "zip5": "94920"
+      },
+      "street_line": "60 BARBAREE WAY"
+     },
+     "address_id": "adr_22synqmljara5535indq",
+     "agencies": [
+      "marincounty_ca"
+     ],
+     "applicants": [],
+     "contractor_count": 2,
+     "contractors": [
+      {
+       "name": "R B ROOFING CO INC",
+       "source_permit_ids": [
+        "pmt_6twqclr5qxoyzwvqerba",
+        "pmt_qomgo63edzjpoypedvnq"
+       ]
+      },
+      {
+       "name": "REGENCY GENERAL CONTRACTORS, INC",
+       "source_permit_ids": [
+        "pmt_deat7ffykrdweji6ikfq",
+        "pmt_ezfdz3ui3ml7mqfk3fga",
+        "pmt_f7yf7qqlhv4224hcuqga"
+       ]
+      }
+     ],
+     "county_fips": "06041",
+     "coverage": {
+      "agencies": [
+       "marincounty_ca"
+      ],
+      "jurisdiction_id": "06-041-99990-00000",
+      "jurisdiction_ids": [
+       "06-041-99990-00000"
+      ],
+      "tier": null
+     },
+     "first_seen": "2026-10-14T05:40:49+00:00",
+     "id": "prp_22synqmljara5535indq",
+     "kind": "address",
+     "last_permit_date": "2022-05-17",
+     "lat": 37.8954568,
+     "lon": -122.4978007,
+     "owners": [],
+     "parcel_ids": [
+      "06041:05506125",
+      "06041:05506128"
+     ],
+     "parties_basis": {
+      "permits_read": 5,
+      "selection": "latest_issuer_records",
+      "source": "permits",
+      "truncated": false
+     },
+     "permit_count": 5,
+     "state": "CA",
+     "statuses": [
+      "unknown"
+     ],
+     "tag_tally": {},
+     "tags": [],
+     "total_value_usd": 1362300.0
+    },
+    {
+     "address": {
+      "formatted": "50 BARBAREE WY CLUBHOUSE, TIBURON, CA 94920",
+      "parts": {
+       "city": "TIBURON",
+       "house_number": "50",
+       "postdirectional": null,
+       "predirectional": null,
+       "state": "CA",
+       "street_name": "BARBAREE WY CLUBHOUSE",
+       "suffix": null,
+       "zip5": "94920"
+      },
+      "street_line": "50 BARBAREE WY CLUBHOUSE"
+     },
+     "address_id": "adr_wdt3lrdrgg5jlqr3xcqq",
+     "agencies": [
+      "marincounty_ca"
+     ],
+     "applicants": [],
+     "contractor_count": 2,
+     "contractors": [
+      {
+       "name": "OWNER/BUILDER",
+       "source_permit_ids": [
+        "pmt_execkrcrx6w6v3boliqq"
+       ]
+      },
+      {
+       "name": "R E WEST BUILDERS, INC",
+       "source_permit_ids": [
+        "pmt_dbauh6iimww35jjokkda"
+       ]
+      }
+     ],
+     "county_fips": "06041",
+     "coverage": {
+      "agencies": [
+       "marincounty_ca"
+      ],
+      "jurisdiction_id": "06-041-99990-00000",
+      "jurisdiction_ids": [
+       "06-041-99990-00000"
+      ],
+      "tier": null
+     },
+     "first_seen": "2026-10-14T05:42:28+00:00",
+     "id": "prp_wdt3lrdrgg5jlqr3xcqq",
+     "kind": "address",
+     "last_permit_date": "2015-11-19",
+     "lat": 37.8960301,
+     "lon": -122.5001615,
+     "owners": [],
+     "parcel_ids": [
+      "06041:05506128"
+     ],
+     "parties_basis": {
+      "permits_read": 3,
+      "selection": "latest_issuer_records",
+      "source": "permits",
+      "truncated": false
+     },
+     "permit_count": 3,
+     "state": "CA",
+     "statuses": [
+      "unknown"
+     ],
+     "tag_tally": {},
+     "tags": [],
+     "total_value_usd": 2350600.0
+    }
+   ],
+   "parcel_id": "06041:05506128",
+   "query": {
+    "apn": "05506128",
+    "apn_normalized": "05506128",
+    "county_fips": "06041"
+   },
+   "resolution": "matched",
+   "total_properties": 51
+  }
+ },
+ "GET /v1/properties/near": {
+  "body": {
+   "items": [
+    {
+     "address": {
+      "formatted": "50 BARBAREE WY AREA E, TIBURON, CA 94920",
+      "parts": {
+       "city": "TIBURON",
+       "house_number": "50",
+       "postdirectional": "E",
+       "predirectional": null,
+       "state": "CA",
+       "street_name": "BARBAREE WY AREA",
+       "suffix": null,
+       "zip5": "94920"
+      },
+      "street_line": "50 BARBAREE WY AREA E"
+     },
+     "address_id": "adr_ik5q2iiggv253wgng6ba",
+     "agencies": [
+      "marincounty_ca"
+     ],
+     "applicants": [],
+     "contractor_count": 1,
+     "contractors": [
+      {
+       "name": "RP MAXIMUS COVE OWNER, LLC",
+       "source_permit_ids": [
+        "pmt_wn2br74w5p7w2axmnsua"
+       ]
+      }
+     ],
+     "county_fips": "06041",
+     "coverage": {
+      "agencies": [
+       "marincounty_ca"
+      ],
+      "jurisdiction_id": "06-041-99990-00000",
+      "jurisdiction_ids": [
+       "06-041-99990-00000"
+      ],
+      "tier": null
+     },
+     "distance_m": 0.0,
+     "first_seen": "2026-10-14T05:41:59+00:00",
+     "id": "prp_ik5q2iiggv253wgng6ba",
+     "kind": "address",
+     "last_permit_date": "2018-04-18",
+     "lat": 37.8960567,
+     "lon": -122.5001881,
+     "owners": [],
+     "parcel_ids": [
+      "06041:05506128"
+     ],
+     "parties_basis": {
+      "permits_read": 1,
+      "selection": "latest_issuer_records",
+      "source": "permits",
+      "truncated": false
+     },
+     "permit_count": 1,
+     "state": "CA",
+     "statuses": [
+      "unknown"
+     ],
+     "tag_tally": {},
+     "tags": [],
+     "total_value_usd": 160000.0
+    },
+    {
+     "address": {
+      "formatted": "50 BARBAREE WY CAPTAINS LNDG, TIBURON, CA 94920",
+      "parts": {
+       "city": "TIBURON",
+       "house_number": "50",
+       "postdirectional": null,
+       "predirectional": null,
+       "state": "CA",
+       "street_name": "BARBAREE WY CAPTAINS",
+       "suffix": "LNDG",
+       "zip5": "94920"
+      },
+      "street_line": "50 BARBAREE WY CAPTAINS LNDG"
+     },
+     "address_id": "adr_o3d2gxucen2fl3jysorq",
+     "agencies": [
+      "marincounty_ca"
+     ],
+     "applicants": [],
+     "contractor_count": 0,
+     "contractors": [],
+     "county_fips": "06041",
+     "coverage": {
+      "agencies": [
+       "marincounty_ca"
+      ],
+      "jurisdiction_id": "06-041-99990-00000",
+      "jurisdiction_ids": [
+       "06-041-99990-00000"
+      ],
+      "tier": null
+     },
+     "distance_m": 0.0,
+     "first_seen": "2026-10-14T05:42:31+00:00",
+     "id": "prp_o3d2gxucen2fl3jysorq",
+     "kind": "address",
+     "last_permit_date": "2015-08-30",
+     "lat": 37.8960567,
+     "lon": -122.5001881,
+     "owners": [],
+     "parcel_ids": [
+      "06041:05506128"
+     ],
+     "parties_basis": {
+      "permits_read": 1,
+      "selection": "latest_issuer_records",
+      "source": "permits",
+      "truncated": false
+     },
+     "permit_count": 1,
+     "state": "CA",
+     "statuses": [
+      "unknown"
+     ],
+     "tag_tally": {},
+     "tags": [],
+     "total_value_usd": 15600.0
+    }
+   ],
+   "query": {
+    "lat": 37.8960567,
+    "lon": -122.5001881,
+    "radius_m": 300.0
+   },
+   "resolution": "matched"
+  }
+ },
+ "GET /v1/properties/{id}": {
+  "body": {
+   "address": {
+    "formatted": "50 BARBAREE WAY, TIBURON, CA 94920",
+    "parts": {
+     "city": "TIBURON",
+     "house_number": "50",
+     "postdirectional": null,
+     "predirectional": null,
+     "state": "CA",
+     "street_name": "BARBAREE",
+     "suffix": "WAY",
+     "zip5": "94920"
+    },
+    "street_line": "50 BARBAREE WAY"
+   },
+   "address_id": "adr_vuoc6a72qoqzzmubcrva",
+   "agencies": [
+    "marincounty_ca"
+   ],
+   "applicants": [],
+   "contractor_count": 9,
+   "contractors": [
+    {
+     "name": "CUPERTINO ELECTRIC INC",
+     "source_permit_ids": [
+      "pmt_4yb7qlba5b6vd3foixda"
+     ]
+    },
+    {
+     "name": "GALLAHER COMPANY",
+     "source_permit_ids": [
+      "pmt_2zaqkgmsd4nzdw3tjsoa",
+      "pmt_5t2ow6mepljaysaar4sq",
+      "pmt_cdkrifwfewhqkcei5eqq"
+     ]
+    },
+    {
+     "name": "HAWKINS CONSTRUCTION",
+     "source_permit_ids": [
+      "pmt_l6zqjy2koydrs6cgkj7a"
+     ]
+    }
+   ],
+   "county_fips": "06041",
+   "coverage": {
+    "agencies": [
+     "marincounty_ca"
+    ],
+    "jurisdiction_id": "06-041-99990-00000",
+    "jurisdiction_ids": [
+     "06-041-99990-00000"
+    ],
+    "tier": null
+   },
+   "first_seen": "2026-10-14T05:38:56+00:00",
+   "id": "prp_vuoc6a72qoqzzmubcrva",
+   "kind": "address",
+   "last_permit_date": "2026-09-18",
+   "lat": 37.8960567,
+   "lon": -122.5001881,
+   "owners": [],
+   "parcel_ids": [
+    "06041:05506128"
+   ],
+   "parties_basis": {
+    "permits_read": 220,
+    "selection": "newest",
+    "source": "permits",
+    "truncated": false
+   },
+   "permit_count": 220,
+   "resolved_from": [],
+   "state": "CA",
+   "statuses": [
+    "unknown"
+   ],
+   "tag_tally": {},
+   "tags": [],
+   "total_value_usd": 2839782.0
+  }
+ },
+ "GET /v1/signals": {
+  "body": {
+   "items": [
+    {
+     "acres": null,
+     "agency": "Los Angeles Department of Water and Power",
+     "apns": [],
+     "applicant": null,
+     "case_numbers": [],
+     "category": "ceqa_nod",
+     "description": "The Los Angeles Department of Water and Power (LADWP) proposes to replace the existing Granada Trunk Line (GTL), which is a potable water trunk line located in the Porter Ranch and Granada Hills neighborhoods of the City of Los Angeles. The Granada Trunk Line Replacement Project (proposed project) would include the replacement of approximately 26,411 feet of the GTL primarily within Rinaldi Street in two sections, or units. Unit 1 would consist of an approximately 13,228-foot portion of the GTL extending from Balboa Boulevard to Yolanda Avenue. Unit 2 would consist of an approximately 13,183 foot portion of the GTL extending from Yolanda Avenue to LADWP’s De Soto Reservoir Regulator Station. The entirety of the trunk line would be replaced with 48-inch-diameter piping. In addition to replacement of the GTL, the proposed project would also replace manholes, isolation valves, blow-off valves, and combination air/vacuum valves along the trunk line.",
+     "doc_type": "NOD",
+     "event_date": "2026-10-13",
+     "filed_date": "2026-10-16",
+     "id": "sig_ez775dk5x54p5rriaqza",
+     "jurisdiction": "Los Angeles",
+     "large": false,
+     "lat": 34.279333,
+     "location": "Yolanda Ave and Balboa Blvd; Los Angeles; Los Angeles County; 91344",
+     "lon": -118.502222,
+     "mw": null,
+     "project_id": null,
+     "size_basis": [],
+     "source": "ceqanet",
+     "sqft": null,
+     "state": "CA",
+     "stated_value_usd": null,
+     "status": "approved",
+     "title": "Granada Trunk Line Replacement Project",
+     "units": null,
+     "url": "https://ceqanet.lci.ca.gov/2026050617/2"
+    },
+    {
+     "acres": null,
+     "agency": "Los Angeles, City of",
+     "apns": [],
+     "applicant": null,
+     "case_numbers": [],
+     "category": "ceqa_nod",
+     "description": "BOE-79 (Project) is a later activity undertaken pursuant to the Sidewalk Repair Program (SRP) as a project eligible for credit under the Willits Settlement (Mark Willits, et al. v. City of Los Angeles [United States District Court Case No. CV10-05782 CBM (RZX)]) and subject to Los Angeles Municipal Code 62.104.1. The Project encompasses sidewalk reconstruction, cross-slope adjustments, curb and gutter repairs, and installation of accessible curb ramps across 160 addresses CD 8. Based on site-specific arborists evaluations, severe tree root uplift has disrupted sidewalk across the project locations. Alternative tree retention options (such as root pruning or sidewalk ramping) were determined infeasible because root pruning would compromise structural tree stability and public safety. Consequently, the Project includes Board of Public Works (BPW) approval for the removal of six street trees (2 Jacarandas, 3 Camphor, 1 Chinese Elm). BOE-79 mandates compliance with the SRP Street Tree Policy and Mandatory Project Design Features Policy.",
+     "doc_type": "NOD",
+     "event_date": "2026-10-02",
+     "filed_date": "2026-10-16",
+     "id": "sig_lggrvc6nfcfd4e73uwkq",
+     "jurisdiction": "Los Angeles",
+     "large": false,
+     "lat": null,
+     "location": "Los Angeles; Los Angeles County",
+     "lon": null,
+     "mw": null,
+     "project_id": null,
+     "size_basis": [],
+     "source": "ceqanet",
+     "sqft": null,
+     "state": "CA",
+     "stated_value_usd": null,
+     "status": "approved",
+     "title": "Sidewalk Repair Program - BOE-79",
+     "units": null,
+     "url": "https://ceqanet.lci.ca.gov/2017071063/11"
+    },
+    {
+     "acres": null,
+     "agency": "Los Angeles, City of",
+     "apns": [],
+     "applicant": null,
+     "case_numbers": [],
+     "category": "ceqa_nod",
+     "description": "ENV-2022-4857-ND\r\n\r\nThe Proposed Project involves the adoption of a new ordinance known as the  “Landscape and Site Design Ordinance” (Proposed Ordinance) that will amend the City's current Landscape Ordinance (No. 170,978), Los Angeles Municipal Code (LAMC) Sections 12.40 through 12.43, previously adopted in May 1996 and amended in April 2005. The proposed amendment to LAMC Sections 12.40 through 12.43 will create new landscape and site design objective standards (Landscape and Site Design Point System) using a dynamic and flexible performance-based point system, in order to implement healthy building design and climate-adapted site design. Through established point targets dependent on project types, the Point System will establish a more efficient and effective implementation process. The objective design standards represent a more comprehensive approach to site design that aligns with broader Citywide policy goals of climate resilience, designing for health and the protection and enhancement of the City’s urban forest and biodiversity. Related amendments to LAMC Sections 12.03, 12.10.5, 12.11.5, 12.12.2, 12.13, 12.21, 12.21.1, 12.40, 12.41, 12.42, 12.43, 13.08, 13.09, 14.00, 19.04, 62.177 and 91.7012 are necessary in order to effectuate the Landscape and Site Design Ordinance and Point System. The proposed Landscape and Site Design Ordinance will apply Citywide and will address pressing sustainability and health-related needs, building upon The Plan for a Healthy Los Angeles, the General Plan’s Health and Wellness Element, and the Citywide Design Guidelines that are in effect today. Policy 2.2 of The Plan for a Healthy Los Angeles (Chapter 2.2) addresses healthy building design and construction and the relationship of health to the built environment. This policy encourages the design and rehabilitation of buildings and sites for healthy living and working conditions, promoting enhanced pedestrian-oriented circulation, lighting, attractive and open stairs, healthy building materials and universal accessibility. Secondly, a future Implementation Program identified in the Plan for a Healthy Los Angeles (Program 36) speaks to streamlining and updating the 1996 City of Los Angeles Landscape Guidelines and Ordinance to better respond to climate change and healthy communities.  The proposed Landscape and Site Design Point System implements Policy 2.2 of the Plan for a Healthy Los Angeles through a set of objective standards that are organized into the following three design approaches: (1) Pedestrian-First Design, (2) 360 Degree Design and (3) Climate Adapted Landscape and Site Design, similar to the Citywide Design Guidelines. Under each design approach, the standards are further organized under topical categories  accompanied by corresponding strategies that are identified as either Mandatory or Elective, each with an assigned point value. The Ordinance will apply to residential and non-residential projects that may employ any of the standards in each category to obtain a required total of points, some of which will be mandatory, with a minimum of three points in each category and at least eight Designing for Health standards. To encourage the protection and expansion of tree canopy and heat island reduction in climate-vulnerable communities, projects that are in a mapped “Health and Urban Forest Equity Priority” area, per the draft Zoning Information file that accompanies the Proposed Ordinance, will be required to meet two additional health-related standards in the Landscape and Site Design Point System. These projects will also be eligible for up to five additional bonus points if certain standards related to tree canopy conservation, tree planting, and reduction of climate impacts are selected. Industrial or hybrid-Industrial projects and surface parking lot projects must meet a total of 15 points, through a combination of Mandatory and Elective standards. The proposed Landscape and Site Design Ordinance also includes a new",
+     "doc_type": "NOD",
+     "event_date": "2026-10-05",
+     "filed_date": "2026-10-14",
+     "id": "sig_g42zjv4vgzb7hrjnf5eq",
+     "jurisdiction": "Los Angeles",
+     "large": false,
+     "lat": null,
+     "location": "Citywide, City of Los Angeles; Los Angeles; Los Angeles County",
+     "lon": null,
+     "mw": null,
+     "project_id": null,
+     "size_basis": [],
+     "source": "ceqanet",
+     "sqft": null,
+     "state": "CA",
+     "stated_value_usd": null,
+     "status": "approved",
+     "title": "Landscape and Site Design Ordinance",
+     "units": null,
+     "url": "https://ceqanet.lci.ca.gov/2024100981/2"
+    }
+   ],
+   "next_cursor": "WyIyMDI2LTEwLTE0IiwgNTYxNTAsICIwNTkwM2MzNjY3ZGUiXQ",
+   "size": 3
+  }
+ },
+ "GET /v1/signals/{signal_id}": {
+  "body": {
+   "acres": 3.13,
+   "agency": "San Diego, City of",
+   "apns": [
+    "646-100-7100",
+    "646-100-7100"
+   ],
+   "applicant": null,
+   "case_numbers": [],
+   "category": "ceqa_nod",
+   "description": "A request for an amendment to the Epoca Neighborhood L Neighborhood Development Permit (NDP) No. 24993334 to develop 120 multi-family residential\r\ndwelling units, including 53 affordable dwelling units and 67 market rate dwelling units. The 3.13- acre site is in the RM-2-5 base zone within the Central Village Specific Plan (CVSP) of the Otay Mesa Community Plan area. Additionally, the project site is located within the Airport Land Use Compatibility Overlay Zone (Brown Field), the Airport Influence Area (Brown Field, Review Area 2), the Federal Aviation Administration Part 77 Noticing Area (Brown Field), the Very High Fire Severity\r\nZone, and Transit Priority Area. Council District 8. (LEGAL DESCRIPTION: ASSESSOR’S PARCEL NUMBER 646-100-7100). Previously, the Epoca Neighborhood L project (Project No. 678856) was submitted to the City as a\r\nrequest for a NDP for the construction of 120 multi-family residential units totaling 80,472-square feet. Of the 120 units, 119 were affordable units and one unit was a market rate manager’s unit. The project has since been revised from the original Epoca Neighborhood L project (Project No. 678856) to include 53 affordable units and 67 market rate units. Pursuant to Public Resources Code Section 21166 and CEQA guidelines 15162 and 15163 the City has determined that: (1) there is substantial evidence that none of the conditions requiring preparation of a subsequent or supplemental EIR exist, and (2) the City will rely on the previous environmental document, which adequately addresses this project.",
+   "doc_type": "NOD",
+   "event_date": "2024-01-18",
+   "filed_date": "2024-01-25",
+   "id": "sig_lwzmzsozu2zgi2tbki6q",
+   "jurisdiction": "San Diego",
+   "large": true,
+   "lat": null,
+   "location": "San Diego; San Diego County",
+   "lon": null,
+   "mw": null,
+   "project_id": "prj_jtuanodw6isoaae5o6rq",
+   "size_basis": [
+    "specific plan"
+   ],
+   "source": "ceqanet",
+   "sqft": 80472.0,
+   "state": "CA",
+   "stated_value_usd": null,
+   "status": "approved",
+   "title": "2440 Cactus Road",
+   "units": 120.0,
+   "url": "https://ceqanet.lci.ca.gov/2004051076/19"
+  }
+ },
+ "GET /v1/usage": {
+  "body": {
+   "daily_usage": [],
+   "is_over_limit": false,
+   "limit": null,
+   "period_start": "2026-10-01",
+   "plan": null,
+   "rate_limit_rpm": null,
+   "remaining": null,
+   "reset_date": "2026-11-01",
+   "used": 0,
+   "webhooks": {
+    "cap": null,
+    "events_this_period": 0,
+    "paused": false,
+    "reason": null,
+    "since": null,
+    "skipped_events": 0
+   }
+  }
+ },
+ "GET /v1/webhooks/{webhook_id}": {
+  "body": {
+   "active": true,
+   "created_at": "2026-10-20T04:15:37Z",
+   "cursor": "11630847492395",
+   "deactivated_at": null,
+   "delivered_events": 344,
+   "filter": {
+    "backfill": false,
+    "geo_id": "cty_04013",
+    "tags": [
+     "solar"
+    ],
+    "types": [
+     "created"
+    ]
+   },
+   "id": "whk_4627a6423a8334e1c711",
+   "url": "https://hooks.example.com/permits"
+  }
+ }
+}
