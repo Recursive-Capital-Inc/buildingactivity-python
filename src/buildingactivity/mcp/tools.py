@@ -429,19 +429,18 @@ def get_property(api, a):
       "Search permits; construction only unless category ['all'] (health, planning, "
       "licensing). date_from/to: issued, else applied, else record date.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
-                                                    "94920; geo_lookup"),
-       "q": {"type": "string"},
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860; geo_lookup"),
+       "q": _s('all words, any order; "a b" = phrase'),
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "solar; -tag excludes"},
+                "description": "-tag excludes"},
        "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
        "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
-                    "description": "['all'] = every class"},
+                    "description": "'all' = every class"},
        "contractor": {"type": "string"}, "contractor_id": _s("ctr_..."),
        "date_from": _s(DATE), "date_to": {"type": "string"},
        "issued_from": _s(DATE), "issued_to": {"type": "string"},
        "applied_from": _s(DATE), "applied_to": {"type": "string"},
-       "min_value": {"type": "number", "minimum": 0, "description": "USD"},
+       "min_value": {"type": "number", "minimum": 0},
        "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
        "limit": _i("rows", hi=50, default=10),
        "cursor": _s("next_cursor"),
@@ -596,7 +595,9 @@ def coverage(api, a):
 @tool("search_projects",
       "Big construction projects (permits plus early signals such as CEQA filings), "
       "newest first, with stage and source_url.",
-      {"geo_id": GEO_ID, "q": _s("words in name, title or address"),
+      {"geo_id": GEO_ID,
+       "q": _s("every word must appear as part of a word in name, titles, descriptions "
+               "or address (ware matches software); no quotes"),
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
@@ -647,7 +648,9 @@ def search_decisions(api, a):
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
       "first, with stage, stated size, location, APNs, a short description and source_url.",
-      {"geo_id": GEO_ID, "q": _s("words in title or description"),
+      {"geo_id": GEO_ID,
+       "q": _s('every word must appear in title or description, any order; whole words, '
+               'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
        "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
