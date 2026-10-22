@@ -87,3 +87,19 @@ def test_descriptions_name_date_basis_and_scope():
     m, s = tools["metrics"]["description"], tools["search_permits"]["description"]
     assert "applied" in m and "36" in m and len(m) <= 200
     assert "construction" in s and "all" in s and len(s) <= 200
+
+
+def test_search_permits_schema_hints():
+    tools = {t["name"]: t for t in T.list_tools()}
+    props = tools["search_permits"]["inputSchema"]["properties"]
+    assert "cty_" in props["geo_id"]["description"] and "CA" in props["geo_id"]["description"]
+    assert "YYYY-MM-DD" in props["issued_from"]["description"]
+    assert "YYYY-MM-DD" in props["applied_from"]["description"]
+    assert "all" in props["category"]["description"]
+
+
+def test_search_permits_all_with_other_class_is_rejected_before_any_call():
+    out, err, fake = _permits({"category": ["all", "planning"]})
+    assert err and out["error"]["type"] == "validation_error"
+    assert out["error"]["param"] == "category" and out["records_charged"] == 0
+    assert fake.calls == []

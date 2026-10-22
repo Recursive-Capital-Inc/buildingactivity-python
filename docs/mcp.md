@@ -51,7 +51,8 @@ Every tool answers one JSON object (MCP text content):
 - `records_charged` is the API's `X-Records-Request` for the call: what it cost against
   the key's monthly records. Free routes (geo, coverage, tags, usage) answer 0.
 - Billing: a call is charged only for the rows it returns. `metrics` asks the API for at
-  most 36 rows, so it is charged one record per row shown; `rows_not_shown` counts the
+  most 36 rows, so it is charged at most one record per row shown (re-reads in the same
+  month are free); `records_charged` is the API's figure. `rows_not_shown` counts the
   rows left out and those are not charged.
 - `next_cursor`: pass it back as `cursor` for the next page; null on the last page.
 - Rows keep selected fields; nulls are dropped. Descriptions and titles are clipped to
@@ -76,7 +77,7 @@ Every tool answers one JSON object (MCP text content):
 | `search_contractors` | `/v1/contractors/search` or `/lookup` | 10 | `license` (with optional `state`, no other filter) goes to the license lookup |
 | `get_contractor` | `GET /v1/contractors/{id}` | 1 | license health and activity |
 | `geo_lookup` | `GET /v1/geo/search` | 5 | names to `geo_id` values for the area filters |
-| `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown; one record charged per row shown, `rows_not_shown` counts the rest (not charged). `permits` by applied month, else issued, else record date; `issued`/`finaled` by their own date, so issued can exceed permits (search_permits uses another date basis) |
+| `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown; at most one record per row shown (re-reads in the same month are free), `records_charged` is the API's figure; `rows_not_shown` counts the rest (not charged). `permits` by applied month, else issued, else record date; `issued`/`finaled` by their own date, so issued can exceed permits (search_permits uses another date basis) |
 | `coverage` | `GET /v1/meta/coverage` | all fields | permits held and field fill tiers for an area |
 | `search_projects` | `GET /v1/projects` | 10 | big projects with stage and first source URL |
 | `get_project` | `GET /v1/projects/{id}` | 10 items | newest items with their `source_url` |

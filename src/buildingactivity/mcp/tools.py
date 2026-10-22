@@ -423,26 +423,31 @@ def get_property(api, a):
 
 
 @tool("search_permits",
-      "Search permits; default construction work only (category ['all'] adds health, "
-      "planning, licensing). date_from/to: issued, else applied, else record date.",
+      "Search permits; construction only unless category ['all'] (health, planning, "
+      "licensing). date_from/to: issued, else applied, else record date.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("area ID from geo_lookup"),
-       "q": _s("description words"),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
+                                                    "94920; geo_lookup"),
+       "q": {"type": "string"},
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "e.g. solar; -tag excludes"},
+                "description": "solar; -tag excludes"},
        "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
        "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
-                    },
-       "contractor": _s("name words"), "contractor_id": _s("ctr_..."),
+                    "description": "['all'] = every class"},
+       "contractor": {"type": "string"}, "contractor_id": _s("ctr_..."),
        "date_from": _s(DATE), "date_to": {"type": "string"},
-       "issued_from": {"type": "string"}, "issued_to": {"type": "string"},
-       "applied_from": {"type": "string"}, "applied_to": {"type": "string"},
+       "issued_from": _s(DATE), "issued_to": {"type": "string"},
+       "applied_from": _s(DATE), "applied_to": {"type": "string"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
-       "sort": {"type": "string", "enum": list(PERMIT_SORTS), "default": "issued_desc"},
+       "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
        "limit": _i("rows", hi=50, default=10),
        "cursor": _s("next_cursor"),
-       "include_count": {"type": "boolean", "description": "add total_count"}})
+       "include_count": {"type": "boolean"}})
 def search_permits(api, a):
+    cat = a.get("category")
+    if cat and len(cat) > 1 and "all" in cat:
+        raise ToolError("validation_error", "category 'all' cannot be combined with other "
+                        "classes; pass ['all'] alone or list classes", "category")
     params = {k: a.get(k) for k in ("address_id", "property_id", "geo_id", "q", "tags",
                                     "status", "category", "contractor", "contractor_id", "date_from",
                                     "date_to", "issued_from", "issued_to", "applied_from",
