@@ -37,6 +37,9 @@ PERMIT_SORTS = ("value_desc", "value_asc", "applied_desc", "applied_asc", "issue
                 "first_seen_asc", "last_seen_desc")
 PERMIT_STATUSES = ("applied", "in_review", "approved", "issued", "inspection", "finaled",
                    "expired", "withdrawn", "denied", "on_hold", "closed", "unknown")
+PERMIT_CLASSES = ("all", "admin", "building", "business_license", "code_enforcement",
+                  "electrical", "engineering_row", "environmental_health", "fire",
+                  "legacy_unknown", "mechanical", "other", "planning", "plumbing")
 GEO_LEVELS = ("state", "metro", "county", "jurisdiction", "zip")
 METRIC_DIMS = ("month", "tag", "class", "status", "jurisdiction")
 CONTRACTOR_SORTS = ("permits_desc", "value_desc", "last_permit_desc")
@@ -420,33 +423,41 @@ def get_property(api, a):
 
 
 @tool("search_permits",
-      "Search building permits. Rows: id, address, status, dates, value, contractor, "
-      "source_url. date_from/date_to: event date (issued, else applied, else record date).",
-      {"address_id": _s("adr_... from resolve_address"),
-       "property_id": _s("prp_..."), "geo_id": GEO_ID,
-       "q": _s("words in description or project name"),
+      "Search permits; construction only unless category ['all'] (health, planning, "
+      "licensing). date_from/to: issued, else applied, else record date.",
+      {"address_id": _s("adr_..."),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
+                                                    "94920; geo_lookup"),
+       "q": {"type": "string"},
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "e.g. solar, roofing; -tag excludes"},
+                "description": "solar; -tag excludes"},
        "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
-       "contractor": _s("contractor name words"), "contractor_id": _s("ctr_..."),
+       "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
+                    "description": "['all'] = every class"},
+       "contractor": {"type": "string"}, "contractor_id": _s("ctr_..."),
        "date_from": _s(DATE), "date_to": {"type": "string"},
-       "issued_from": _s(DATE), "issued_to": _s(DATE),
-       "applied_from": _s(DATE), "applied_to": _s(DATE),
+       "issued_from": _s(DATE), "issued_to": {"type": "string"},
+       "applied_from": _s(DATE), "applied_to": {"type": "string"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
-       "sort": {"type": "string", "enum": list(PERMIT_SORTS), "default": "issued_desc"},
+       "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
        "limit": _i("rows", hi=50, default=10),
-       "cursor": CURSOR,
-       "include_count": {"type": "boolean", "description": "add total_count"}})
+       "cursor": _s("next_cursor"),
+       "include_count": {"type": "boolean"}})
 def search_permits(api, a):
+    cat = a.get("category")
+    if cat and len(cat) > 1 and "all" in cat:
+        raise ToolError("validation_error", "category 'all' cannot be combined with other "
+                        "classes; pass ['all'] alone or list classes", "category")
     params = {k: a.get(k) for k in ("address_id", "property_id", "geo_id", "q", "tags",
-                                    "status", "contractor", "contractor_id", "date_from",
+                                    "status", "category", "contractor", "contractor_id", "date_from",
                                     "date_to", "issued_from", "issued_to", "applied_from",
                                     "applied_to", "min_value", "cursor", "include_count")}
     params["sort"] = a.get("sort", "issued_desc")
     params["limit"] = a.get("limit", 10)
     r = _fetch(api, "/v1/permits/search", params)
     return _page(r, [permit_row(x) for x in r.body.get("items") or []],
-                 total_count=r.body.get("total_count"))
+                 total_count=r.body.get("total_count"),
+                 excluded_classes=r.body.get("excluded_classes") or None)
 
 
 @tool("get_permit", "One permit by ID (pmt_...), with its source_url.",
@@ -538,22 +549,31 @@ def geo_lookup(api, a):
 
 
 @tool("metrics",
-      "Monthly permit counts and values for an area, or a breakdown by tag, class, status "
-      "or jurisdiction.",
+      "Permit counts and values by month, or by tag, class, status or jurisdiction. permits: "
+      "month applied, else issued, else record date; issued/finaled: own date. At most 36 "
+      "rows, 1 record per row shown.",
       {"geo_id": GEO_ID, "from": _s("YYYY-MM"), "to": _s("YYYY-MM"),
-       "group_by": {"type": "string", "enum": list(METRIC_DIMS), "default": "month"},
+       "group_by": {"type": "string", "enum": list(METRIC_DIMS), "default": "month",
+                    "description": "issued can exceed permits; search_permits uses another "
+                                   "date basis"},
        "tag": _s("one work tag"), "class": _s("permit class, e.g. building")},
       required=("geo_id",))
 def metrics(api, a):
     r = _fetch(api, "/v1/metrics", {"geo_id": a["geo_id"], "from": a.get("from"),
                                     "to": a.get("to"), "group_by": a.get("group_by", "month"),
-                                    "tag": a.get("tag"), "class": a.get("class")})
+                                    "tag": a.get("tag"), "class": a.get("class"),
+                                    "limit": METRIC_ROWS})
     keep = ("month", "tag", "class", "status", "jurisdiction", "permits", "permits_with_value", "value_sum", "issued", "finaled", "value_p50",
             "approval_days_p50")
     rows = [_prune({k: x.get(k) for k in keep}, keep=()) for x in r.body.get("data") or []]
     meta = r.body.get("meta") or {}
-    return _page(r, rows[:METRIC_ROWS], geo=r.body.get("geo"),
-                 rows_not_shown=len(rows) - METRIC_ROWS if len(rows) > METRIC_ROWS else None,
+    shown = rows[:METRIC_ROWS]
+    available = meta.get("rows_available")
+    if isinstance(available, int) and available > len(shown):
+        not_shown = available - len(shown)
+    else:
+        not_shown = len(rows) - METRIC_ROWS if len(rows) > METRIC_ROWS else None
+    return _page(r, shown, geo=r.body.get("geo"), rows_not_shown=not_shown,
                  truncated=meta.get("truncated") or None)
 
 

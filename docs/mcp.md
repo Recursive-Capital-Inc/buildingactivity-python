@@ -50,6 +50,10 @@ Every tool answers one JSON object (MCP text content):
 
 - `records_charged` is the API's `X-Records-Request` for the call: what it cost against
   the key's monthly records. Free routes (geo, coverage, tags, usage) answer 0.
+- Billing: a call is charged only for the rows it returns. `metrics` asks the API for at
+  most 36 rows, so it is charged at most one record per row shown (re-reads in the same
+  month are free); `records_charged` is the API's figure. `rows_not_shown` counts the
+  rows left out and those are not charged.
 - `next_cursor`: pass it back as `cursor` for the next page; null on the last page.
 - Rows keep selected fields; nulls are dropped. Descriptions and titles are clipped to
   160 characters, other text fields to 80; IDs and URLs are never clipped.
@@ -67,13 +71,13 @@ Every tool answers one JSON object (MCP text content):
 |---|---|---|---|
 | `resolve_address` | `GET /v1/addresses/search` | 5 | address text to `adr_` IDs, best first, with permit counts |
 | `get_property` | `/v1/properties/{id}`, `/lookup`, `/near` | 1 or 5 | one of: `id`, `address`, `apn` + `county_fips`, `lat` + `lon` |
-| `search_permits` | `GET /v1/permits/search` | 10 (at most 50) | `address_id`, `property_id`, `geo_id`, `q`, `tags`, `status`, `contractor`, `contractor_id`, `date_from`/`date_to` (event date: issued, else applied, else record date), issued and applied ranges, `min_value`, `sort` (default `issued_desc`), `include_count` |
+| `search_permits` | `GET /v1/permits/search` | 10 (at most 50) | `address_id`, `property_id`, `geo_id`, `q`, `tags`, `status`, `contractor`, `contractor_id`, `date_from`/`date_to` (event date: issued, else applied, else record date), issued and applied ranges, `min_value`, `sort` (default `issued_desc`), `include_count`, `category` (permit classes; default construction work only, leaving out admin, business_license, code_enforcement, engineering_row, environmental_health, other and planning; `["all"]` for every class). The answer carries `excluded_classes` when the default scope left classes out |
 | `get_permit` | `GET /v1/permits/{id}` | 1 | adds owner, applicant, license, APN, coordinates, day counts |
 | `permit_history` | `GET /v1/permits/{id}/history` | 20 | status and field changes since 2026-10-12 |
 | `search_contractors` | `/v1/contractors/search` or `/lookup` | 10 | `license` (with optional `state`, no other filter) goes to the license lookup |
 | `get_contractor` | `GET /v1/contractors/{id}` | 1 | license health and activity |
 | `geo_lookup` | `GET /v1/geo/search` | 5 | names to `geo_id` values for the area filters |
-| `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown |
+| `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown; at most one record per row shown (re-reads in the same month are free), `records_charged` is the API's figure; `rows_not_shown` counts the rest (not charged). `permits` by applied month, else issued, else record date; `issued`/`finaled` by their own date, so issued can exceed permits (search_permits uses another date basis) |
 | `coverage` | `GET /v1/meta/coverage` | all fields | permits held and field fill tiers for an area |
 | `search_projects` | `GET /v1/projects` | 10 | big projects with stage and first source URL |
 | `get_project` | `GET /v1/projects/{id}` | 10 items | newest items with their `source_url` |
