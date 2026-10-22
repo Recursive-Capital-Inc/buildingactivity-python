@@ -171,6 +171,7 @@ def _enum(path, name):
 def test_enums_match_the_bundled_spec():
     assert set(T.PERMIT_SORTS) == _enum("/v1/permits/search", "sort")
     assert set(T.PERMIT_STATUSES) == _enum("/v1/permits/search", "status")
+    assert set(T.PERMIT_CLASSES) == _enum("/v1/permits/search", "category")
     # contractor sort has no enum in the spec, only a description naming the values
     desc = _param("/v1/contractors/search", "sort")["description"]
     assert set(T.CONTRACTOR_SORTS) == set(re.findall(r"[a-z]+_[a-z_]+", desc))
