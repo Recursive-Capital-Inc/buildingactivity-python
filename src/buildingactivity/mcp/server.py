@@ -28,7 +28,11 @@ INSTRUCTIONS = (
     "call). Permits at an address: resolve_address, then search_permits(address_id=<id>). "
     "Area filters take a geo_id from geo_lookup; tag filters take ids from list_tags. "
     "What is new: recent_changes. Plan and records left: my_usage. Every record row has "
-    "source_url, the issuer's own record."
+    "source_url, the issuer's own record. records_charged counts records new to your "
+    "organization this UTC calendar month: one per permit, signal, project, contractor, "
+    "property, address or decision row, and one per metrics row. Reading the same record "
+    "again this month is free from any tool (search_signals then get_signal charges once). "
+    "Permit rows in your paid area feed, geo_lookup, coverage, list_tags, my_usage and errors are free."
 )
 ENV_ALLOWED_HOSTS = "BUILDINGACTIVITY_MCP_ALLOWED_HOSTS"
 log = logging.getLogger("buildingactivity.mcp")

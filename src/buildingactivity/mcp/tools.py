@@ -722,7 +722,7 @@ def list_tags(api, a):
     return _page(r, rows)
 
 
-@tool("my_usage", "Your plan, records used and remaining this month, and the reset date.", {})
+@tool("my_usage", "Your plan, records used and remaining this UTC calendar month, and the reset date. Free.", {})
 def my_usage(api, a):
     r = _fetch(api, "/v1/usage")
     u = r.body
