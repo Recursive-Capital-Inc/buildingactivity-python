@@ -27,6 +27,7 @@ ENV_KEY = "BUILDINGACTIVITY_API_KEY"
 DEFAULT_URL = "https://api.buildingactivity.com"
 TOKEN_BUDGET = 4000  # per default-size answer, estimated as len(json) / 4
 TEXT_MAX = 160  # characters kept of a description or title
+DETAIL_TEXT_MAX = 2000  # characters kept of a detail answer's title or description
 FIELD_MAX = 80  # characters kept of any other text field (IDs and URLs are kept whole)
 METRIC_ROWS = 36  # rows of one metrics answer
 TIMEOUT = 30.0
@@ -650,8 +651,11 @@ def get_signal(api, a):
     row.update(_prune({"location": s.get("location"), "applicant": s.get("applicant"),
                        "apns": sorted(set(s.get("apns") or []))[:5],
                        "case_numbers": (s.get("case_numbers") or [])[:5],
-                       "lat": s.get("lat"), "lon": s.get("lon"),
-                       "description": _clip(s.get("description"), 600)}, keep=()))
+                       "lat": s.get("lat"), "lon": s.get("lon")}, keep=()))
+    if s.get("title"):
+        row["title"] = _clip(s.get("title"), DETAIL_TEXT_MAX)
+    if s.get("description"):
+        row["description"] = _clip(s.get("description"), DETAIL_TEXT_MAX)
     return _one(r, row)
 
 
