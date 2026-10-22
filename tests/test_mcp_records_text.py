@@ -7,6 +7,7 @@ def test_instructions_explain_records_unit():
     assert "UTC calendar month" in server.INSTRUCTIONS
     assert "search_signals then get_signal charges once" in server.INSTRUCTIONS
     assert "my_usage" in server.INSTRUCTIONS
+    assert "Permit rows in your paid area feed" in server.INSTRUCTIONS
 
 
 def test_my_usage_description():

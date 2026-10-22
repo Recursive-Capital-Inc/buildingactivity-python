@@ -32,7 +32,7 @@ INSTRUCTIONS = (
     "organization this UTC calendar month: one per permit, signal, project, contractor, "
     "property, address or decision row, and one per metrics row. Reading the same record "
     "again this month is free from any tool (search_signals then get_signal charges once). "
-    "Rows in your paid area feed, geo_lookup, coverage, list_tags, my_usage and errors are free."
+    "Permit rows in your paid area feed, geo_lookup, coverage, list_tags, my_usage and errors are free."
 )
 ENV_ALLOWED_HOSTS = "BUILDINGACTIVITY_MCP_ALLOWED_HOSTS"
 log = logging.getLogger("buildingactivity.mcp")

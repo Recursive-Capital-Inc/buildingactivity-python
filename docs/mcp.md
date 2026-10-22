@@ -68,16 +68,16 @@ month.
 
 What is one record: each permit, signal, project, contractor, property, address or
 decision row is one record, and each metrics row shown is one record. `search_permits`,
-`get_permit`, `recent_changes` and `permit_history` charge for their permit rows, and
-`permit_history` charges the permit itself. Signals from `search_signals` and
-`get_signal` share one key, so pulling the same signal twice through both tools charges
+`get_permit`, `recent_changes` and `permit_history` charge for their permit rows.
+`permit_history` charges one record, the permit; its history entries are free. Signals from `search_signals` and `get_signal`
+share one key, so pulling the same signal twice through both tools charges
 once. A project's items are free with the project. `metrics` shows at most 36 rows and
 is charged at most one record per row shown; `rows_not_shown` counts the rest and those
 are not charged.
 
 Reading the same record again in the same month is free, from any tool and any key of
 the organization. Free tools are `geo_lookup`, `coverage`, `list_tags` and `my_usage`.
-Errors are free. Rows inside the organization's paid area feed are free.
+Errors are free. Permit rows inside the organization's paid area feed are free.
 
 ## Tools
 
