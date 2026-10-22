@@ -193,6 +193,7 @@ def permit_row(p):
         "id": p.get("id"),
         "permit_number": p.get("permit_number") or p.get("record_id"),
         "agency": p.get("agency"),
+        "agency_name": p.get("agency_name"),
         "address": p.get("address"),
         "status": p.get("status_code") or p.get("status"),
         "type": p.get("permit_type"),
@@ -307,7 +308,8 @@ def change_row(e):
            "old": _clip(e.get("old"), 60), "new": _clip(e.get("new"), 60)}
     if p:
         row.update({"permit_number": p.get("permit_number") or p.get("record_id"),
-                    "agency": p.get("agency"), "address": p.get("address"),
+                    "agency": p.get("agency"), "agency_name": p.get("agency_name"),
+                    "address": p.get("address"),
                     "city": p.get("city"), "status": p.get("status_code") or p.get("status"),
                     "class": p.get("permit_class"),
                     "description": _clip(p.get("description"), 100),
@@ -723,7 +725,7 @@ def list_tags(api, a):
     return _page(r, rows)
 
 
-@tool("my_usage", "Your plan, records used and remaining this month, and the reset date.", {})
+@tool("my_usage", "Your plan, records used and remaining this UTC calendar month, and the reset date. Free.", {})
 def my_usage(api, a):
     r = _fetch(api, "/v1/usage")
     u = r.body

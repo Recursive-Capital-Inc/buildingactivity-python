@@ -48,12 +48,6 @@ Every tool answers one JSON object (MCP text content):
 {"error": {"type", "message", "param"}, "status", "request_id", "records_charged": 0}
 ```
 
-- `records_charged` is the API's `X-Records-Request` for the call: what it cost against
-  the key's monthly records. Free routes (geo, coverage, tags, usage) answer 0.
-- Billing: a call is charged only for the rows it returns. `metrics` asks the API for at
-  most 36 rows, so it is charged at most one record per row shown (re-reads in the same
-  month are free); `records_charged` is the API's figure. `rows_not_shown` counts the
-  rows left out and those are not charged.
 - `next_cursor`: pass it back as `cursor` for the next page; null on the last page.
 - Rows keep selected fields; nulls are dropped. Descriptions and titles are clipped to
   160 characters, other text fields to 80; IDs and URLs are never clipped.
@@ -64,6 +58,26 @@ Every tool answers one JSON object (MCP text content):
 - Errors keep the API's `type` (`validation_error`, `auth_error`, `credit_exhausted`,
   `rate_limited`, `not_found`, `unavailable`, ...) with `isError` set. Bad arguments are
   caught against the schema before any call (`records_charged: 0`).
+
+### Records
+
+The meter counts one record per distinct row, per organization, per UTC calendar month.
+The month resets at 00:00 UTC on the 1st. `records_charged` is the API's
+`X-Records-Request` for the call and counts only rows new to your organization this
+month.
+
+What is one record: each permit, signal, project, contractor, property, address or
+decision row is one record, and each metrics row shown is one record. `search_permits`,
+`get_permit`, `recent_changes` and `permit_history` charge for their permit rows.
+`permit_history` charges one record, the permit; its history entries are free. Signals from `search_signals` and `get_signal`
+share one key, so pulling the same signal twice through both tools charges
+once. A project's items are free with the project. `metrics` shows at most 36 rows and
+is charged at most one record per row shown; `rows_not_shown` counts the rest and those
+are not charged.
+
+Reading the same record again in the same month is free, from any tool and any key of
+the organization. Free tools are `geo_lookup`, `coverage`, `list_tags` and `my_usage`.
+Errors are free. Permit rows inside the organization's paid area feed are free.
 
 ## Tools
 
