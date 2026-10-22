@@ -35,14 +35,17 @@
        "type": {
         "description": "Branch on this, not on message",
         "enum": [
+         "area_not_entitled",
          "auth_error",
          "bad_request",
          "credit_exhausted",
+         "feature_requires_area_feed",
          "forbidden",
          "not_found",
          "query_too_broad",
          "rate_limited",
          "server_error",
+         "signals_not_entitled",
          "unavailable",
          "validation_error"
         ],
@@ -798,9 +801,337 @@
     ]
    }
   },
+  "/v1/areas": {
+   "get": {
+    "description": "The areas catalog: the country (US), every state, every metro and micro area (CBSA) and every county we hold, one record each, with the 12-month window, average and peak permits a month, the raw volume band A to G from the average month, the coverage tier (api_only, early_access or standard, from the thresholds in the pricing rules: api_only under 5, early access under 25, standard from 25), the priced band, the coverage index and whether the area is sellable. The priced band is the volume band raised to the kind's floor for a standard area (metro B, state D, county A), the volume band with no floor for early access, null for api_only; the country's band is country. Sellable areas are every tier but api_only. Areas with no permits in the window are listed too. Free, and carries bands, never prices.",
+    "operationId": "areas_v1_areas_get",
+    "parameters": [
+     {
+      "description": "Only this kind of area.",
+      "example": "metro",
+      "in": "query",
+      "name": "kind",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "country",
+          "state",
+          "metro",
+          "county"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kind"
+      }
+     },
+     {
+      "description": "Only areas that include this state (two letters, any case).",
+      "example": "CA",
+      "in": "query",
+      "name": "state",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "State"
+      }
+     },
+     {
+      "description": "Case-insensitive substring of the area name, or an exact area ID.",
+      "example": "Los Angeles",
+      "in": "query",
+      "name": "q",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "description": "Only this coverage tier.",
+      "example": "standard",
+      "in": "query",
+      "name": "tier",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "api_only",
+          "early_access",
+          "standard"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tier"
+      }
+     },
+     {
+      "description": "true: only areas that are sold (any tier but api_only); false: only the api_only areas.",
+      "example": true,
+      "in": "query",
+      "name": "sellable",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Sellable"
+      }
+     },
+     {
+      "description": "Page size (1 to 1000).",
+      "example": 2,
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "default": 100,
+       "maximum": 1000,
+       "minimum": 1,
+       "title": "Limit",
+       "type": "integer"
+      }
+     },
+     {
+      "description": "Opaque cursor: pass the previous response's next_cursor back, with the same filters, for the next page. Omit for the first page.",
+      "example": "2",
+      "in": "query",
+      "name": "cursor",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Cursor"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Parameters are well formed but do not make sense together, or the query is too broad (type query_too_broad)"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Missing or invalid X-API-Key header"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "A parameter is missing, malformed or out of range"
+     },
+     "429": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Too many requests; retry after the Retry-After header (seconds)"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Our fault; retry, then report the request_id"
+     },
+     "503": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The index, or the side table this route reads, is not built yet; retry after the next index publish"
+     }
+    },
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ],
+    "summary": "Areas catalog: country, states, metros and counties",
+    "tags": [
+     "areas"
+    ]
+   }
+  },
+  "/v1/areas/{area_id}": {
+   "get": {
+    "description": "One area: its full catalog record (including its counties), the customer-facing label for its tier (\"Early access\", \"Building coverage\", or null for standard), the areas that contain it smallest first, the tier thresholds, the band and floor tables, the coverage index under which no feed is sold, and the /v1/geo link for the same area. Free, and carries bands, never prices.",
+    "operationId": "area_v1_areas__area_id__get",
+    "parameters": [
+     {
+      "description": "US, a two-letter state code, msa_ plus five CBSA digits, or cty_ plus five county FIPS digits. Any case.",
+      "example": "msa_31080",
+      "in": "path",
+      "name": "area_id",
+      "required": true,
+      "schema": {
+       "title": "Area Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Parameters are well formed but do not make sense together, or the query is too broad (type query_too_broad)"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Missing or invalid X-API-Key header"
+     },
+     "404": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "No such resource"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "A parameter is missing, malformed or out of range"
+     },
+     "429": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Too many requests; retry after the Retry-After header (seconds)"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Our fault; retry, then report the request_id"
+     },
+     "503": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The index, or the side table this route reads, is not built yet; retry after the next index publish"
+     }
+    },
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ],
+    "summary": "One area: counties, containing areas and bands",
+    "tags": [
+     "areas"
+    ]
+   }
+  },
   "/v1/changes": {
    "get": {
-    "description": "Durable, ordered feed of permit.created (first seen by our crawler) and permit.changed (one published field changed on a re-pull) events since 2026-10-12; there is no older change history. Backfill created events (older records loaded with a newly connected source) are left out unless include_backfill=true. Events come in seq order, which is time order; pass next_cursor back as since to resume without missing or repeating an event, and keep paging while has_more is true (a page scans at most 100,000 events, so a narrow filter can return a short or empty page). Metered: one record per event.",
+    "description": "Durable, ordered feed of permit.created (first seen by our crawler) and permit.changed (one published field changed on a re-pull) events since 2026-10-12; there is no older change history. Backfill created events (older records loaded with a newly connected source) are left out unless include_backfill=true. Events come in seq order, which is time order; pass next_cursor back as since to resume without missing or repeating an event, and keep paging while has_more is true (a page scans at most 100,000 events, so a narrow filter can return a short or empty page). Metered: one record per event. An organization with an area feed reads only that feed: the rows are free and an organization with no feed area gets 403 feature_requires_area_feed.",
     "operationId": "changes_v1_changes_get",
     "parameters": [
      {
@@ -954,6 +1285,24 @@
         }
        ],
        "title": "Backfill"
+      }
+     },
+     {
+      "description": "entitled: only events inside the calling organization's area feed. The feed already reads only feed agencies for an organization with a feed; an organization with none gets 403 feature_requires_area_feed.",
+      "example": "entitled",
+      "in": "query",
+      "name": "within",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Within"
       }
      },
      {
@@ -2725,9 +3074,89 @@
     ]
    }
   },
+  "/v1/entitlements": {
+   "get": {
+    "description": "The calling key's organization: its plan, its Developer allowance and usage from\nthe meter, the feed areas it may read (with names, bands, state lists and end dates),\nits signals and Pro areas, and its features. Free: the response is never charged, and\na key without an organization (a keys-file key) answers with nulls and empty lists.",
+    "operationId": "entitlements_route_v1_entitlements_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Parameters are well formed but do not make sense together, or the query is too broad (type query_too_broad)"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Missing or invalid X-API-Key header"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "A parameter is missing, malformed or out of range"
+     },
+     "429": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Too many requests; retry after the Retry-After header (seconds)"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Our fault; retry, then report the request_id"
+     },
+     "503": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The index, or the side table this route reads, is not built yet; retry after the next index publish"
+     }
+    },
+    "summary": "Everything the calling key may use",
+    "tags": [
+     "meta"
+    ]
+   }
+  },
   "/v1/exports": {
    "get": {
-    "description": "The bulk export releases, newest first: base snapshots (every table) and incrementals (since the previous release: full rows of new or changed permits with their permit_versions hashes, last_seen of permits re-pulled unchanged, permit deletes, the tag rows of changed permits and the change-feed events), each with its manifest (schema, row counts, sha256 per file, data release, seq window). Every file carries a signed `url` valid for the calling key only, until expires_at. Free: listing charges no records; a download charges the rows in the file.",
+    "description": "The bulk export releases, newest first: base snapshots (every table) and incrementals (since the previous release: full rows of new or changed permits with their permit_versions hashes, last_seen of permits re-pulled unchanged, permit deletes, the tag rows of changed permits and the change-feed events), each with its manifest (schema, row counts, sha256 per file, data release, seq window). Every file carries a signed `url` valid for the calling key only, until expires_at. Free: listing charges no records; a download charges the rows in the file. These files are national, so an enforced organization needs the country feed: with a smaller feed the answer is 403 feature_requires_area_feed (per-area export files are not available yet), and with the country feed its downloads are free.",
     "operationId": "list_exports_v1_exports_get",
     "parameters": [
      {
@@ -2856,7 +3285,7 @@
   },
   "/v1/exports/{release}/{file}": {
    "get": {
-    "description": "One export file (Parquet, or the release's manifest.json) by the signed URL from GET /v1/exports. Send the same X-API-Key that listed it: the signature covers the key, the file and the expiry. Metered: the file's row count (from the manifest) is reserved before the download starts; a key with fewer records left this month gets 402 credit_exhausted, never a partial file. manifest.json costs 0.",
+    "description": "One export file (Parquet, or the release's manifest.json) by the signed URL from GET /v1/exports. Send the same X-API-Key that listed it: the signature covers the key, the file and the expiry. Metered: the file's row count (from the manifest) is reserved before the download starts; a key with fewer records left this month gets 402 credit_exhausted, never a partial file. manifest.json costs 0. An enforced organization needs the country feed to download (403 feature_requires_area_feed otherwise); its download is free.",
     "operationId": "download_v1_exports__release___file__get",
     "parameters": [
      {
@@ -3007,7 +3436,7 @@
   },
   "/v1/geo/counties": {
    "get": {
-    "description": "Counties (and county equivalents) by state and/or metro, with coverage and BPS 2025 context. Free.",
+    "description": "Counties (and county equivalents) by state and/or metro, with coverage, BPS 2025 context, and coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "counties_v1_geo_counties_get",
     "parameters": [
      {
@@ -3179,7 +3608,7 @@
   },
   "/v1/geo/counties/{id}": {
    "get": {
-    "description": "One county: parent metro and state, its BPS jurisdictions, coverage and a permits link. Free.",
+    "description": "One county: parent metro and state, its BPS jurisdictions, coverage, a permits link and coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "county_v1_geo_counties__id__get",
     "parameters": [
      {
@@ -3621,7 +4050,7 @@
   },
   "/v1/geo/metros": {
    "get": {
-    "description": "Metropolitan and micropolitan statistical areas (CBSA, 2023 delineation), optionally within one state, with coverage and BPS 2025 context. Free.",
+    "description": "Metropolitan and micropolitan statistical areas (CBSA, 2023 delineation), optionally within one state, with coverage, BPS 2025 context, and coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "metros_v1_geo_metros_get",
     "parameters": [
      {
@@ -3797,7 +4226,7 @@
   },
   "/v1/geo/metros/{id}": {
    "get": {
-    "description": "One metro or micro area: its states, counties and coverage. Free.",
+    "description": "One metro or micro area: its states, counties, coverage and coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "metro_v1_geo_metros__id__get",
     "parameters": [
      {
@@ -4062,7 +4491,7 @@
   },
   "/v1/geo/states": {
    "get": {
-    "description": "Every US state with our coverage (agencies, indexed permits) beside Census Building Permits Survey 2025 context (permit-issuing places, housing units authorized). Free.",
+    "description": "Every US state with our coverage (agencies, indexed permits) beside Census Building Permits Survey 2025 context (permit-issuing places, housing units authorized), plus coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "states_v1_geo_states_get",
     "parameters": [
      {
@@ -4198,7 +4627,7 @@
   },
   "/v1/geo/states/{code}": {
    "get": {
-    "description": "One state: its metros, counties and BPS jurisdictions, with coverage and a link to its permits. Free.",
+    "description": "One state: its metros, counties and BPS jurisdictions, with coverage, a link to its permits and coverage_index_pct, band and sellable from the areas catalog. Free.",
     "operationId": "state_v1_geo_states__code__get",
     "parameters": [
      {
@@ -4948,7 +5377,7 @@
   },
   "/v1/metrics": {
    "get": {
-    "description": "Monthly permit metrics for one geography: a series by month, or a breakdown by tag, class, status or jurisdiction (one or two dimensions). Each row has permits, permits with value, value sum and median, contractors, approval and construction day medians, finaled, issued, applied. Metered: one record per row.",
+    "description": "Monthly permit metrics for one geography: a series by month, or a breakdown by tag, class, status or jurisdiction (one or two dimensions). Each row has permits, permits with value, value sum and median, contractors, approval and construction day medians, finaled, issued, applied. Date basis: permits counts by the month of the first non-empty applied, issued or record date; applied, issued and finaled count permits by the month of their own date; see `basis` in the response. Metered: one record per returned row; `limit` caps the rows.",
     "operationId": "metrics_v1_metrics_get",
     "parameters": [
      {
@@ -5097,6 +5526,26 @@
        ],
        "title": "Class"
       }
+     },
+     {
+      "description": "At most this many rows, in the response order; only returned rows are charged. Default: every row.",
+      "example": 36,
+      "in": "query",
+      "name": "limit",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "maximum": 10000,
+         "minimum": 1,
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Limit"
+      }
      }
     ],
     "responses": {
@@ -5192,7 +5641,7 @@
   },
   "/v1/permits": {
    "get": {
-    "description": "Up to 100 permits by ID, in request order, duplicates once. IDs we do not hold are listed in meta.missing; when the key's monthly records run out mid-batch, the IDs not looked up are in meta.not_returned. Metered: one record per permit returned.",
+    "description": "Up to 100 permits by ID, in request order, duplicates once. IDs we do not hold are listed in meta.missing; permits new this month that do not fit in the key's remaining monthly records are left out and listed in meta.not_returned (permits already read this month are always returned). Metered: one record per distinct permit a month. meta.areas_needed names the areas that would cover dropped rows that lie outside the organization's area feed, and meta.coverage_building the api_only areas among them (no feed is sold there yet).",
     "operationId": "batch_v1_permits_get",
     "parameters": [
      {
@@ -5313,7 +5762,7 @@
   },
   "/v1/permits/search": {
    "get": {
-    "description": "Search permits. Every /v0/permits filter with the same meaning plus geo_id, address and property IDs, ZIP, tags (with -tag exclusion), contractor license, has_contractor and has_value, the event date window date_from/date_to (date_issued, else date_applied, else record_date; the default way to search a date window), finaled and Shovels-style permit date windows, minimum approval and construction days, and include_count. All filters are ANDed. Items are v1 permit objects: id first, the issuer's fields with source_url and provenance, then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (null unless the permit's own description is missing, a code or shorthand and a model wrote one; the issuer's description is never replaced). Keyset paginated with next_cursor. Metered: one record per item.",
+    "description": "Search permits. Every /v0/permits filter with the same meaning plus geo_id, address and property IDs, ZIP, tags (with -tag exclusion), contractor license, has_contractor and has_value, the event date window date_from/date_to (date_issued, else date_applied, else record_date; the default way to search a date window), finaled and Shovels-style permit date windows, minimum approval and construction days, and include_count. By default the search returns every permit class except the non-construction ones (admin, business_license, code_enforcement, engineering_row, environmental_health, other, planning); pass category=all for every class. All filters are ANDed. Items are v1 permit objects: id first, the issuer's fields with source_url and provenance, then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (null unless the permit's own description is missing, a code or shorthand and a model wrote one; the issuer's description is never replaced). Keyset paginated with next_cursor. excluded_classes lists the classes the default scope left out (empty unless no category was given). Metered: one record per item. within=entitled narrows the search to the organization's area feed. An organization's feed rows are free and need no Developer records; rows outside it are charged to the Developer meter, and a response that cannot pay for them answers 402 with areas_needed (the areas that would cover them), coverage_building (the api_only areas those rows sit in, where no feed is sold yet) and upgrade_url. X-BA-Scope on the response says feed, metered or mixed.",
     "operationId": "search_v1_permits_search_get",
     "parameters": [
      {
@@ -5715,7 +6164,7 @@
       }
      },
      {
-      "description": "Permit class; repeat or comma-separate.",
+      "description": "Permit class; repeat or comma-separate. Default: every class except admin, business_license, code_enforcement, engineering_row, environmental_health, other and planning (construction work plus unclassified records). `all`: every class.",
       "example": [
        "building"
       ],
@@ -5727,6 +6176,7 @@
         {
          "items": {
           "enum": [
+           "all",
            "admin",
            "building",
            "business_license",
@@ -6242,6 +6692,24 @@
        ],
        "title": "Sort",
        "type": "string"
+      }
+     },
+     {
+      "description": "entitled: only permits inside the calling organization's area feed (intersected with geo_id). A keys-file key has no organization and gets 400; an enforced organization with no feed area gets 403 feature_requires_area_feed; an organization on an operator-set plan is unrestricted and the value changes nothing.",
+      "example": "entitled",
+      "in": "query",
+      "name": "within",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Within"
       }
      },
      {
@@ -7977,7 +8445,7 @@
   },
   "/v1/signals": {
    "get": {
-    "description": "Early signals (CEQA documents, Legistar council matters, planning cases), newest filed first, each with its sig_ ID and its v1 project when it has one. Metered: one record per signal.",
+    "description": "Early signals (CEQA documents, Legistar council matters, planning cases), newest filed first, each with its sig_ ID and its v1 project when it has one. Metered: one record per signal. An organization with a signals scope reads only the signals in it: the states it bought and the packs it bought, matched by the pack rules over the signal's title, description, applicant, NAICS code and source type; a pack page is filtered here, so next_cursor continues the scan. Without a scope the answer is 402 signals_not_entitled.",
     "operationId": "list_signals_v1_signals_get",
     "parameters": [
      {
@@ -8302,7 +8770,7 @@
   },
   "/v1/signals/{signal_id}": {
    "get": {
-    "description": "One early signal by its sig_ ID. Metered: one record.",
+    "description": "One early signal by its sig_ ID. Metered: one record. A signal outside the organization's signals scope answers 402 signals_not_entitled.",
     "operationId": "get_signal_v1_signals__signal_id__get",
     "parameters": [
      {
@@ -8420,7 +8888,7 @@
   },
   "/v1/usage": {
    "get": {
-    "description": "Records used this month by the calling key, its monthly limit, the reset date and daily usage, plus its webhook state: paused (with reason and since), events skipped while paused, webhook events delivered this month and the plan's fair-use cap. Free.",
+    "description": "Records used this month by the calling key, its monthly limit and what is left of it, the reset date and daily usage, plus its webhook state: paused (with reason and since), events skipped while paused, webhook events delivered this month and the plan's fair-use cap. The unit is distinct records per UTC month: distinct_permits is how many permits this month's charge includes, and reading the same record again in the month is free. Free.",
     "operationId": "usage_v1_usage_get",
     "responses": {
      "200": {
@@ -8593,7 +9061,7 @@
     ]
    },
    "post": {
-    "description": "Subscribe an https URL to the change feed (GET /v1/changes) with a filter: geo_id, tags, types, fields, include_backfill, backfill. As in GET /v1/changes, backfill created events are left out unless the filter sets include_backfill: true. The response carries the signing secret once; every delivery is a POST of up to 100 events in seq order with X-PermitIntel-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, \"<t>.\" + body)>. Private, loopback and link-local targets are refused. The subscription belongs to the calling key; a key may have at most 5 active webhooks (plans config), and one more answers 403 forbidden. Not metered; each delivered event counts as one record for the key, once, and plan fair-use caps pause deliveries (GET /v1/usage shows it).",
+    "description": "Subscribe an https URL to the change feed (GET /v1/changes) with a filter: geo_id, tags, types, fields, include_backfill, backfill. As in GET /v1/changes, backfill created events are left out unless the filter sets include_backfill: true. The response carries the signing secret once; every delivery is a POST of up to 100 events in seq order with X-PermitIntel-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, \"<t>.\" + body)>. Private, loopback and link-local targets are refused. The subscription belongs to the calling key; a key may have at most 5 active webhooks (plans config), and one more answers 403 forbidden. Not metered; each delivered event counts as one record for the key, once, and plan fair-use caps pause deliveries (GET /v1/usage shows it). An organization whose plan is enforced may subscribe when it holds an area feed, even though its Developer plan's webhooks flag is false: the feed grants them and the worker delivers only events inside the feed. Without a feed area it answers 403 feature_requires_area_feed.",
     "operationId": "create_v1_webhooks_post",
     "requestBody": {
      "content": {
