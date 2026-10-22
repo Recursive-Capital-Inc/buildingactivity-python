@@ -96,15 +96,15 @@ Errors are free. Rows inside the organization's paid area feed are free.
 | `search_projects` | `GET /v1/projects` | 10 | big projects with stage and first source URL |
 | `get_project` | `GET /v1/projects/{id}` | 10 items | newest items with their `source_url` |
 | `search_decisions` | `GET /v1/decisions/search` | 10 | zoning, land-use and CEQA decisions |
-| `search_signals` | `GET /v1/signals` | 10 | early signals (CEQA, council matters, planning cases): `stage`, stated `size` (units, sqft, acres, MW, USD), `large`; filters `geo_id`, `q`, `category`, `source`, filed `date_from`/`date_to`, `large_only`, `min_value`, `project_id` |
-| `get_signal` | `GET /v1/signals/{id}` | 1 | adds location, applicant, APNs, case numbers, 600 characters of text |
+| `search_signals` | `GET /v1/signals` | 10 | early signals (CEQA, council matters, planning cases): `stage`, stated `size` (units, sqft, acres, MW, USD), `large`, `location`, up to 3 `apns`, a short `description`; filters `geo_id`, `q`, `category`, `source`, filed `date_from`/`date_to`, `large_only`, `min_value`, `project_id` |
+| `get_signal` | `GET /v1/signals/{id}` | 1 | adds applicant, case numbers, lat/lon, up to 5 APNs and up to 2,000 characters of title and description |
 | `recent_changes` | `GET /v1/changes` | 10 (at most 100) | new and changed permits, oldest first; `geo_id`, `tags`, `types`, `fields`, `since`, or `webhook_id` to reuse a saved webhook's filter (one more GET); `has_more` and `next_cursor` to resume |
 | `list_tags` | `GET /v1/lists/tags` | all | work tag IDs for the tag filters, permit counts, reliable or beta |
 | `my_usage` | `GET /v1/usage` | 1 | plan, records used and remaining, reset date, last 7 days |
 
 Measured answer sizes (chars / 4, `tests/test_mcp_tools.py`): on recorded API responses
 35 to 330 tokens per answer; at the default page with every text field padded to 400
-characters 35 to 3,416 tokens (`search_signals` the largest), all under the 4,000 budget.
+characters 35 to 3,942 tokens (`search_signals` the largest), all under the 4,000 budget.
 
 ## For maintainers
 
