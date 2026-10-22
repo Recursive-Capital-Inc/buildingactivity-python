@@ -426,24 +426,24 @@ def get_property(api, a):
 
 
 @tool("search_permits",
-      "Search permits; construction only unless category ['all'] (health, planning, "
+      "Permits; construction only unless category ['all'] (health, planning, "
       "licensing). date_from/to: issued, else applied, else record date.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860; geo_lookup"),
-       "q": _s('all words, any order; "a b" = phrase'),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., 94920; geo_lookup"),
+       "q": _s('all words; "a b" = phrase'),
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "-tag excludes"},
+                "description": "solar; -tag excludes"},
        "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
        "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
-                    "description": "'all' = every class"},
+                    "description": "['all'] = every class"},
        "contractor": {"type": "string"}, "contractor_id": _s("ctr_..."),
        "date_from": _s(DATE), "date_to": {"type": "string"},
        "issued_from": _s(DATE), "issued_to": {"type": "string"},
        "applied_from": _s(DATE), "applied_to": {"type": "string"},
-       "min_value": {"type": "number", "minimum": 0},
+       "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
        "limit": _i("rows", hi=50, default=10),
-       "cursor": _s("next_cursor"),
+       "cursor": {"type": "string"},
        "include_count": {"type": "boolean"}})
 def search_permits(api, a):
     cat = a.get("category")
@@ -689,7 +689,7 @@ def get_signal(api, a):
       "New and changed permits from the change feed, oldest first. Filter by area and tags, "
       "or pass webhook_id to reuse a saved webhook's filter. Resume with next_cursor.",
       {"webhook_id": _s("whk_...: use this saved filter"), "geo_id": GEO_ID,
-       "tags": {"type": "array", "items": {"type": "string"}, "description": "-tag excludes"},
+       "tags": {"type": "array", "items": {"type": "string"}, "description": "solar; -tag excludes"},
        "types": {"type": "array", "items": {"type": "string", "enum": list(CHANGE_TYPES)}},
        "fields": {"type": "array", "items": {"type": "string", "enum": list(CHANGE_FIELDS)}},
        "since": _s(f"{DATE}, ISO time or seq"), "cursor": CURSOR,
