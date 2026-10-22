@@ -29,6 +29,7 @@ TOKEN_BUDGET = 4000  # per default-size answer, estimated as len(json) / 4
 TEXT_MAX = 160  # characters kept of a description or title
 DETAIL_TEXT_MAX = 2000  # characters kept of a detail answer's title or description
 FIELD_MAX = 80  # characters kept of any other text field (IDs and URLs are kept whole)
+SIGNAL_ROW_TEXT_MAX = 100  # search_signals descriptions only: 160 chars overflow the budget
 METRIC_ROWS = 36  # rows of one metrics answer
 TIMEOUT = 30.0
 
@@ -288,6 +289,8 @@ def signal_row(s):
     size = {k: s.get(k) for k in SIZE_FIELDS if s.get(k) is not None}
     return _prune({
         "id": s.get("id"), "title": _clip(s.get("title"), 120), "category": s.get("category"),
+        "description": _clip(s.get("description"), SIGNAL_ROW_TEXT_MAX), "location": s.get("location"),
+        "apns": sorted(set(s.get("apns") or []))[:3],
         "doc_type": s.get("doc_type"), "stage": s.get("status"),
         "filed": s.get("filed_date"), "event_date": s.get("event_date"),
         "agency": s.get("agency"), "jurisdiction": s.get("jurisdiction"),
@@ -645,7 +648,7 @@ def search_decisions(api, a):
 
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
-      "first, with stage, stated size (units, sqft, acres, MW, USD) and source_url.",
+      "first, with stage, stated size, location, APNs, a short description and source_url.",
       {"geo_id": GEO_ID, "q": _s("words in title or description"),
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
