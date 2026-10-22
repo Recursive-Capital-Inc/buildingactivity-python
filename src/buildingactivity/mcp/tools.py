@@ -460,8 +460,20 @@ def search_permits(api, a):
     params["sort"] = a.get("sort", "issued_desc")
     params["limit"] = a.get("limit", 10)
     r = _fetch(api, "/v1/permits/search", params)
+    count = r.body.get("total_count")
+    if a.get("include_count"):
+        if isinstance(count, dict):
+            pass
+        elif isinstance(count, int) and not isinstance(count, bool):
+            count = {"value": count, "relation": "eq"}
+        else:
+            # the API's count ran out of time; total_estimate would ignore event-date
+            # windows, so it is not surfaced
+            count = {"value": None, "relation": "unknown", "reason": "timeout"}
+    else:
+        count = None
     return _page(r, [permit_row(x) for x in r.body.get("items") or []],
-                 total_count=r.body.get("total_count"),
+                 total_count=count,
                  excluded_classes=r.body.get("excluded_classes") or None)
 
 

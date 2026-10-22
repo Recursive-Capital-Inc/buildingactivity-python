@@ -33,6 +33,9 @@ INSTRUCTIONS = (
     "property, address or decision row, and one per metrics row. Reading the same record "
     "again this month is free from any tool (search_signals then get_signal charges once). "
     "Permit rows in your paid area feed, geo_lookup, coverage, list_tags, my_usage and errors are free."
+    " search_permits include_count adds total_count {value, relation}: eq is exact, gte means"
+    " at least 10,000, unknown (value null) means counting ran out of time; retry once or"
+    " narrow the filters."
 )
 ENV_ALLOWED_HOSTS = "BUILDINGACTIVITY_MCP_ALLOWED_HOSTS"
 log = logging.getLogger("buildingactivity.mcp")
