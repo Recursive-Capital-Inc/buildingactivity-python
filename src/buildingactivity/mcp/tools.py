@@ -299,7 +299,7 @@ def signal_row(s):
     size = {k: s.get(k) for k in SIZE_FIELDS if s.get(k) is not None}
     return _prune({
         "id": s.get("id"), "kind": s.get("kind"), "title": _clip(s.get("title"), 120),
-        "category": s.get("category"),
+        "category": s.get("category"), "type": s.get("type"),
         "description": _clip(s.get("description"), SIGNAL_ROW_TEXT_MAX), "location": s.get("location"),
         "apns": sorted(set(s.get("apns") or []))[:3],
         "doc_type": s.get("doc_type"), "stage": s.get("status"),
@@ -684,6 +684,8 @@ def search_decisions(api, a):
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
        "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
+       "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
+                "description": "project type of the signal, text rules (beta)"},
        "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
                 "description": KIND_TEXT},
        "date_from": _s("filed on or after, " + DATE), "date_to": _s(DATE),
@@ -692,9 +694,9 @@ def search_decisions(api, a):
        "project_id": _s("prj_..."),
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_signals(api, a):
-    params = {k: a.get(k) for k in ("geo_id", "q", "category", "source", "kind", "date_from",
-                                    "date_to", "large_only", "min_value", "project_id",
-                                    "cursor")}
+    params = {k: a.get(k) for k in ("geo_id", "q", "category", "source", "type", "kind",
+                                    "date_from", "date_to", "large_only", "min_value",
+                                    "project_id", "cursor")}
     params["limit"] = a.get("limit", 10)
     r = _fetch(api, "/v1/signals", params)
     return _page(r, [signal_row(x) for x in r.body.get("items") or []])
