@@ -50,6 +50,9 @@ PROJECT_TYPES = ("data_center", "hospital", "stadium_arena", "school", "logistic
                  "infrastructure", "other")
 SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case")
 SIGNAL_KINDS = ("site", "policy", "program", "other")
+KIND_TEXT = ("site: one place; policy: ordinance, moratorium, code/zoning change, "
+             "ballot measure; program: plan over many sites (general plan, CIP); "
+             "other: unplaced (rules only)")
 CHANGE_TYPES = ("created", "changed")
 CHANGE_FIELDS = ("status", "status_detail", "record_date", "permit_type", "description",
                  "address", "source_url", "value", "contractor", "date_applied", "date_issued",
@@ -624,8 +627,7 @@ def coverage(api, a):
        "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
                 "description": "project type from text rules (beta)"},
        "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
-                "description": "site: one place or building; policy: ordinance, moratorium, "
-                               "code change, study"},
+                "description": KIND_TEXT},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
@@ -683,8 +685,7 @@ def search_decisions(api, a):
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
        "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
        "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
-                "description": "site: one place or building; policy: ordinance, moratorium, "
-                               "code change, study"},
+                "description": KIND_TEXT},
        "date_from": _s("filed on or after, " + DATE), "date_to": _s(DATE),
        "large_only": {"type": "boolean", "description": "only large projects"},
        "min_value": {"type": "number", "minimum": 0, "description": "stated USD"},

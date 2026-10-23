@@ -6,16 +6,30 @@ from buildingactivity.mcp import tools as T
 from test_mcp_tools import FixtureServer, api
 
 
-def _spec_kinds():
-    param = next(x for x in cli.load_spec()["paths"]["/v1/signals"]["get"]["parameters"]
+def _spec_kinds(path):
+    param = next(x for x in cli.load_spec()["paths"][path]["get"]["parameters"]
                  if x["name"] == "kind")
     return param["schema"]["anyOf"][0]["items"]["enum"]
 
 
 def test_signal_kinds_match_the_bundled_spec():
-    listed = _spec_kinds()
+    listed = _spec_kinds("/v1/signals")
     assert list(T.SIGNAL_KINDS) == listed
     assert all(re.fullmatch(r"[a-z_]+", k) for k in listed)
+
+
+def test_project_kinds_match_the_bundled_spec():
+    listed = _spec_kinds("/v1/projects")
+    assert list(T.SIGNAL_KINDS) == listed
+    assert all(re.fullmatch(r"[a-z_]+", k) for k in listed)
+
+
+def test_kind_description_matches_and_names_all_four():
+    for name in ("search_signals", "search_projects"):
+        desc = T.TOOLS[name].schema["properties"]["kind"]["description"]
+        assert desc == T.KIND_TEXT
+        for word in ("site", "policy", "program", "other"):
+            assert word in desc
 
 
 def _body(row):
