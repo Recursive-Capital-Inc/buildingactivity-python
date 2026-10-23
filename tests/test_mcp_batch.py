@@ -162,11 +162,30 @@ def test_project_ids_rows_equal_the_single_id_row():
     assert many["items"][0] == one["item"]
 
 
+def test_project_id_and_ids_together_or_neither_is_a_validation_error():
+    srv = BatchServer({"/v1/projects/batch": (PROJECT_BATCH_BODY, 2)})
+    for args in ({"id": PRJ_A["id"], "ids": [PRJ_A["id"]]}, {}):
+        out, err = T.call_tool("get_project", args, api(srv))
+        assert err and out["error"]["type"] == "validation_error"
+        assert out["records_charged"] == 0
+    assert not srv.calls
+
+
 def test_project_items_argument_is_honoured_with_ids():
     srv = BatchServer({"/v1/projects/batch": (PROJECT_BATCH_BODY, 2)})
     out, err = T.call_tool("get_project", {"ids": [PRJ_A["id"]], "items": 1}, api(srv))
     assert not err and [i["id"] for i in out["items"][0]["items"]] == ["pmt_ogeqf4pvpljlty3oyska"]
     assert out["items"][0]["items_not_shown"] == 1
+
+
+def test_project_ids_default_to_three_items_each():
+    five = json.loads(json.dumps(PRJ_A))
+    five["items"] = [dict(five["items"][0], id=f"pmt_{i:020d}") for i in range(5)]
+    srv = BatchServer({"/v1/projects/batch": ({"items": [five], "size": 1, "meta": {}}, 1)})
+    out, err = T.call_tool("get_project", {"ids": [PRJ_A["id"]]}, api(srv))
+    assert not err, out
+    assert [i["id"] for i in out["items"][0]["items"]] == [f"pmt_{i:020d}" for i in range(3)]
+    assert out["items"][0]["items_not_shown"] == 2
 
 
 def test_ten_projects_at_three_items_stay_under_the_token_budget():

@@ -652,6 +652,8 @@ def search_projects(api, a):
        "ids": {"type": "array", "items": {"type": "string"}, "maxItems": 10,
                "description": "up to 10 prj_... IDs; use instead of id"}})
 def get_project(api, a):
+    if bool(a.get("id")) == bool(a.get("ids")):
+        raise ToolError("validation_error", "give exactly one of id or ids")
     ids = a.get("ids")
     if ids:
         r = _fetch(api, "/v1/projects/batch", {"id": ids})
