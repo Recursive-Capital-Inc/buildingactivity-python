@@ -14,8 +14,22 @@ def test_search_tools_describe_the_q_rules():
     assert "every word" in sig and "phrase" in sig
     prj = _prop("search_projects", "q")["description"]
     assert "every word" in prj and "no quotes" in prj
-    per = _prop("search_permits", "q")["description"]
-    assert "all words" in per and "phrase" in per
+
+
+def test_instructions_carry_the_q_rules():
+    from buildingactivity.mcp import server
+
+    assert "Text search q" in server.INSTRUCTIONS
+    assert "whole words" in server.INSTRUCTIONS
+
+
+def test_search_permits_schema_matches_main():
+    q = _prop("search_permits", "q")
+    assert q == {"type": "string"}
+    limit = _prop("search_permits", "limit")
+    assert limit["description"] == "rows"
+    cursor = _prop("search_permits", "cursor")
+    assert cursor["description"] == "next_cursor"
 
 
 def test_tool_json_sizes_stay_under_budget():

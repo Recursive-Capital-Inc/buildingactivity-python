@@ -431,8 +431,9 @@ def get_property(api, a):
       "Search permits; construction only unless category ['all'] (health, planning, "
       "licensing). date_from/to: issued, else applied, else record date.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., 94920; geo_lookup"),
-       "q": _s('all words; "a b" = phrase'),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
+                                                    "94920; geo_lookup"),
+       "q": {"type": "string"},
        "tags": {"type": "array", "items": {"type": "string"},
                 "description": "solar; -tag excludes"},
        "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
@@ -444,8 +445,8 @@ def get_property(api, a):
        "applied_from": _s(DATE), "applied_to": {"type": "string"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
-       "limit": {"type": "integer", "minimum": 1, "maximum": 50, "default": 10},
-       "cursor": {"type": "string"},
+       "limit": _i("rows", hi=50, default=10),
+       "cursor": _s("next_cursor"),
        "include_count": {"type": "boolean"}})
 def search_permits(api, a):
     cat = a.get("category")
@@ -598,8 +599,8 @@ def coverage(api, a):
       "Big construction projects (permits plus early signals such as CEQA filings), "
       "newest first, with stage and source_url.",
       {"geo_id": GEO_ID,
-       "q": _s("every word must appear as part of a word in name, titles, descriptions "
-               "or address (ware matches software); no quotes"),
+       "q": _s("every word must appear as part of a word in name, titles, descriptions, "
+               "address or location (ware matches software); no quotes"),
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},

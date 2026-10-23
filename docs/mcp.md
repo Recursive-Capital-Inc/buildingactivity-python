@@ -106,7 +106,7 @@ Text search (`q`): on `search_permits` and `search_signals` every word must appe
 (whole words, no plurals: `center` misses `centers`), in any order, and a quoted
 `"data center"` matches the words adjacent as a phrase. On `search_projects` every word
 must appear as part of a word (`ware` matches `software`) in the name, titles,
-descriptions or address, and quotes are not supported.
+descriptions, address or location, and quotes are not supported.
 
 Measured answer sizes (chars / 4, `tests/test_mcp_tools.py`): on recorded API responses
 35 to 330 tokens per answer; at the default page with every text field padded to 400
