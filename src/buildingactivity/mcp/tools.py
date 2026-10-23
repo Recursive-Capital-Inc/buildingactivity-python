@@ -342,6 +342,17 @@ def _page(r, rows, **extra):
     return out
 
 
+def _batch(r, rows):
+    """One batch answer: the rows, the API's meta lists (missing IDs, rows it did not
+    return and would have charged, out-of-scope or aliased IDs), nothing empty."""
+    meta = r.body.get("meta") or {}
+    out = {"items": rows}
+    out.update({k: meta[k] for k in ("missing", "not_returned", "out_of_scope", "aliased")
+                if meta.get(k)})
+    out["records_charged"] = r.records
+    return out
+
+
 def _one(r, row, **extra):
     out = {"item": row}
     out.update({k: v for k, v in extra.items() if v is not None})
@@ -642,19 +653,34 @@ def search_projects(api, a):
     return _page(r, [project_row(x) for x in r.body.get("items") or []])
 
 
-@tool("get_project", "One big project (prj_...) with its newest items and their source_url.",
-      {"id": _s("prj_..."), "items": _i("items to return", hi=50, default=10)},
-      required=("id",))
+@tool("get_project",
+      "One or more big projects (prj_...) with stage and newest items with source_url. Give "
+      "id, or ids for up to 10 in one call (3 items each unless items is set).",
+      {"id": _s("prj_..."), "items": _i("items to return", hi=50, default=10),
+       "ids": {"type": "array", "items": {"type": "string"}, "maxItems": 10,
+               "description": "up to 10 prj_... IDs; use instead of id"}})
 def get_project(api, a):
+    if bool(a.get("id")) == bool(a.get("ids")):
+        raise ToolError("validation_error", "give exactly one of id or ids")
+    ids = a.get("ids")
+    if ids:
+        r = _fetch(api, "/v1/projects/batch", {"id": ids})
+        n = a.get("items", 3)
+        rows = []
+        for p in r.body.get("items") or []:
+            rows.append(_project_detail(p, n))
+        return _batch(r, rows)
     r = _fetch(api, "/v1/projects/" + _seg(a["id"], "id"))
-    p = r.body
+    return _one(r, _project_detail(r.body, a.get("items", 10)))
+
+
+def _project_detail(p, n):
     row = project_row(p)
     items = p.get("items") or []
-    n = a.get("items", 10)
     row["items"] = [project_item_row(i) for i in items[:n]]
     if len(items) > n:
         row["items_not_shown"] = len(items) - n
-    return _one(r, row)
+    return row
 
 
 @tool("search_decisions",
@@ -702,11 +728,25 @@ def search_signals(api, a):
     return _page(r, [signal_row(x) for x in r.body.get("items") or []])
 
 
-@tool("get_signal", "One early signal (sig_...) with its full size fields, APNs and text.",
-      {"id": _s("sig_...")}, required=("id",))
+@tool("get_signal",
+      "One or more early signals (sig_...) with full size fields, location, APNs and text. "
+      "Give id, or ids for up to 20 in one call. Each signal is one record, once a month.",
+      {"id": _s("sig_..."),
+       "ids": {"type": "array", "items": {"type": "string"}, "maxItems": 20,
+               "description": "up to 20 sig_... IDs; use instead of id"}})
 def get_signal(api, a):
+    if bool(a.get("id")) == bool(a.get("ids")):
+        raise ToolError("validation_error", "give exactly one of id or ids")
+    if a.get("ids"):
+        r = _fetch(api, "/v1/signals/batch", {"id": a["ids"]})
+        return _batch(r, [_signal_detail(s) for s in r.body.get("items") or []])
     r = _fetch(api, "/v1/signals/" + _seg(a["id"], "id"))
-    s = r.body
+    return _one(r, _signal_detail(r.body))
+
+
+def _signal_detail(s):
+    """The single-signal row: the search row plus location, applicant, up to 5 APNs and
+    case numbers, coordinates, and title and description kept to DETAIL_TEXT_MAX."""
     row = signal_row(s)
     row.update(_prune({"location": s.get("location"), "applicant": s.get("applicant"),
                        "apns": sorted(set(s.get("apns") or []))[:5],
@@ -716,7 +756,7 @@ def get_signal(api, a):
         row["title"] = _clip(s.get("title"), DETAIL_TEXT_MAX)
     if s.get("description"):
         row["description"] = _clip(s.get("description"), DETAIL_TEXT_MAX)
-    return _one(r, row)
+    return row
 
 
 @tool("recent_changes",
@@ -794,6 +834,9 @@ def _check_value(name, spec, v):
         if "maximum" in spec and v > spec["maximum"]:
             raise ToolError("validation_error", f"{name} must be <= {spec['maximum']}", name)
     if t == "array":
+        if "maxItems" in spec and len(v) > spec["maxItems"]:
+            raise ToolError("validation_error", f"{name} must have at most "
+                            f"{spec['maxItems']} items", name)
         for x in v:
             _check_value(name, spec.get("items", {}), x)
 
