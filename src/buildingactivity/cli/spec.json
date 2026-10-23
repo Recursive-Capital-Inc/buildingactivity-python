@@ -188,7 +188,7 @@
         "type": "null"
        }
       ],
-      "description": "created, changed",
+      "description": "created, changed; or signal.created (early signals, a webhook of its own)",
       "title": "Types"
      }
     },
@@ -7377,6 +7377,35 @@
       }
      },
      {
+      "description": "Project kind. site: one place or development; policy: ordinance, moratorium, code or zoning text change, ballot measure; program: plan or program over many sites (general plan, housing element, CIP); other: agenda items the rules cannot place. Rules only. Repeat or comma-separate.",
+      "example": [
+       "site"
+      ],
+      "in": "query",
+      "name": "kind",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "enum": [
+           "site",
+           "policy",
+           "program",
+           "other"
+          ],
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kind"
+      }
+     },
+     {
       "description": "An organization named among the project's parties (owner, applicant, developer, architect, engineer, contractor, CEQA lead agency): words of the name, case and legal form ignored. At least 3 letters or digits.",
       "example": "turner construction",
       "in": "query",
@@ -7563,6 +7592,127 @@
      }
     ],
     "summary": "Big projects, newest activity first",
+    "tags": [
+     "projects"
+    ]
+   }
+  },
+  "/v1/projects/batch": {
+   "get": {
+    "description": "Up to 25 projects by ID, in request order; each item is the same object GET /v1/projects/{project_id} returns. An ID merged into another project answers the current project (also marked resolved_from) and is listed in meta.aliased ({asked_id: current_id}); IDs that resolve to the same project are answered once and charged once. Unknown IDs are listed in meta.missing; IDs the key could not pay for are in meta.not_returned. Metered: one record per project returned.",
+    "operationId": "projects_batch_v1_projects_batch_get",
+    "parameters": [
+     {
+      "description": "Project IDs (prj_ plus 20 base32 characters); repeat id= or comma-separate, at most 25.",
+      "example": [
+       "prj_bj3uxinpwmctyh6mifmq",
+       "prj_nfqnptpw5gfinbrremyq"
+      ],
+      "in": "query",
+      "name": "id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Parameters are well formed but do not make sense together, or the query is too broad (type query_too_broad)"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Missing or invalid X-API-Key header"
+     },
+     "402": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The key's monthly records are used up"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "A parameter is missing, malformed or out of range"
+     },
+     "429": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Too many requests; retry after the Retry-After header (seconds)"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Our fault; retry, then report the request_id"
+     },
+     "503": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The index, or the side table this route reads, is not built yet; retry after the next index publish"
+     }
+    },
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ],
+    "summary": "Projects by ID (batch, up to 25)",
     "tags": [
      "projects"
     ]
@@ -8647,7 +8797,7 @@
       }
      },
      {
-      "description": "Project type of the signal, from the same fixed rules as project type (title and description phrases, CEQA development type, permit tags): data_center, hospital, stadium_arena, school, logistics_industrial, mixed_use, multifamily, office, infrastructure, other. Repeat or comma-separate.",
+      "description": "Project type of the signal, from the same fixed rules as project type (title and description phrases, CEQA development type, permit tags): data_center, hospital, stadium_arena, school, logistics_industrial, mixed_use, multifamily, office, solar_farm, energy_storage, infrastructure, other. Repeat or comma-separate.",
       "example": [
        "data_center"
       ],
@@ -8667,6 +8817,35 @@
         }
        ],
        "title": "Type"
+      }
+     },
+     {
+      "description": "Signal kind. site: one place or development; policy: ordinance, moratorium, code or zoning text change, ballot measure; program: plan or program over many sites (general plan, housing element, CIP); other: agenda items the rules cannot place. Rules only. Repeat or comma-separate.",
+      "example": [
+       "site"
+      ],
+      "in": "query",
+      "name": "kind",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "enum": [
+           "site",
+           "policy",
+           "program",
+           "other"
+          ],
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kind"
       }
      },
      {
@@ -8788,6 +8967,127 @@
      }
     ],
     "summary": "Early signals, newest filed first",
+    "tags": [
+     "signals"
+    ]
+   }
+  },
+  "/v1/signals/batch": {
+   "get": {
+    "description": "Up to 50 signals by ID, in request order; unknown IDs are listed in meta.missing. For an enforced org a signal outside its bought Signals scope is listed in meta.out_of_scope instead of failing the whole batch, and in-scope signals are free (they do not count against the API plan). IDs the key could not pay for are in meta.not_returned. Metered: one record per signal returned.",
+    "operationId": "signals_batch_v1_signals_batch_get",
+    "parameters": [
+     {
+      "description": "Signal IDs (sig_ plus 20 base32 characters); repeat id= or comma-separate, at most 50.",
+      "example": [
+       "sig_4lvt2ihrxmtcpclnmguq",
+       "sig_5gkytgaxnbgm6rukvyvq"
+      ],
+      "in": "query",
+      "name": "id",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "400": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Parameters are well formed but do not make sense together, or the query is too broad (type query_too_broad)"
+     },
+     "401": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Missing or invalid X-API-Key header"
+     },
+     "402": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The key's monthly records are used up"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "A parameter is missing, malformed or out of range"
+     },
+     "429": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Too many requests; retry after the Retry-After header (seconds)"
+     },
+     "500": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "Our fault; retry, then report the request_id"
+     },
+     "503": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/V1Error"
+        }
+       }
+      },
+      "description": "The index, or the side table this route reads, is not built yet; retry after the next index publish"
+     }
+    },
+    "security": [
+     {
+      "APIKeyHeader": []
+     }
+    ],
+    "summary": "Signals by ID (batch, up to 50)",
     "tags": [
      "signals"
     ]
@@ -9086,7 +9386,7 @@
     ]
    },
    "post": {
-    "description": "Subscribe an https URL to the change feed (GET /v1/changes) with a filter: geo_id, tags, types, fields, include_backfill, backfill. As in GET /v1/changes, backfill created events are left out unless the filter sets include_backfill: true. The response carries the signing secret once; every delivery is a POST of up to 100 events in seq order with X-PermitIntel-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, \"<t>.\" + body)>. Private, loopback and link-local targets are refused. The subscription belongs to the calling key; a key may have at most 5 active webhooks (plans config), and one more answers 403 forbidden. Not metered; each delivered event counts as one record for the key, once, and plan fair-use caps pause deliveries (GET /v1/usage shows it). An organization whose plan is enforced may subscribe when it holds an area feed, even though its Developer plan's webhooks flag is false: the feed grants them and the worker delivers only events inside the feed. Without a feed area it answers 403 feature_requires_area_feed.",
+    "description": "Subscribe an https URL to the change feed (GET /v1/changes) with a filter: geo_id, tags, types, fields, include_backfill, backfill. As in GET /v1/changes, backfill created events are left out unless the filter sets include_backfill: true. The response carries the signing secret once; every delivery is a POST of up to 100 events in seq order with X-PermitIntel-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, \"<t>.\" + body)>. Private, loopback and link-local targets are refused. The subscription belongs to the calling key; a key may have at most 5 active webhooks (plans config), and one more answers 403 forbidden. Not metered; each delivered event counts as one record for the key, once, and plan fair-use caps pause deliveries (GET /v1/usage shows it). An organization whose plan is enforced may subscribe when it holds an area feed, even though its Developer plan's webhooks flag is false: the feed grants them and the worker delivers only events inside the feed. Without a feed area it answers 403 feature_requires_area_feed. A filter with types [\"signal.created\"] subscribes to early signals instead (a webhook of its own; geo_id takes a state, tags and fields are refused): an enforced organization needs a Signals scope (else 402 signals_not_entitled) and receives only the signals inside it, free.",
     "operationId": "create_v1_webhooks_post",
     "requestBody": {
      "content": {
