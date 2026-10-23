@@ -1,7 +1,28 @@
 """search_signals takes and returns `type`, and PROJECT_TYPES follows the API's 12 types
 (proposal #37)."""
+from buildingactivity.cli import main as cli
 from buildingactivity.mcp import tools as T
 from test_mcp_tools import FixtureServer, api
+
+
+def _signals_spec_type_desc():
+    param = next(x for x in cli.load_spec()["paths"]["/v1/signals"]["get"]["parameters"]
+                 if x["name"] == "type")
+    return param["description"].split(":", 1)[1]
+
+
+def test_search_signals_type_matches_the_bundled_spec():
+    listed = [t.split()[0].rstrip(".") for t in _signals_spec_type_desc().split(",")]
+    assert all(t in T.PROJECT_TYPES for t in listed)
+    assert len(listed) == len(T.PROJECT_TYPES)
+
+
+def test_search_signals_accepts_solar_farm():
+    srv = FixtureServer()
+    out, err = T.call_tool("search_signals", {"geo_id": "cty_x", "type": ["solar_farm"]},
+                           api(srv))
+    assert not err, out
+    assert srv.calls[0][1]["type"] == "solar_farm"
 
 
 def test_project_types_follow_the_api():
