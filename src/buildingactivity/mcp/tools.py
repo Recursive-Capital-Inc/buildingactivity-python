@@ -46,8 +46,10 @@ METRIC_DIMS = ("month", "tag", "class", "status", "jurisdiction")
 CONTRACTOR_SORTS = ("permits_desc", "value_desc", "last_permit_desc")
 PROJECT_SORTS = ("newest", "value_desc")
 PROJECT_TYPES = ("data_center", "hospital", "stadium_arena", "school", "logistics_industrial",
-                 "mixed_use", "multifamily", "office", "infrastructure", "other")
+                 "mixed_use", "multifamily", "office", "solar_farm", "energy_storage",
+                 "infrastructure", "other")
 SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case")
+SIGNAL_KINDS = ("site", "policy", "program", "other")
 CHANGE_TYPES = ("created", "changed")
 CHANGE_FIELDS = ("status", "status_detail", "record_date", "permit_type", "description",
                  "address", "source_url", "value", "contractor", "date_applied", "date_issued",
@@ -268,7 +270,8 @@ def project_row(p):
     urls = p.get("source_urls") or []
     t = p.get("type")
     return _prune({
-        "id": p.get("id"), "name": _clip(p.get("name"), 120), "state": p.get("state"),
+        "id": p.get("id"), "kind": p.get("kind"),
+        "name": _clip(p.get("name"), 120), "state": p.get("state"),
         "city": p.get("city"), "address": p.get("address"), "value_usd": p.get("value_usd"),
         "type": t.get("type") if isinstance(t, dict) else t,
         "stage": stage.get("stage"), "stage_date": stage.get("date"),
@@ -292,7 +295,8 @@ def signal_row(s):
     its text states (units, sqft, acres, MW, dollars), with `large` and its basis."""
     size = {k: s.get(k) for k in SIZE_FIELDS if s.get(k) is not None}
     return _prune({
-        "id": s.get("id"), "title": _clip(s.get("title"), 120), "category": s.get("category"),
+        "id": s.get("id"), "kind": s.get("kind"), "title": _clip(s.get("title"), 120),
+        "category": s.get("category"),
         "description": _clip(s.get("description"), SIGNAL_ROW_TEXT_MAX), "location": s.get("location"),
         "apns": sorted(set(s.get("apns") or []))[:3],
         "doc_type": s.get("doc_type"), "stage": s.get("status"),
@@ -613,12 +617,15 @@ def coverage(api, a):
 
 @tool("search_projects",
       "Big construction projects (permits plus early signals such as CEQA filings), newest "
-      "first, with type, stage and source_url.",
+      "first, with kind, type, stage and source_url.",
       {"geo_id": GEO_ID,
        "q": _s("every word must appear as part of a word in name, titles, descriptions, "
                "address or location (ware matches software); no quotes"),
        "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
                 "description": "project type from text rules (beta)"},
+       "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
+                "description": "site: one place or building; policy: ordinance, moratorium, "
+                               "code change, study"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
@@ -626,8 +633,8 @@ def coverage(api, a):
        "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_projects(api, a):
-    params = {k: a.get(k) for k in ("geo_id", "q", "type", "min_value", "stage", "date_from",
-                                    "date_to", "cursor")}
+    params = {k: a.get(k) for k in ("geo_id", "q", "type", "kind", "min_value", "stage",
+                                    "date_from", "date_to", "cursor")}
     params.update(sort=a.get("sort", "newest"), limit=a.get("limit", 10))
     r = _fetch(api, "/v1/projects", params)
     return _page(r, [project_row(x) for x in r.body.get("items") or []])
@@ -668,20 +675,23 @@ def search_decisions(api, a):
 
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
-      "first, with stage, stated size, location, APNs, a short description and source_url.",
+      "first, with kind, stage, stated size, location, APNs, a short description and source_url.",
       {"geo_id": GEO_ID,
        "q": _s('every word must appear in title or description, any order; whole words, '
                'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
        "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
+       "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
+                "description": "site: one place or building; policy: ordinance, moratorium, "
+                               "code change, study"},
        "date_from": _s("filed on or after, " + DATE), "date_to": _s(DATE),
        "large_only": {"type": "boolean", "description": "only large projects"},
        "min_value": {"type": "number", "minimum": 0, "description": "stated USD"},
        "project_id": _s("prj_..."),
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_signals(api, a):
-    params = {k: a.get(k) for k in ("geo_id", "q", "category", "source", "date_from",
+    params = {k: a.get(k) for k in ("geo_id", "q", "category", "source", "kind", "date_from",
                                     "date_to", "large_only", "min_value", "project_id",
                                     "cursor")}
     params["limit"] = a.get("limit", 10)
