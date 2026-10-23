@@ -3156,7 +3156,7 @@
   },
   "/v1/exports": {
    "get": {
-    "description": "The bulk export releases, newest first: base snapshots (every table) and incrementals (since the previous release: full rows of new or changed permits with their permit_versions hashes, last_seen of permits re-pulled unchanged, permit deletes, the tag rows of changed permits and the change-feed events), each with its manifest (schema, row counts, sha256 per file, data release, seq window). Every file carries a signed `url` valid for the calling key only, until expires_at. Free: listing charges no records; a download charges the rows in the file. These files are national, so an enforced organization needs the country feed: with a smaller feed the answer is 403 feature_requires_area_feed (per-area export files are not available yet), and with the country feed its downloads are free.",
+    "description": "The bulk export releases, newest first: base snapshots (every table) and incrementals (since the previous release: full rows of new or changed permits with their permit_versions hashes, last_seen of permits re-pulled unchanged, permit deletes, the tag rows of changed permits and the change-feed events), each with its manifest (schema, row counts, sha256 per file, data release, seq window). Every file carries a signed `url` valid for the calling key only, until expires_at. Free: listing charges no records; a download charges the rows in the file. An enforced organization needs an area feed (403 feature_requires_area_feed without one, matching features.bulk_exports in GET /v1/entitlements) and its downloads are free. The country feed sees every file; a state, metro or county feed sees only the partitions its feed touches, with `scope` on each release, and files filtered to its feed agencies (or counties) are marked `scoped` with `rows` null until downloaded.",
     "operationId": "list_exports_v1_exports_get",
     "parameters": [
      {
@@ -3285,7 +3285,7 @@
   },
   "/v1/exports/{release}/{file}": {
    "get": {
-    "description": "One export file (Parquet, or the release's manifest.json) by the signed URL from GET /v1/exports. Send the same X-API-Key that listed it: the signature covers the key, the file and the expiry. Metered: the file's row count (from the manifest) is reserved before the download starts; a key with fewer records left this month gets 402 credit_exhausted, never a partial file. manifest.json costs 0. An enforced organization needs the country feed to download (403 feature_requires_area_feed otherwise); its download is free.",
+    "description": "One export file (Parquet, or the release's manifest.json) by the signed URL from GET /v1/exports. Send the same X-API-Key that listed it: the signature covers the key, the file and the expiry. Metered: the file's row count (from the manifest) is reserved before the download starts; a key with fewer records left this month gets 402 credit_exhausted, never a partial file. manifest.json costs 0. An enforced organization needs an area feed to download (403 feature_requires_area_feed otherwise) and its download is free. A file outside a smaller feed's scope answers 404; a `scoped` file is filtered to the feed's rows on the way out (X-Export-Rows carries the filtered count), and manifest.json lists only the feed's files.",
     "operationId": "download_v1_exports__release___file__get",
     "parameters": [
      {
@@ -5641,7 +5641,7 @@
   },
   "/v1/permits": {
    "get": {
-    "description": "Up to 100 permits by ID, in request order, duplicates once. IDs we do not hold are listed in meta.missing; permits new this month that do not fit in the key's remaining monthly records are left out and listed in meta.not_returned (permits already read this month are always returned). Metered: one record per distinct permit a month. meta.areas_needed names the areas that would cover dropped rows that lie outside the organization's area feed, and meta.coverage_building the api_only areas among them (no feed is sold there yet).",
+    "description": "Up to 100 permits by ID, in request order, duplicates once. IDs we do not hold are listed in meta.missing; permits new this month that do not fit in the key's remaining monthly records are left out and listed in meta.not_returned (permits already read this month are always returned). Metered: one record per distinct permit a month. meta.areas_needed names the areas that would cover dropped rows that lie outside the organization's area feed, and meta.coverage_building the api_only areas among them (no feed is sold there yet). The permit object ends with agency_name: the place the agency key serves, '<jurisdiction name>, <state>' from the agency's jurisdiction (for example bridgeport_tx -> 'Bridgeport, CT'); null when the agency has no jurisdiction.",
     "operationId": "batch_v1_permits_get",
     "parameters": [
      {
@@ -5762,7 +5762,7 @@
   },
   "/v1/permits/search": {
    "get": {
-    "description": "Search permits. Every /v0/permits filter with the same meaning plus geo_id, address and property IDs, ZIP, tags (with -tag exclusion), contractor license, has_contractor and has_value, the event date window date_from/date_to (date_issued, else date_applied, else record_date; the default way to search a date window), finaled and Shovels-style permit date windows, minimum approval and construction days, and include_count. By default the search returns every permit class except the non-construction ones (admin, business_license, code_enforcement, engineering_row, environmental_health, other, planning); pass category=all for every class. All filters are ANDed. Items are v1 permit objects: id first, the issuer's fields with source_url and provenance, then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (null unless the permit's own description is missing, a code or shorthand and a model wrote one; the issuer's description is never replaced). Keyset paginated with next_cursor. excluded_classes lists the classes the default scope left out (empty unless no category was given). Metered: one record per item. within=entitled narrows the search to the organization's area feed. An organization's feed rows are free and need no Developer records; rows outside it are charged to the Developer meter, and a response that cannot pay for them answers 402 with areas_needed (the areas that would cover them), coverage_building (the api_only areas those rows sit in, where no feed is sold yet) and upgrade_url. X-BA-Scope on the response says feed, metered or mixed.",
+    "description": "Search permits. Every /v0/permits filter with the same meaning plus geo_id, address and property IDs, ZIP, tags (with -tag exclusion), contractor license, has_contractor and has_value, the event date window date_from/date_to (date_issued, else date_applied, else record_date; the default way to search a date window), finaled and Shovels-style permit date windows, minimum approval and construction days, and include_count. By default the search returns every permit class except the non-construction ones (admin, business_license, code_enforcement, engineering_row, environmental_health, other, planning); pass category=all for every class. All filters are ANDed. Items are v1 permit objects: id first, the issuer's fields with source_url and provenance, then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (null unless the permit's own description is missing, a code or shorthand and a model wrote one; the issuer's description is never replaced). Keyset paginated with next_cursor. The permit object ends with agency_name: the place the agency key serves, '<jurisdiction name>, <state>' from the agency's jurisdiction (for example bridgeport_tx -> 'Bridgeport, CT'); null when the agency has no jurisdiction. excluded_classes lists the classes the default scope left out (empty unless no category was given). Metered: one record per item. within=entitled narrows the search to the organization's area feed. An organization's feed rows are free and need no Developer records; rows outside it are charged to the Developer meter, and a response that cannot pay for them answers 402 with areas_needed (the areas that would cover them), coverage_building (the api_only areas those rows sit in, where no feed is sold yet) and upgrade_url. X-BA-Scope on the response says feed, metered or mixed.",
     "operationId": "search_v1_permits_search_get",
     "parameters": [
      {
@@ -6102,7 +6102,7 @@
       }
      },
      {
-      "description": "Add total_count: {value, relation eq} exact up to 10,000, then {10000, gte}; null when counting runs past 5 s.",
+      "description": "Add total_count: {value, relation: eq} exact up to 10,000, then {value: 10000, relation: gte}. null when counting runs past its time budget (about 1 s); total_estimate then gives a rough figure from monthly metrics that can ignore some filters (listed in its ignores).",
       "example": true,
       "in": "query",
       "name": "include_count",
@@ -6634,7 +6634,7 @@
       }
      },
      {
-      "description": "Full text over description and project name: words ANDed, \"quoted phrases\" kept.",
+      "description": "Full text over description and project name: every word must appear, in any order; whole words, no plurals or stemming; \"a quoted phrase\" must appear as adjacent words.",
       "example": "solar",
       "in": "query",
       "name": "q",
@@ -6838,7 +6838,7 @@
   },
   "/v1/permits/{permit_id}": {
    "get": {
-    "description": "One permit by its stable ID: id, the issuer's fields (with source_url, first_seen, last_seen, provenance), then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (a short plain description written by a model for permits whose own description is missing, a code or shorthand, and the permit fields it was written from; null otherwise, and the issuer's description is never replaced). Metered: one record.",
+    "description": "One permit by its stable ID: id, the issuer's fields (with source_url, first_seen, last_seen, provenance), then approval_days, construction_days and total_days, contractor_link, and description_derived with description_derived_sources (a short plain description written by a model for permits whose own description is missing, a code or shorthand, and the permit fields it was written from; null otherwise, and the issuer's description is never replaced). The permit object ends with agency_name: the place the agency key serves, '<jurisdiction name>, <state>' from the agency's jurisdiction (for example bridgeport_tx -> 'Bridgeport, CT'); null when the agency has no jurisdiction. Metered: one record.",
     "operationId": "get_permit_v1_permits__permit_id__get",
     "parameters": [
      {
@@ -7206,7 +7206,7 @@
       }
      },
      {
-      "description": "Every word appears in the project name or an item's title, description, address or location.",
+      "description": "Every word must appear as part of a word (substring, so ware matches software) in the project name or an item's title, description, address or location, in any order. Quotes are not supported: a quote character is matched literally.",
       "example": "data center",
       "in": "query",
       "name": "q",
@@ -7340,7 +7340,7 @@
       }
      },
      {
-      "description": "Project type from fixed rules over the project name, item titles, the CEQA development type and permit tags: data_center, hospital, stadium_arena, school, logistics_industrial, mixed_use, multifamily, office, infrastructure, other. Repeat or comma-separate.",
+      "description": "Project type from fixed rules over the project name, item titles, the CEQA development type and permit tags: data_center, hospital, stadium_arena, school, logistics_industrial, mixed_use, multifamily, office, solar_farm, energy_storage, infrastructure, other. Repeat or comma-separate.",
       "example": [
        "data_center"
       ],
@@ -7360,6 +7360,8 @@
            "mixed_use",
            "multifamily",
            "office",
+           "solar_farm",
+           "energy_storage",
            "infrastructure",
            "other"
           ],
@@ -8577,7 +8579,7 @@
       }
      },
      {
-      "description": "Full text over title and description; every word must appear.",
+      "description": "Full text over title and description: every word must appear, in any order; whole words, no plurals or stemming (center does not match centers); \"a quoted phrase\" must appear as adjacent words.",
       "example": "hospital",
       "in": "query",
       "name": "q",
@@ -8642,6 +8644,29 @@
         }
        ],
        "title": "Project Id"
+      }
+     },
+     {
+      "description": "Project type of the signal, from the same fixed rules as project type (title and description phrases, CEQA development type, permit tags): data_center, hospital, stadium_arena, school, logistics_industrial, mixed_use, multifamily, office, infrastructure, other. Repeat or comma-separate.",
+      "example": [
+       "data_center"
+      ],
+      "in": "query",
+      "name": "type",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Type"
       }
      },
      {
