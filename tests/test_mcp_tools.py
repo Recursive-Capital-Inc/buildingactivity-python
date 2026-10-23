@@ -188,14 +188,16 @@ ROUTES_OF = {
     "search_contractors": ["/v1/contractors/search", "/v1/contractors/lookup"],
     "get_contractor": ["/v1/contractors/{contractor_id}"], "geo_lookup": ["/v1/geo/search"],
     "metrics": ["/v1/metrics"], "coverage": ["/v1/meta/coverage"],
-    "search_projects": ["/v1/projects"], "get_project": ["/v1/projects/{project_id}"],
+    "search_projects": ["/v1/projects"], "get_project": ["/v1/projects/{project_id}",
+                                                          "/v1/projects/batch"],
     "search_decisions": ["/v1/decisions/search"], "search_signals": ["/v1/signals"],
-    "get_signal": ["/v1/signals/{signal_id}"],
+    "get_signal": ["/v1/signals/{signal_id}", "/v1/signals/batch"],
     "recent_changes": ["/v1/changes", "/v1/webhooks/{webhook_id}"],
     "list_tags": ["/v1/lists/tags"], "my_usage": ["/v1/usage"],
 }
 NOT_PARAMS = {("resolve_address", "address"), ("get_property", "id"),
-              ("get_project", "items"), ("recent_changes", "webhook_id")}
+              ("get_project", "items"), ("get_project", "ids"),
+              ("get_signal", "ids"), ("recent_changes", "webhook_id")}
 
 
 @pytest.mark.parametrize("name", sorted(CALLS))
