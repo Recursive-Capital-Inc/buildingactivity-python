@@ -102,6 +102,12 @@ Errors are free. Permit rows inside the organization's paid area feed are free.
 | `list_tags` | `GET /v1/lists/tags` | all | work tag IDs for the tag filters, permit counts, reliable or beta |
 | `my_usage` | `GET /v1/usage` | 1 | plan, records used and remaining, reset date, last 7 days |
 
+Text search (`q`): on `search_permits` and `search_signals` every word must appear
+(whole words, no plurals: `center` misses `centers`), in any order, and a quoted
+`"data center"` matches the words adjacent as a phrase. On `search_projects` every word
+must appear as part of a word (`ware` matches `software`) in the name, titles,
+descriptions, address or location, and quotes are not supported.
+
 Measured answer sizes (chars / 4, `tests/test_mcp_tools.py`): on recorded API responses
 35 to 330 tokens per answer; at the default page with every text field padded to 400
 characters 35 to 3,942 tokens (`search_signals` the largest), all under the 4,000 budget.

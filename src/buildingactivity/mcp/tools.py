@@ -610,7 +610,9 @@ def coverage(api, a):
 @tool("search_projects",
       "Big construction projects (permits plus early signals such as CEQA filings), "
       "newest first, with stage and source_url.",
-      {"geo_id": GEO_ID, "q": _s("words in name, title or address"),
+      {"geo_id": GEO_ID,
+       "q": _s("every word must appear as part of a word in name, titles, descriptions, "
+               "address or location (ware matches software); no quotes"),
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
@@ -661,7 +663,9 @@ def search_decisions(api, a):
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
       "first, with stage, stated size, location, APNs, a short description and source_url.",
-      {"geo_id": GEO_ID, "q": _s("words in title or description"),
+      {"geo_id": GEO_ID,
+       "q": _s('every word must appear in title or description, any order; whole words, '
+               'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
        "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
