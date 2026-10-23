@@ -93,8 +93,8 @@ Errors are free. Permit rows inside the organization's paid area feed are free.
 | `geo_lookup` | `GET /v1/geo/search` | 5 | names to `geo_id` values for the area filters |
 | `metrics` | `GET /v1/metrics` | at most 36 rows | monthly series or one breakdown; at most one record per row shown (re-reads in the same month are free), `records_charged` is the API's figure; `rows_not_shown` counts the rest (not charged). `permits` by applied month, else issued, else record date; `issued`/`finaled` by their own date, so issued can exceed permits (search_permits uses another date basis) |
 | `coverage` | `GET /v1/meta/coverage` | all fields | permits held and field fill tiers for an area |
-| `search_projects` | `GET /v1/projects` | 10 | big projects with stage and first source URL |
-| `get_project` | `GET /v1/projects/{id}` | 10 items | newest items with their `source_url` |
+| `search_projects` | `GET /v1/projects` | 10 | big projects with type filter and field (data_center, hospital, ..., rules only, beta), stage and first source URL |
+| `get_project` | `GET /v1/projects/{id}` | 10 items | newest items with their `source_url`, project's `type` |
 | `search_decisions` | `GET /v1/decisions/search` | 10 | zoning, land-use and CEQA decisions |
 | `search_signals` | `GET /v1/signals` | 10 | early signals (CEQA, council matters, planning cases): `stage`, stated `size` (units, sqft, acres, MW, USD), `large`, `location`, up to 3 `apns`, a short `description`; filters `geo_id`, `q`, `category`, `source`, filed `date_from`/`date_to`, `large_only`, `min_value`, `project_id` |
 | `get_signal` | `GET /v1/signals/{id}` | 1 | adds applicant, case numbers, lat/lon, up to 5 APNs and up to 2,000 characters of title and description |
