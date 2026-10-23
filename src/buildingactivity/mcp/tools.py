@@ -45,6 +45,8 @@ GEO_LEVELS = ("state", "metro", "county", "jurisdiction", "zip")
 METRIC_DIMS = ("month", "tag", "class", "status", "jurisdiction")
 CONTRACTOR_SORTS = ("permits_desc", "value_desc", "last_permit_desc")
 PROJECT_SORTS = ("newest", "value_desc")
+PROJECT_TYPES = ("data_center", "hospital", "stadium_arena", "school", "logistics_industrial",
+                 "mixed_use", "multifamily", "office", "infrastructure", "other")
 SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case")
 CHANGE_TYPES = ("created", "changed")
 CHANGE_FIELDS = ("status", "status_detail", "record_date", "permit_type", "description",
@@ -264,9 +266,11 @@ def decision_row(d):
 def project_row(p):
     stage = p.get("stage") or {}
     urls = p.get("source_urls") or []
+    t = p.get("type")
     return _prune({
         "id": p.get("id"), "name": _clip(p.get("name"), 120), "state": p.get("state"),
         "city": p.get("city"), "address": p.get("address"), "value_usd": p.get("value_usd"),
+        "type": t.get("type") if isinstance(t, dict) else t,
         "stage": stage.get("stage"), "stage_date": stage.get("date"),
         "permit_count": p.get("permit_count"), "signal_count": p.get("signal_count"),
         "latest_item_date": p.get("latest_item_date"),
@@ -608,11 +612,13 @@ def coverage(api, a):
 
 
 @tool("search_projects",
-      "Big construction projects (permits plus early signals such as CEQA filings), "
-      "newest first, with stage and source_url.",
+      "Big construction projects (permits plus early signals such as CEQA filings), newest "
+      "first, with type, stage and source_url.",
       {"geo_id": GEO_ID,
        "q": _s("every word must appear as part of a word in name, titles, descriptions, "
                "address or location (ware matches software); no quotes"),
+       "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
+                "description": "project type from text rules (beta)"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
@@ -620,7 +626,7 @@ def coverage(api, a):
        "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_projects(api, a):
-    params = {k: a.get(k) for k in ("geo_id", "q", "min_value", "stage", "date_from",
+    params = {k: a.get(k) for k in ("geo_id", "q", "type", "min_value", "stage", "date_from",
                                     "date_to", "cursor")}
     params.update(sort=a.get("sort", "newest"), limit=a.get("limit", 10))
     r = _fetch(api, "/v1/projects", params)
