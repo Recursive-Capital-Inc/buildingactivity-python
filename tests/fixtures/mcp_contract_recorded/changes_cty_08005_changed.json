@@ -1,0 +1,124 @@
+{
+ "request": {
+  "path": "/v1/changes",
+  "params": {
+   "geo_id": "cty_08005",
+   "since": "2026-10-22",
+   "limit": 10,
+   "types": "permit.changed"
+  }
+ },
+ "status": 200,
+ "body": {
+  "items": [
+   {
+    "seq": 15828977394401,
+    "type": "permit.changed",
+    "permit_id": "pmt_xzhtcbr6hfb5yz6ybhpa",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_expires",
+    "old": "2027-04-06T14:45:52",
+    "new": "2027-04-19T15:17:44",
+    "source_field": "raw.ExpireDate"
+   },
+   {
+    "seq": 15828977394402,
+    "type": "permit.changed",
+    "permit_id": "pmt_t62gfrmug2mvndpxaxxa",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "status",
+    "old": "Issued",
+    "new": "Complete",
+    "source_field": "status"
+   },
+   {
+    "seq": 15828977394405,
+    "type": "permit.changed",
+    "permit_id": "pmt_t62gfrmug2mvndpxaxxa",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_expires",
+    "old": "2027-04-13T15:53:19",
+    "new": "2027-04-19T15:19:08",
+    "source_field": "raw.ExpireDate"
+   },
+   {
+    "seq": 15828977394406,
+    "type": "permit.changed",
+    "permit_id": "pmt_t62gfrmug2mvndpxaxxa",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_finaled",
+    "old": "null",
+    "new": "2026-10-21T00:00:00",
+    "source_field": "raw.FinalDate"
+   },
+   {
+    "seq": 15828977394407,
+    "type": "permit.changed",
+    "permit_id": "pmt_esbhb2l5nz4ku56pgulq",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "status",
+    "old": "Issued",
+    "new": "Complete",
+    "source_field": "status"
+   },
+   {
+    "seq": 15828977394410,
+    "type": "permit.changed",
+    "permit_id": "pmt_esbhb2l5nz4ku56pgulq",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_expires",
+    "old": "2027-04-18T10:59:06",
+    "new": "2027-04-19T15:29:52",
+    "source_field": "raw.ExpireDate"
+   },
+   {
+    "seq": 15828977394411,
+    "type": "permit.changed",
+    "permit_id": "pmt_esbhb2l5nz4ku56pgulq",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_finaled",
+    "old": "null",
+    "new": "2026-10-21T00:00:00",
+    "source_field": "raw.FinalDate"
+   },
+   {
+    "seq": 15828977394412,
+    "type": "permit.changed",
+    "permit_id": "pmt_jk62coovrczoc35ctsia",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "date_expires",
+    "old": "2027-04-07T13:35:51",
+    "new": "2027-04-19T15:27:38",
+    "source_field": "raw.ExpireDate"
+   },
+   {
+    "seq": 15828977394413,
+    "type": "permit.changed",
+    "permit_id": "pmt_lhx26g6losneyqbkxokq",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "record_date",
+    "old": "2026-06-08",
+    "new": "2026-10-21",
+    "source_field": "record_date"
+   },
+   {
+    "seq": 15828977394414,
+    "type": "permit.changed",
+    "permit_id": "pmt_lhx26g6losneyqbkxokq",
+    "observed_at": "2026-10-22T22:04:40Z",
+    "field": "status",
+    "old": "In Review",
+    "new": "Issued",
+    "source_field": "status"
+   }
+  ],
+  "size": 10,
+  "next_cursor": "15828977394414",
+  "has_more": true,
+  "meta": {
+   "history_start": "2026-10-12",
+   "published_through": "2026-10-24T19:17:58Z",
+   "latest_seq": 18560150053627
+  }
+ }
+}

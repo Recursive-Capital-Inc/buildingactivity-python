@@ -20,6 +20,7 @@ import json
 import os
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from urllib.parse import quote
 
 ENV_URL = "BUILDINGACTIVITY_API_URL"
@@ -210,6 +211,7 @@ def permit_row(p):
         "applied": p.get("date_applied"),
         "issued": p.get("date_issued"),
         "finaled": p.get("date_finaled"),
+        "record_date": p.get("record_date"),
         "contractor": p.get("contractor_name"),
         "contractor_id": link.get("contractor_id"),
         "source_url": p.get("source_url"),
@@ -388,7 +390,21 @@ def _i(desc, lo=1, hi=None, default=None):
 
 CURSOR = _s("next_cursor from the previous answer")
 GEO_ID = _s("area: CA, cty_06041, msa_41860, jur_..., ZIP 94920 (find with geo_lookup)")
+GEO_ID_NO_ZIP = _s("area: US, CA, cty_06041, msa_41860 or jur_... (find with geo_lookup)")
 DATE = "YYYY-MM-DD"
+
+
+def utcnow():
+    """The clock for the default metrics window (tests monkeypatch this)."""
+    return datetime.now(UTC)
+
+
+def _month_window(now=None):
+    """(from, to) YYYY-MM covering the 36 months ending with the current UTC month."""
+    now = now or utcnow()
+    total = now.year * 12 + now.month - 1 - (METRIC_ROWS - 1)
+    y, m0 = divmod(total, 12)
+    return f"{y:04d}-{m0 + 1:02d}", f"{now.year:04d}-{now.month:02d}"
 
 
 def tool(name, description, properties, required=()):
@@ -406,7 +422,7 @@ def tool(name, description, properties, required=()):
 @tool("resolve_address",
       "Find address IDs (adr_...) for street text, best match first, with permit counts. "
       "Pass an id to search_permits(address_id=...) for the permits there.",
-      {"address": _s("street address, e.g. '123 Main St, San Rafael, CA 94901'"),
+      {"address": _s("street address, e.g. '100 Congress Ave, Austin, TX 78701'"),
        "state": _s("two-letter state", pattern="^[A-Za-z]{2}$"),
        "zip": _s("five-digit ZIP", pattern=r"^\d{5}$"),
        "limit": _i("candidates", hi=20, default=5)},
@@ -451,22 +467,24 @@ def get_property(api, a):
 
 @tool("search_permits",
       "Search permits; construction only unless category ['all'] (health, planning, "
-      "licensing). date_from/to: issued, else applied, else record date.",
+      "licensing). Dates: issued, else applied, else record date.",
       {"address_id": _s("adr_..."),
        "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
                                                     "94920; geo_lookup"),
-       "q": {"type": "string"},
+       "q": _s('every word must appear in description or project name, any order; whole '
+               'words, no plurals; "quoted phrase" = adjacent words'),
        "tags": {"type": "array", "items": {"type": "string"},
                 "description": "solar; -tag excludes"},
-       "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
+       "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)},
+                  "description": "permit statuses"},
        "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
                     "description": "['all'] = every class"},
-       "contractor": {"type": "string"}, "contractor_id": _s("ctr_..."),
-       "date_from": _s(DATE), "date_to": {"type": "string"},
-       "issued_from": _s(DATE), "issued_to": {"type": "string"},
-       "applied_from": _s(DATE), "applied_to": {"type": "string"},
+       "contractor": _s("contractor name"), "contractor_id": _s("ctr_..."),
+       "date_from": _s(DATE), "date_to": _s(DATE),
+       "issued_from": _s(DATE), "issued_to": _s(DATE),
+       "applied_from": _s(DATE), "applied_to": _s(DATE),
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
-       "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
+       "sort": {"type": "string", "enum": list(PERMIT_SORTS), "description": "row order"},
        "limit": _i("rows", hi=50, default=10),
        "cursor": _s("next_cursor"),
        "include_count": {"type": "boolean"}})
@@ -505,6 +523,12 @@ def get_permit(api, a):
     r = _fetch(api, "/v1/permits/" + _seg(a["id"], "id"))
     p = r.body
     row = permit_row(p)
+    # the detail tool: title and description kept to DETAIL_TEXT_MAX, like get_signal
+    if p.get("title"):
+        row["title"] = _clip(p.get("title"), DETAIL_TEXT_MAX)
+    if p.get("description") or p.get("project_name"):
+        row["description"] = _clip(p.get("description") or p.get("project_name"),
+                                   DETAIL_TEXT_MAX)
     row.update(_prune({"zip5": p.get("zip5"), "apn": p.get("apn"), "owner": p.get("owner_name"),
                        "applicant": p.get("applicant_name"),
                        "license": p.get("contractor_license"),
@@ -533,13 +557,14 @@ def permit_history(api, a):
 @tool("search_contractors",
       "Find contractors by area, name, trade tags or activity window. Or give license "
       "(with optional state, nothing else) to look one license up.",
-      {"geo_id": GEO_ID, "name": _s("name words, 3+ characters"),
+      {"geo_id": GEO_ID_NO_ZIP, "name": _s("name words, 3+ characters"),
        "license": _s("license number (exact)"),
        "state": _s("two-letter state", pattern="^[A-Za-z]{2}$"),
        "tags": {"type": "array", "items": {"type": "string"},
                 "description": "permit tags of their work, e.g. solar"},
        "permit_from": _s(DATE), "permit_to": _s(DATE),
-       "sort": {"type": "string", "enum": list(CONTRACTOR_SORTS), "default": "permits_desc"},
+       "sort": {"type": "string", "enum": list(CONTRACTOR_SORTS), "default": "permits_desc",
+                "description": "row order"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_contractors(api, a):
     if a.get("license"):
@@ -576,8 +601,9 @@ def get_contractor(api, a):
 
 @tool("geo_lookup",
       "Find area IDs (state, metro, county, jurisdiction, ZIP) by name for geo_id filters.",
-      {"q": _s("place name, e.g. 'Marin' or 'San Rafael'"),
-       "level": {"type": "string", "enum": list(GEO_LEVELS)},
+      {"q": _s("place name, e.g. 'Austin' or 'Maricopa'"),
+       "level": {"type": "string", "enum": list(GEO_LEVELS),
+                 "description": "area level to search"},
        "state": _s("two-letter state", pattern="^[A-Za-z]{2}$"),
        "limit": _i("rows", hi=20, default=5)},
       required=("q",))
@@ -588,20 +614,25 @@ def geo_lookup(api, a):
 
 
 @tool("metrics",
-      "Permit counts and values by month, or by tag, class, status or jurisdiction. permits: "
-      "month applied, else issued, else record date; issued/finaled: own date. At most 36 "
-      "rows, 1 record per row shown.",
-      {"geo_id": GEO_ID, "from": _s("YYYY-MM"), "to": _s("YYYY-MM"),
+      "Permit counts and values by month, tag, class, status or jurisdiction; month basis: "
+      "applied, else issued, else record date. No from/to: the latest 36 months. At most "
+      "36 rows, 1 record each.",
+      {"geo_id": GEO_ID_NO_ZIP, "from": _s("YYYY-MM"), "to": _s("YYYY-MM"),
        "group_by": {"type": "string", "enum": list(METRIC_DIMS), "default": "month",
                     "description": "issued can exceed permits; search_permits uses another "
                                    "date basis"},
        "tag": _s("one work tag"), "class": _s("permit class, e.g. building")},
       required=("geo_id",))
 def metrics(api, a):
+    window = {}
+    if a.get("group_by", "month") == "month" and a.get("from") is None and a.get("to") is None:
+        # the API returns months ascending, so no window means the 36 oldest; ask for the
+        # latest 36 instead
+        window = dict(zip(("from", "to"), _month_window()))
     r = _fetch(api, "/v1/metrics", {"geo_id": a["geo_id"], "from": a.get("from"),
                                     "to": a.get("to"), "group_by": a.get("group_by", "month"),
                                     "tag": a.get("tag"), "class": a.get("class"),
-                                    "limit": METRIC_ROWS})
+                                    "limit": METRIC_ROWS, **window})
     keep = ("month", "tag", "class", "status", "jurisdiction", "permits", "permits_with_value", "value_sum", "issued", "finaled", "value_p50",
             "approval_days_p50")
     rows = [_prune({k: x.get(k) for k in keep}, keep=()) for x in r.body.get("data") or []]
@@ -618,7 +649,7 @@ def metrics(api, a):
 
 @tool("coverage",
       "How complete our data is for an area: permits held and field fill rates (tiers).",
-      {"geo_id": GEO_ID, "from": _s("YYYY-MM"), "to": _s("YYYY-MM")},
+      {"geo_id": GEO_ID_NO_ZIP, "from": _s("YYYY-MM"), "to": _s("YYYY-MM")},
       required=("geo_id",))
 def coverage(api, a):
     r = _fetch(api, "/v1/meta/coverage", {"geo_id": a["geo_id"], "from": a.get("from"),
@@ -632,7 +663,7 @@ def coverage(api, a):
 @tool("search_projects",
       "Big construction projects (permits plus early signals such as CEQA filings), newest "
       "first, with kind, type, stage and source_url.",
-      {"geo_id": GEO_ID,
+      {"geo_id": GEO_ID_NO_ZIP,
        "q": _s("every word must appear as part of a word in name, titles, descriptions, "
                "address or location (ware matches software); no quotes"),
        "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
@@ -643,7 +674,8 @@ def coverage(api, a):
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
        "date_from": _s(DATE), "date_to": _s(DATE),
-       "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest"},
+       "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest",
+                "description": "row order"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_projects(api, a):
     params = {k: a.get(k) for k in ("geo_id", "q", "type", "kind", "min_value", "stage",
@@ -653,10 +685,15 @@ def search_projects(api, a):
     return _page(r, [project_row(x) for x in r.body.get("items") or []])
 
 
+PROJECT_ITEMS = 10  # items kept with a single get_project id
+BATCH_ITEMS = 3  # items kept per project when get_project gets ids
+
+
 @tool("get_project",
       "One or more big projects (prj_...) with stage and newest items with source_url. Give "
       "id, or ids for up to 10 in one call (3 items each unless items is set).",
-      {"id": _s("prj_..."), "items": _i("items to return", hi=50, default=10),
+      {"id": _s("prj_..."), "items": _i("items to return, default 10 with id, 3 each with "
+                                        "ids", hi=50),
        "ids": {"type": "array", "items": {"type": "string"}, "maxItems": 10,
                "description": "up to 10 prj_... IDs; use instead of id"}})
 def get_project(api, a):
@@ -665,13 +702,13 @@ def get_project(api, a):
     ids = a.get("ids")
     if ids:
         r = _fetch(api, "/v1/projects/batch", {"id": ids})
-        n = a.get("items", 3)
+        n = a.get("items", BATCH_ITEMS)
         rows = []
         for p in r.body.get("items") or []:
             rows.append(_project_detail(p, n))
         return _batch(r, rows)
     r = _fetch(api, "/v1/projects/" + _seg(a["id"], "id"))
-    return _one(r, _project_detail(r.body, a.get("items", 10)))
+    return _one(r, _project_detail(r.body, a.get("items", PROJECT_ITEMS)))
 
 
 def _project_detail(p, n):
@@ -704,7 +741,7 @@ def search_decisions(api, a):
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
       "first, with kind, stage, stated size, location, APNs, a short description and source_url.",
-      {"geo_id": GEO_ID,
+      {"geo_id": GEO_ID_NO_ZIP,
        "q": _s('every word must appear in title or description, any order; whole words, '
                'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
@@ -760,8 +797,9 @@ def _signal_detail(s):
 
 
 @tool("recent_changes",
-      "New and changed permits from the change feed, oldest first. Filter by area and tags, "
-      "or pass webhook_id to reuse a saved webhook's filter. Resume with next_cursor.",
+      "New and changed permits, oldest first. Filter by area and tags, or webhook_id to "
+      "reuse a saved filter. Changed events carry permit_id, field, old and new only; "
+      "get_permit gives the rest.",
       {"webhook_id": _s("whk_...: use this saved filter"), "geo_id": GEO_ID,
        "tags": {"type": "array", "items": {"type": "string"}, "description": "-tag excludes"},
        "types": {"type": "array", "items": {"type": "string", "enum": list(CHANGE_TYPES)}},

@@ -128,7 +128,7 @@ def test_eighteen_tools_with_short_closed_schemas():
         assert s["type"] == "object" and s["additionalProperties"] is False
         assert set(s.get("required", ())) <= set(s["properties"])
         assert len(t["description"]) <= 200, t["name"]
-        assert len(json.dumps(t)) < 2000, t["name"]  # about 500 tokens
+        assert len(json.dumps(t)) < 2400, t["name"]  # about 600 tokens
         for name, p in s["properties"].items():
             assert p.get("type") in ("string", "integer", "number", "boolean", "array"), name
     assert len(json.dumps(tools)) < 16000  # the whole tool list stays near 4,000 tokens

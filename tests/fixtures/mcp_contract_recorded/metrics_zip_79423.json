@@ -1,0 +1,20 @@
+{
+ "request": {
+  "path": "/v1/metrics",
+  "params": {
+   "geo_id": "79423",
+   "from": "2026-07",
+   "to": "2026-07"
+  }
+ },
+ "status": 422,
+ "body": {
+  "error": {
+   "type": "validation_error",
+   "message": "geo_id must be US, a state (CA or 06), cty_06037, msa_31080 or jur_06-037-44000-00000",
+   "param": "geo_id",
+   "doc_url": "/docs/api/v1.md#validation-error"
+  },
+  "request_id": "req_91db99ecf40d45d8b2d2823d5d7eb3f7"
+ }
+}
