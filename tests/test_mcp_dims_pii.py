@@ -54,6 +54,30 @@ def test_metrics_month_still_prunes_other_nulls():
     assert "value_p50" not in row and row["month"] == "2026-01"
 
 
+def test_metrics_month_rows_carry_no_other_dimension_keys():
+    fake = Fake({"data": [{"month": f"2026-{m:02d}", "permits": 3} for m in range(1, 13)] * 3,
+                 "meta": {}})
+    out, err = _call("metrics", {"geo_id": "st_06"}, fake)
+    assert not err
+    rows = out["items"]
+    assert len(rows) == 36
+    for row in rows:
+        assert not set(row) & {"tag", "class", "status", "jurisdiction"}
+
+
+def test_metrics_two_group_dims_keep_both_keys():
+    fake = Fake({"data": [
+        {"class": None, "status": "issued", "permits": 5},
+        {"class": "building", "status": None, "permits": 7},
+    ], "meta": {}})
+    out, err = _call("metrics", {"geo_id": "st_06", "group_by": "class,status"}, fake)
+    assert not err
+    rows = out["items"]
+    assert rows[0]["class"] is None and rows[0]["status"] == "issued"
+    assert "tag" not in rows[0] and "jurisdiction" not in rows[0]
+    assert rows[1]["status"] is None and rows[1]["class"] == "building"
+
+
 def test_get_permit_description_mentions_plan_gate():
     desc = T.TOOLS["get_permit"].description
     assert "plan" in desc

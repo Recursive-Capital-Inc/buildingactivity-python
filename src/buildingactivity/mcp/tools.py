@@ -614,13 +614,14 @@ def geo_lookup(api, a):
 
 
 @tool("metrics",
-      "Permit counts and values by month, tag, class, status/jurisdiction; months: "
-      "applied, else issued, else record. Latest 36 months without from/to. Rows keep "
-      "group_by key (null jurisdiction: no agency).",
+      "Permit counts and values by month, tag, class, status or jurisdiction; months: "
+      "applied, else issued, else record. Latest 36 months without from/to. A null "
+      "group key is the unattributed bucket.",
       {"geo_id": GEO_ID_NO_ZIP, "from": _s("YYYY-MM"), "to": _s("YYYY-MM"),
-       "group_by": {"type": "string", "enum": list(METRIC_DIMS), "default": "month",
-                    "description": "issued can exceed permits; search_permits uses another "
-                                   "date basis"},
+       "group_by": {"type": "string", "default": "month",
+                    "description": "one or two of: month, tag, class, status, "
+                                   "jurisdiction (comma-joined); issued can exceed "
+                                   "permits, search_permits uses another date basis"},
        "tag": _s("one work tag"), "class": _s("permit class, e.g. building")},
       required=("geo_id",))
 def metrics(api, a):
@@ -635,9 +636,18 @@ def metrics(api, a):
                                     "limit": METRIC_ROWS, **window})
     keep = ("month", "tag", "class", "status", "jurisdiction", "permits", "permits_with_value", "value_sum", "issued", "finaled", "value_p50",
             "approval_days_p50")
-    # dimension keys are kept even when null: the unattributed bucket (e.g. agencies
-    # with no jurisdiction) must still say which bucket it is
-    rows = [_prune({k: x.get(k) for k in keep}, keep=METRIC_DIMS)
+    # keep only this answer's group_by dimension keys (null means the unattributed
+    # bucket); other dimension fields stay pruned
+    parts = a.get("group_by", "month").split(",")
+    dims = tuple(d for d in parts if d in METRIC_DIMS)
+    if len(dims) != len(parts) or not dims or len(dims) > 2:
+        raise ToolError("validation_error",
+                        "group_by must be one or two of: " + ", ".join(METRIC_DIMS),
+                        "group_by")
+    if "month" in dims and len(dims) > 1:
+        raise ToolError("validation_error", "group_by: month cannot combine with another "
+                        "dimension", "group_by")
+    rows = [_prune({k: x.get(k) for k in keep}, keep=dims)
             for x in r.body.get("data") or []]
     meta = r.body.get("meta") or {}
     shown = rows[:METRIC_ROWS]
