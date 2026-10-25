@@ -515,7 +515,9 @@ def search_permits(api, a):
                  excluded_classes=r.body.get("excluded_classes") or None)
 
 
-@tool("get_permit", "One permit by ID (pmt_...), with its source_url.",
+@tool("get_permit",
+      "One permit by ID (pmt_...), with its source_url. Owner and applicant names appear "
+      "only on plans that include personal names (the API returns them null otherwise).",
       {"id": _s("pmt_...")}, required=("id",))
 def get_permit(api, a):
     r = _fetch(api, "/v1/permits/" + _seg(a["id"], "id"))
@@ -527,6 +529,8 @@ def get_permit(api, a):
     if p.get("description") or p.get("project_name"):
         row["description"] = _clip(p.get("description") or p.get("project_name"),
                                    DETAIL_TEXT_MAX)
+    # owner and applicant names are plan-gated (D1): the API returns them null without
+    # a plan that includes personal names, and _prune drops nulls
     row.update(_prune({"zip5": p.get("zip5"), "apn": p.get("apn"), "owner": p.get("owner_name"),
                        "applicant": p.get("applicant_name"),
                        "license": p.get("contractor_license"),
@@ -610,9 +614,9 @@ def geo_lookup(api, a):
 
 
 @tool("metrics",
-      "Permit counts and values by month, tag, class, status or jurisdiction; month basis: "
-      "applied, else issued, else record date. No from/to: the latest 36 months. At most "
-      "36 rows, 1 record each.",
+      "Permit counts and values by month, tag, class, status or jurisdiction; months: "
+      "applied, else issued, else record. Latest 36 months without from/to. A null "
+      "group key is the unattributed bucket.",
       {"geo_id": GEO_ID_NO_ZIP, "from": _s("YYYY-MM"), "to": _s("YYYY-MM"),
        "group_by": {"type": "string", "enum": list(METRIC_DIMS), "default": "month",
                     "description": "issued can exceed permits; search_permits uses another "
@@ -631,7 +635,11 @@ def metrics(api, a):
                                     "limit": METRIC_ROWS, **window})
     keep = ("month", "tag", "class", "status", "jurisdiction", "permits", "permits_with_value", "value_sum", "issued", "finaled", "value_p50",
             "approval_days_p50")
-    rows = [_prune({k: x.get(k) for k in keep}, keep=()) for x in r.body.get("data") or []]
+    # keep the group_by dimension key on every row (null means the unattributed
+    # bucket); other dimension fields stay pruned
+    dims = (a.get("group_by", "month"),)
+    rows = [_prune({k: x.get(k) for k in keep}, keep=dims)
+            for x in r.body.get("data") or []]
     meta = r.body.get("meta") or {}
     shown = rows[:METRIC_ROWS]
     available = meta.get("rows_available")
