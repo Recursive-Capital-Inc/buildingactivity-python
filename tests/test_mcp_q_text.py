@@ -25,7 +25,7 @@ def test_instructions_carry_the_q_rules():
 
 def test_search_permits_schema_matches_main():
     q = _prop("search_permits", "q")
-    assert q == {"type": "string"}
+    assert "all words" in q["description"]  # q gained a description (proposal: API contract)
     limit = _prop("search_permits", "limit")
     assert limit["description"] == "rows"
     cursor = _prop("search_permits", "cursor")

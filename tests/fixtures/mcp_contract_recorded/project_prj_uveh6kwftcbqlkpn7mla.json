@@ -1,0 +1,658 @@
+{
+ "request": {
+  "path": "/v1/projects/prj_uveh6kwftcbqlkpn7mla",
+  "params": null
+ },
+ "status": 200,
+ "body": {
+  "id": "prj_uveh6kwftcbqlkpn7mla",
+  "kind": "site",
+  "name": "Harbor-UCLA Replacement Program - Construction Change Order",
+  "state": "CA",
+  "city": "Torrance",
+  "address": "W Carson St and S Vermont Ave; Torrance; Los Angeles County",
+  "apns": [
+   "7344-001-901"
+  ],
+  "value_usd": 1695000000.0,
+  "max_permit_value_usd": null,
+  "stated_value_usd": 1695000000.0,
+  "value_basis": "dollar figure stated in signal text",
+  "scale_basis": [
+   "medical center",
+   "stated $1,695M"
+  ],
+  "owners": [],
+  "applicants": [],
+  "contractors": [],
+  "types": [
+   "ceqa_nod"
+  ],
+  "statuses": [
+   "Approved"
+  ],
+  "earliest_signal_date": "2024-03-14",
+  "earliest_permit_date": null,
+  "lead_days": null,
+  "permit_count": 0,
+  "signal_count": 9,
+  "sources": [
+   "ceqanet"
+  ],
+  "link_confidence": 1.0,
+  "stage": {
+   "stage": "approved",
+   "date": "2024-02-06",
+   "evidence_item_id": "sig_lmmw4gn3za7vesu7akya",
+   "reason": "CEQA NOD filed by the lead agency",
+   "changed_at": "2024-02-06"
+  },
+  "milestones": {
+   "approved": "2024-02-06"
+  },
+  "stage_notes": [],
+  "parties": [
+   {
+    "role": "lead_agency",
+    "name": "Los Angeles County Public Works",
+    "confidence": 0.95,
+    "method": "structured",
+    "source_item_id": "sig_lmmw4gn3za7vesu7akya",
+    "source_field": "lead_agency",
+    "item_count": 9
+   }
+  ],
+  "type": {
+   "type": "hospital",
+   "basis": [
+    "title: medical center",
+    "description: medical center"
+   ],
+   "evidence_item_id": "sig_lmmw4gn3za7vesu7akya"
+  },
+  "geo": {
+   "states": [
+    "CA"
+   ],
+   "jurisdiction_ids": [
+    "jur_06-037-80000-00000"
+   ],
+   "county_ids": [
+    "cty_06037"
+   ],
+   "metro_ids": [
+    "msa_31080"
+   ]
+  },
+  "latest_item_date": "2026-08-05",
+  "earliest_item_date": "2024-02-06",
+  "item_count": 9,
+  "source_urls": [
+   "https://ceqanet.lci.ca.gov/2014111004/4",
+   "https://ceqanet.lci.ca.gov/2014111004/5",
+   "https://ceqanet.lci.ca.gov/2014111004/6",
+   "https://ceqanet.lci.ca.gov/2014111004/7",
+   "https://ceqanet.lci.ca.gov/2014111004/8"
+  ],
+  "updated_at": "2026-08-05",
+  "v0_project_id": "cluster:6ca1809fe590",
+  "changed_at": "2026-08-05",
+  "stage_history": [
+   {
+    "stage": "approved",
+    "date": "2024-02-06",
+    "evidence_item_id": "sig_lmmw4gn3za7vesu7akya",
+    "reason": "CEQA NOD filed by the lead agency",
+    "changed_at": "2024-02-06",
+    "observed_at": "2026-10-20T11:58:49+00:00"
+   }
+  ],
+  "change_history": [
+   {
+    "changed_at": "2026-08-05",
+    "observed_at": "2026-10-20T15:01:11+00:00",
+    "new": true,
+    "fields": {}
+   }
+  ],
+  "items": [
+   {
+    "id": "sig_lmmw4gn3za7vesu7akya",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA RP - Construction Change Orders and Buildover Agreements (Harbor-UCLA Medical Center Campus Master Plan Project)",
+    "source": "ceqanet",
+    "source_id": "2014111004/4",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On February 6, 2024, the Board approved various change orders and authorized the execution of two Buildover Agreements, for the Harbor-UCLA Medical Center Replacement Project. The approved change orders include the construction of irrigation systems along Medical Foundation Drive, South Drive, and Meyler Street; infrastructure to support additional Laboratory equipment; design and construction of a security booth and security fencing around the Central Plant and Loading Dock; and demolition of existing buildings within the footprints of Inpatient Tower and new regional Laboratory. The Board al",
+    "apns": [],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2024-03-14",
+     "event": "2024-02-06"
+    },
+    "date": "2024-03-14",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/4",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_gkdmim4j7rqa6h5ttesa"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_lmmw4gn3za7vesu7akya",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2024-02-06",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_gkdmim4j7rqa6h5ttesa",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Orders",
+    "source": "ceqanet",
+    "source_id": "2014111004/5",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On April 23, 2024, the Board approved five change orders for the Harbor-UCLA Medical Center Replacement Project. The approved change orders include the addition of five Uninterpretable Power Supply (UPS) units and associated infrastructure at the Inpatient Tower; additional electrical infrastructure to increase the number of Electric Vehicle charging stations from 10 percent to 25 percent of the total number of parking spaces at Parking Structure A, four additional spare breakers at the Central Utility Plant and associated electrical ductbank, two additional 15kV cable feeders from the 12kV Bu",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2024-06-11",
+     "event": "2024-04-23"
+    },
+    "date": "2024-06-11",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/5",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_gkdmim4j7rqa6h5ttesa",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2024-04-23",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_drifu2klebqazq4xwq5q",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Revised Project Budget Approval",
+    "source": "ceqanet",
+    "source_id": "2014111004/6",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": 1695000000.0,
+    "size_basis": [
+     "stated $1,695M",
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On June 25, 2024, the Board approved the revised project budget of $1,755,000,000, an increase of $60,000,000 from the previous Board-approved amount of $1,695,000,000, for the Harbor-UCLA Medical Center Replacement Program.  The approved budget adjustment is not a project under California Environmental Quality Act (CEQA), since it is excluded from the definition of a project under Section 21065 of the California Public Resources Code, and is a fiscal activity of government that will not result in direct or indirect physical changes in the environment.",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2024-07-18",
+     "event": "2024-06-25"
+    },
+    "date": "2024-07-18",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/6",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_drifu2klebqazq4xwq5q",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2024-06-25",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_xhoumh3pbgu4vo23ohka",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Orders",
+    "source": "ceqanet",
+    "source_id": "2014111004/7",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On October 22, 2024, the Board approved four change orders for the Harbor-UCLA Medical Center Replacement Project. The approved change orders include the double-ended electrical substation for distribution of 480-volt power in a redundant fashion at the Outpatient/Support Building; a redundant source of electrical power to Intermediate Distribution Frame Rooms at the Outpatient/Support Building; removal and disposal of contaminated soil encountered during excavation for the Inpatient Tower; and the Campus Network Integrator services and infrastructure for the program wide Building Automation S",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2024-11-19",
+     "event": "2024-10-22"
+    },
+    "date": "2024-11-19",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/7",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_xhoumh3pbgu4vo23ohka",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2024-10-22",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_y2pxobo5xdjipdlum6na",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Orders",
+    "source": "ceqanet",
+    "source_id": "2014111004/8",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On December 17, 2024, the Board approved two change orders for the Harbor-UCLA Medical Center Replacement Project.  The approved change orders include the additional design and construction of the Emergency Responder Radio Coverage Distributed Antenna System in accordance with the revised Fire Department Regulations at the Inpatient Tower and the Outpatient/Support Building.  Work is in accordance with the Environmental Impact Report (EIR) Addendum certified by the Board of Supervisors on February 8, 2022 for the Harbor-UCLA Medical Center Replacement Project.  The original EIR was certified o",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2025-02-04",
+     "event": "2024-12-17"
+    },
+    "date": "2025-02-04",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/8",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_y2pxobo5xdjipdlum6na",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2024-12-17",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_xaxgvt566wbxfkjtntoq",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Generator Building Retrofit Project Component",
+    "source": "ceqanet",
+    "source_id": "2014111004/9",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On February 4, 2025, the Board adopted plans and specifications for the Generator Building Retrofit Project under the Harbor-UCLA Medical Center Replacement Program, instructed the Executive Officer of the Board to advertise for bids, and authorized the Director of Public Works to award and execute a construction contract to the apparent lowest responsive and responsible bidder.  Additionally, the Internal Services Department, as the County's Purchasing Agent, was authorized to proceed with the Sole Source acquisition of electrical maintenance equipment.  Work is in accordance with the Environ",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2025-02-18",
+     "event": "2025-02-04"
+    },
+    "date": "2025-02-18",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/9",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_xaxgvt566wbxfkjtntoq",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2025-02-04",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_khsuvugbwf2ojaciepma",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Orders",
+    "source": "ceqanet",
+    "source_id": "2014111004/10",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vermont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On May 13, 2025, the Board adopted two change orders for the Harbor-UCLA Medical Center Replacement Program.  The approved change orders include design and construction of a low-voltage ductbank between the existing hospital tower, Outpatient/Support Building, Inpatient Tower, and Building N-25, and a utility ductbank between the new Central Utility Plant and the existing Surgery/Emergency Building.  Work is in accordance with the Environmental Impact Report (EIR) Addendum certified by the Board of Supervisors on February 8, 2022 for the Harbor-UCLA Medical Center Replacement Project.  The ori",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2025-06-16",
+     "event": "2025-05-13"
+    },
+    "date": "2025-06-16",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/10",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_khsuvugbwf2ojaciepma",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2025-05-13",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_zivxlsntvg6k7ytzogkq",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Orders",
+    "source": "ceqanet",
+    "source_id": "2014111004/11",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Torrance",
+    "agency": "Los Angeles County Public Works",
+    "location": "W Carson St and S Vemont Ave; Torrance; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": 1600.0,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On April 14, 2026, the Board adopted two change orders for the Harbor-UCLA Medical Center Replacement Program. The approved change orders include design, furnishing, and installation of a secondary domestic water line to the existing Surgery/Emergency Building; and the decrease in spacing between wireless access points from 1,600 square feet per device to 600 square feet at the Inpatient Tower. Work is in accordance with the Environmental Impact Report (EIR) Addendum certified by the Board of Supervisors on February 8, 2022 for the Harbor-UCLA Medical Center Replacement Project. The original E",
+    "apns": [
+     "7344-001-901"
+    ],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2026-05-19",
+     "event": "2026-04-16"
+    },
+    "date": "2026-05-19",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/11",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_lmmw4gn3za7vesu7akya"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_zivxlsntvg6k7ytzogkq",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2026-04-16",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   },
+   {
+    "id": "sig_irjdg5aqibhmol4x7jta",
+    "kind": "ceqa",
+    "permit_id": null,
+    "title": "Harbor-UCLA Replacement Program - Construction Change Order",
+    "source": "ceqanet",
+    "source_id": "2014111004/12",
+    "doc_type": "NOD",
+    "category": "ceqa_nod",
+    "status": "Approved",
+    "jurisdiction": "Los Angeles County",
+    "agency": "Los Angeles County Public Works",
+    "location": "Carson Street and Normandie Avenue; Los Angeles County; 90502",
+    "applicant": null,
+    "units": null,
+    "sqft": null,
+    "acres": null,
+    "mw": null,
+    "stated_value_usd": null,
+    "size_basis": [
+     "medical center"
+    ],
+    "large": true,
+    "state": "CA",
+    "development_type": null,
+    "signal_kind": "site",
+    "description": "On July 21, 2026, the Board adopted two change orders for the Harbor-UCLA Medical Center Replacement Program. The approved change orders include design and construction of an auxiliary generator yard at Surface Lot 2 and the utility ductbank and the bridge connecting the new Central Utility Plant to the Surgery/Emergency Building. Work is in accordance with the Environmental Impact Report (EIR) Addendum certified by the Board of Supervisors on February 8, 2022 for the Harbor-UCLA Medical Center Replacement Project. The original EIR was certified on December 20, 2016.",
+    "apns": [],
+    "case_numbers": [],
+    "dates": {
+     "filed": "2026-08-05",
+     "event": "2026-07-21"
+    },
+    "date": "2026-08-05",
+    "source_url": "https://ceqanet.lci.ca.gov/2014111004/12",
+    "link": {
+     "confidence": 1.0,
+     "basis": "same CEQA SCH number 2014111004",
+     "linked_to": "sig_gkdmim4j7rqa6h5ttesa"
+    },
+    "parties": [
+     {
+      "role": "lead_agency",
+      "name": "Los Angeles County Public Works",
+      "source_item_id": "sig_irjdg5aqibhmol4x7jta",
+      "source_field": "lead_agency",
+      "method": "structured",
+      "confidence": 0.95
+     }
+    ],
+    "stage_evidence": [
+     {
+      "stage": "approved",
+      "date": "2026-07-21",
+      "reason": "CEQA NOD filed by the lead agency"
+     }
+    ]
+   }
+  ]
+ }
+}
