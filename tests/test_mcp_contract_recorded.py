@@ -36,6 +36,12 @@ def norm(s):
     return " ".join(s.split()) if isinstance(s, str) else s
 
 
+def _clip60(s):
+    """What change_row keeps of old/new: whitespace-normalized, then clipped to 60."""
+    s = norm(s)
+    return s if len(s) <= 60 else s[:57].rstrip() + "..."
+
+
 def call(name, args, rec):
     out, err = T.call_tool(name, args, rec)
     assert not err, out
@@ -115,6 +121,28 @@ def test_metrics_coverage_and_contractors_geo_id_rejects_a_zip():
         assert "ZIP" not in desc and "94920" not in desc, name
 
 
+GEO_ROUTES = {"search_permits": "/v1/permits/search", "metrics": "/v1/metrics",
+              "coverage": "/v1/meta/coverage", "search_contractors": "/v1/contractors/search",
+              "search_projects": "/v1/projects", "search_signals": "/v1/signals",
+              "search_decisions": "/v1/decisions/search", "recent_changes": "/v1/changes"}
+
+
+def test_geo_id_text_names_only_what_its_route_accepts():
+    spec = json.loads(pathlib.Path("src/buildingactivity/cli/spec.json").read_text())
+    for name, path in GEO_ROUTES.items():
+        spec_desc = next(p["description"] for p in spec["paths"][path]["get"]["parameters"]
+                         if p["name"] == "geo_id")
+        text = _schema(name)["properties"]["geo_id"]["description"]
+        assert ("US" in text) == ("US" in spec_desc), name
+        assert ("ZIP" in text or "94920" in text) == ("ZIP" in spec_desc
+                                                      or "94920" in spec_desc), name
+
+
+def test_search_permits_limit_bounds():
+    p = _schema("search_permits")["properties"]["limit"]
+    assert p["minimum"] == 1 and p["maximum"] == 50 and p["default"] == 10
+
+
 def test_every_string_property_has_a_description_and_no_san_rafael():
     for t in T.list_tools():
         for name, p in t["inputSchema"]["properties"].items():
@@ -143,7 +171,9 @@ def test_change_row_on_recorded_changed_events():
         assert row["type"] == "changed"
         assert row["permit_id"] == e["permit_id"]
         assert row["field"] == e["field"]
-        assert row["old"] == (norm(e["old"])[:57].rstrip() + "...") or row["old"] == norm(e["old"])
+        assert row.get("old") == _clip60(e["old"])
+        if e.get("new"):
+            assert row["new"] == _clip60(e["new"])
         assert "new" in row
 
 

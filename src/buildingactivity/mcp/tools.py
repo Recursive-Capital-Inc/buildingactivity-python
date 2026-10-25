@@ -391,6 +391,7 @@ def _i(desc, lo=1, hi=None, default=None):
 CURSOR = _s("next_cursor from the previous answer")
 GEO_ID = _s("area: CA, cty_06041, msa_41860, jur_..., ZIP 94920 (find with geo_lookup)")
 GEO_ID_NO_ZIP = _s("area: US, CA, cty_06041, msa_41860 or jur_... (find with geo_lookup)")
+GEO_AREA = _s("area: CA, cty_06041, msa_41860 or jur_... (find with geo_lookup)")
 DATE = "YYYY-MM-DD"
 
 
@@ -466,15 +467,15 @@ def get_property(api, a):
 
 
 @tool("search_permits",
-      "Search permits; construction only unless category ['all']. Dates: issued, else "
-      "applied, else record.",
+      "construction only unless category ['all']. Dates: issued, else applied, else record.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, 94920; geo_lookup"),
-       "q": _s('all words must appear (whole words); "quoted phrase" = adjacent words'),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
+                                                    "94920; geo_lookup"),
+       "q": _s('all words appear (whole words); "quoted phrase" = adjacent words'),
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "-tag excludes"},
-       "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
-       "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
+                "description": "solar; -tag excludes"},
+       "status": {"type": "array", "items": {"enum": list(PERMIT_STATUSES)}},
+       "category": {"type": "array", "items": {"enum": list(PERMIT_CLASSES)},
                     "description": "all = every class"},
        "contractor": _s("name"), "contractor_id": _s("ctr_..."),
        "date_from": _s(DATE), "date_to": {"type": "string"},
@@ -482,7 +483,7 @@ def get_property(api, a):
        "applied_from": _s(DATE), "applied_to": {"type": "string"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
        "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
-       "limit": {"type": "integer", "description": "rows", "maximum": 50},
+       "limit": _i("rows", hi=50, default=10),
        "cursor": _s("next_cursor"),
        "include_count": {"type": "boolean"}})
 def search_permits(api, a):
@@ -658,7 +659,7 @@ def coverage(api, a):
 @tool("search_projects",
       "Big construction projects (permits plus early signals such as CEQA filings), newest "
       "first, with kind, type, stage and source_url.",
-      {"geo_id": GEO_ID_NO_ZIP,
+      {"geo_id": GEO_AREA,
        "q": _s("every word must appear as part of a word in name, titles, descriptions, "
                "address or location (ware matches software); no quotes"),
        "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
@@ -735,7 +736,7 @@ def search_decisions(api, a):
 @tool("search_signals",
       "Early project signals (CEQA filings, council matters, planning cases), newest filed "
       "first, with kind, stage, stated size, location, APNs, a short description and source_url.",
-      {"geo_id": GEO_ID_NO_ZIP,
+      {"geo_id": GEO_AREA,
        "q": _s('every word must appear in title or description, any order; whole words, '
                'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
