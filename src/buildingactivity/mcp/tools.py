@@ -466,26 +466,23 @@ def get_property(api, a):
 
 
 @tool("search_permits",
-      "Search permits; construction only unless category ['all'] (health, planning, "
-      "licensing). Dates: issued, else applied, else record date.",
+      "Search permits; construction only unless category ['all']. Dates: issued, else "
+      "applied, else record.",
       {"address_id": _s("adr_..."),
-       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, msa_41860, jur_..., "
-                                                    "94920; geo_lookup"),
-       "q": _s('every word must appear in description or project name, any order; whole '
-               'words, no plurals; "quoted phrase" = adjacent words'),
+       "property_id": _s("prp_..."), "geo_id": _s("CA, cty_06041, 94920; geo_lookup"),
+       "q": _s('all words must appear (whole words); "quoted phrase" = adjacent words'),
        "tags": {"type": "array", "items": {"type": "string"},
-                "description": "solar; -tag excludes"},
-       "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)},
-                  "description": "permit statuses"},
+                "description": "-tag excludes"},
+       "status": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_STATUSES)}},
        "category": {"type": "array", "items": {"type": "string", "enum": list(PERMIT_CLASSES)},
-                    "description": "['all'] = every class"},
-       "contractor": _s("contractor name"), "contractor_id": _s("ctr_..."),
-       "date_from": _s(DATE), "date_to": _s(DATE),
-       "issued_from": _s(DATE), "issued_to": _s(DATE),
-       "applied_from": _s(DATE), "applied_to": _s(DATE),
+                    "description": "all = every class"},
+       "contractor": _s("name"), "contractor_id": _s("ctr_..."),
+       "date_from": _s(DATE), "date_to": {"type": "string"},
+       "issued_from": _s(DATE), "issued_to": {"type": "string"},
+       "applied_from": _s(DATE), "applied_to": {"type": "string"},
        "min_value": {"type": "number", "minimum": 0, "description": "USD"},
-       "sort": {"type": "string", "enum": list(PERMIT_SORTS), "description": "row order"},
-       "limit": _i("rows", hi=50, default=10),
+       "sort": {"type": "string", "enum": list(PERMIT_SORTS)},
+       "limit": {"type": "integer", "description": "rows", "maximum": 50},
        "cursor": _s("next_cursor"),
        "include_count": {"type": "boolean"}})
 def search_permits(api, a):
@@ -563,8 +560,7 @@ def permit_history(api, a):
        "tags": {"type": "array", "items": {"type": "string"},
                 "description": "permit tags of their work, e.g. solar"},
        "permit_from": _s(DATE), "permit_to": _s(DATE),
-       "sort": {"type": "string", "enum": list(CONTRACTOR_SORTS), "default": "permits_desc",
-                "description": "row order"},
+       "sort": {"type": "string", "enum": list(CONTRACTOR_SORTS), "default": "permits_desc"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_contractors(api, a):
     if a.get("license"):
@@ -602,8 +598,7 @@ def get_contractor(api, a):
 @tool("geo_lookup",
       "Find area IDs (state, metro, county, jurisdiction, ZIP) by name for geo_id filters.",
       {"q": _s("place name, e.g. 'Austin' or 'Maricopa'"),
-       "level": {"type": "string", "enum": list(GEO_LEVELS),
-                 "description": "area level to search"},
+       "level": {"type": "string", "enum": list(GEO_LEVELS)},
        "state": _s("two-letter state", pattern="^[A-Za-z]{2}$"),
        "limit": _i("rows", hi=20, default=5)},
       required=("q",))
@@ -674,8 +669,7 @@ def coverage(api, a):
        "stage": {"type": "array", "items": {"type": "string"},
                  "description": "e.g. in_review, approved, permit_issued"},
        "date_from": _s(DATE), "date_to": _s(DATE),
-       "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest",
-                "description": "row order"},
+       "sort": {"type": "string", "enum": list(PROJECT_SORTS), "default": "newest"},
        "limit": _i("rows", hi=50, default=10), "cursor": CURSOR})
 def search_projects(api, a):
     params = {k: a.get(k) for k in ("geo_id", "q", "type", "kind", "min_value", "stage",

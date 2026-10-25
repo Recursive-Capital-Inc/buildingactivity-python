@@ -25,7 +25,7 @@ def test_instructions_carry_the_q_rules():
 
 def test_search_permits_schema_matches_main():
     q = _prop("search_permits", "q")
-    assert "every word" in q["description"]  # q gained a description (proposal: API contract)
+    assert "all words" in q["description"]  # q gained a description (proposal: API contract)
     limit = _prop("search_permits", "limit")
     assert limit["description"] == "rows"
     cursor = _prop("search_permits", "cursor")
@@ -36,7 +36,7 @@ def test_tool_json_sizes_stay_under_budget():
     tools = T.list_tools()
     assert len(json.dumps(tools)) < 16000
     for t in tools:
-        assert len(json.dumps(t)) < 2400, t["name"]
+        assert len(json.dumps(t)) < 2000, t["name"]
 
 
 def test_q_is_passed_through_unchanged():

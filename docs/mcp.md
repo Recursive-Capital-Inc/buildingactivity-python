@@ -6,7 +6,7 @@ tool is a `GET /v1/...` with your key, so auth, record metering, rate limits and
 error shape apply unchanged. It never reads a database.
 
 It is built to keep agent context small: 18 tools with short closed schemas (the whole
-tool list is about 3,800 tokens), compact rows instead of full objects, a default page of
+tool list is about 3,700 tokens), compact rows instead of full objects, a default page of
 10, every answer under 4,000 tokens, and one key from the environment (stdio) or from
 each caller's own request (HTTP).
 

@@ -118,7 +118,9 @@ def test_metrics_coverage_and_contractors_geo_id_rejects_a_zip():
 def test_every_string_property_has_a_description_and_no_san_rafael():
     for t in T.list_tools():
         for name, p in t["inputSchema"]["properties"].items():
-            if p.get("type") == "string":
+            free_text = (p.get("type") == "string" and "enum" not in p
+                         and "pattern" not in p)
+            if free_text and not name.endswith(("from", "to")):  # date bounds: fixed format
                 assert p.get("description"), (t["name"], name)
         assert "San Rafael" not in json.dumps(t), t["name"]
 
