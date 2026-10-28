@@ -8597,13 +8597,13 @@
   },
   "/v1/signals": {
    "get": {
-    "description": "Early signals (CEQA documents, Legistar council matters, planning cases), newest filed first, each with its sig_ ID and its v1 project when it has one. Metered: one record per signal. An organization with a signals scope reads only the signals in it: the states it bought and the packs it bought, matched by the pack rules over the signal's title, description, applicant, NAICS code and source type; a pack page is filtered here, so next_cursor continues the scan. Without a scope the answer is 402 signals_not_entitled.",
+    "description": "Early signals (CEQA documents, Legistar council matters, planning cases), newest filed first, each with its sig_ ID and its v1 project when it has one. National signals (grid interconnection queue entries, planned generators, FAA obstruction filings, construction stormwater notices, federal awards and opportunities, state drilling, air and siting filings, DOT lettings, Army Corps notices) are listed only when the request names them: source=national or a national source key, a national category (their kind, e.g. interconnection_queue or drilling_permit), or large_only=true; every other request, the signal.created webhooks and /v0/signals read only ceqanet, legistar and planning_case. National signals are never linked to projects (project_id null) and carry source_type and naics. By default only site-level and large-project signals are listed (large signals; data center, solar farm and energy storage items of any kind; site signals except notices of exemption, agenda items and contract awards without a stated size, project type or entitlement); include=all lists every signal, agenda noise (minutes, grants, service contracts, routine exemptions) included. Lookups by ID are never filtered. Metered: one record per signal. An organization with a signals scope reads only the signals in it: the states it bought and the packs it bought, matched by the pack rules over the signal's title, description, applicant, NAICS code and source type; a pack page is filtered here, so next_cursor continues the scan. Without a scope the answer is 402 signals_not_entitled.",
     "operationId": "list_signals_v1_signals_get",
     "parameters": [
      {
-      "description": "ceqanet, legistar or planning_case (repeat or comma-separate).",
+      "description": "ceqanet, legistar, planning_case; national (every national source); or a national source key: air_app_lists, ca_smarts_construction, caiso_queue, dot_aashtoware, dot_html_results, dot_masterworks, eia860m, epa_cgp_noi, faa_oeaaa, isone_queue, nyiso_queue, pjm_queue, sam_opportunities, siting_project_lists, spp_queue, stormwater_arcgis, usace_rrs_notices, usaspending_awards, wy_wogcc_apd (the current list is in the 422 answer to an unknown key). Repeat or comma-separate.",
       "example": [
-       "ceqanet"
+       "wy_wogcc_apd"
       ],
       "in": "query",
       "name": "source",
@@ -8612,11 +8612,6 @@
        "anyOf": [
         {
          "items": {
-          "enum": [
-           "ceqanet",
-           "legistar",
-           "planning_case"
-          ],
           "type": "string"
          },
          "type": "array"
@@ -8670,7 +8665,7 @@
       }
      },
      {
-      "description": "Signal category: ceqa_nod, ceqa_eir, ceqa_nop, ceqa_mnd, rezoning, site_plan, subdivision, specific_plan, development_agreement, contract_award, planning_case, ...",
+      "description": "Signal category: ceqa_nod, ceqa_eir, ceqa_nop, ceqa_mnd, rezoning, site_plan, subdivision, specific_plan, development_agreement, contract_award, planning_case, ...; a national signal's category is its kind: air_permit_application, drilling_permit, federal_award, federal_opportunity, interconnection_queue, obstruction_filing, planned_generator, public_contract, regulatory_notice, siting_application, stormwater_noi.",
       "example": [
        "ceqa_nod"
       ],
@@ -8748,7 +8743,7 @@
       }
      },
      {
-      "description": "Only signals whose text names a large project (see size_basis).",
+      "description": "Only signals whose text names a large project (see size_basis); national signals count with their source's size rule ($50M, 50 MW, or a source rule such as FAA structure height), so this lists them too.",
       "example": true,
       "in": "query",
       "name": "large_only",
@@ -8846,6 +8841,28 @@
         }
        ],
        "title": "Kind"
+      }
+     },
+     {
+      "description": "default (or omitted): only site-level and large-project signals; all: every signal, agenda noise included. Part of the cursor.",
+      "example": "all",
+      "in": "query",
+      "name": "include",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "enum": [
+          "default",
+          "all"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Include"
       }
      },
      {

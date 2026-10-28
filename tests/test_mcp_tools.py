@@ -176,7 +176,10 @@ def test_enums_match_the_bundled_spec():
     desc = _param("/v1/contractors/search", "sort")["description"]
     assert set(T.CONTRACTOR_SORTS) == set(re.findall(r"[a-z]+_[a-z_]+", desc))
     assert set(T.PROJECT_SORTS) == _enum("/v1/projects", "sort")
-    assert set(T.SIGNAL_SOURCES) == _enum("/v1/signals", "source")
+    # signal source has no enum (national source keys grow with the store): the spec's
+    # description names every key the tool lists
+    desc = _param("/v1/signals", "source")["description"]
+    assert all(re.search(rf"\b{k}\b", desc) for k in T.SIGNAL_SOURCES)
 
 
 # The /v1 routes each tool may call, and tool arguments that are not API parameters.
@@ -364,6 +367,18 @@ def test_signals_carry_stage_size_and_source_url():
     item = out["item"]
     assert item["size"] == {"units": 120.0, "sqft": 80472.0, "acres": 3.13}
     assert item["apns"] == ["646-100-7100"] and item["project_id"].startswith("prj_")
+
+
+def test_signals_pass_national_sources_through():
+    """A national source key or the `national` group goes to the API unchanged (the API
+    validates it; the key list grows with the national store, so the schema has no enum)."""
+    srv = FixtureServer()
+    args = {"geo_id": "WY", "source": ["wy_wogcc_apd", "national"]}
+    out, err = T.call_tool("search_signals", args, api(srv))
+    assert not err, out
+    assert srv.calls[0][1] == {"geo_id": "WY", "source": "wy_wogcc_apd,national", "limit": 10}
+    schema = next(t for t in T.list_tools() if t["name"] == "search_signals")
+    assert "enum" not in schema["inputSchema"]["properties"]["source"]["items"]
 
 
 def test_recent_changes_rows_and_resume_cursor():
