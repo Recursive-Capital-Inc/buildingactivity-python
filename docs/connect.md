@@ -29,18 +29,6 @@ screenshot it. If it leaks, rotate the key in your account and update the connec
 5. In a chat, turn the connector on from the tools menu and ask, for example: "Solar
    permits issued in Marin County last month, with links."
 
-Claude Desktop can also run the server locally instead (needs [uv](https://docs.astral.sh/uv/)).
-In **Settings > Developer > Edit Config**, add:
-
-```json
-{"mcpServers": {"buildingactivity": {
-  "command": "uvx",
-  "args": ["--from", "buildingactivity[mcp]", "buildingactivity-mcp"],
-  "env": {"BUILDINGACTIVITY_API_KEY": "<your key>"}}}}
-```
-
-Restart Claude Desktop after saving.
-
 ## Claude Code
 
 ```
@@ -86,12 +74,9 @@ Edu; a workspace admin may have to allow it).
 
 ## Other clients
 
-Any MCP client that speaks streamable HTTP works with the URL and header above. Clients
-that only run local (stdio) servers can use the local server:
-
-```
-uvx --from 'buildingactivity[mcp]' buildingactivity-mcp      # with BUILDINGACTIVITY_API_KEY set
-```
+Any MCP client that speaks streamable HTTP works with the URL and header above, or with
+the URL that carries your key if it cannot send a header. The server is hosted only; there
+is nothing to install or run on your machine.
 
 ## What the assistant can do
 
@@ -101,18 +86,3 @@ uvx --from 'buildingactivity[mcp]' buildingactivity-mcp      # with BUILDINGACTI
 `get_signal`, `recent_changes`, `list_tags` and `my_usage`. Answers are compact (a page
 is 10 rows unless the assistant asks for more), and each tool call reports the records it
 used. Ask "how many records do I have left?" to see your plan through `my_usage`.
-
-## Command line
-
-The same package has a command line client for scripts and pipelines:
-
-```
-pipx install buildingactivity
-export BUILDINGACTIVITY_API_KEY=<your key>       # or: buildingactivity config set-key
-buildingactivity permits search --geo-id cty_06041 --tags solar --limit 20
-buildingactivity changes tail --geo-id CA --tags solar      # follow new permits
-buildingactivity schema                                     # every command
-```
-
-Every API route is a command, generated from the API's own OpenAPI document. Output is
-JSON; exit codes tell scripts what happened (2 bad key, 3 rate limited, 4 records used up).

@@ -1,59 +1,45 @@
 # buildingactivity
 
-Command line client and MCP server for the [BuildingActivity](https://buildingactivity.com)
-API: US building permits, properties, contractors, zoning decisions, early project signals
-and big projects, each record linked to the issuer's own page (`source_url`).
+Source of the hosted MCP server for the [BuildingActivity](https://buildingactivity.com)
+API (US building permits, properties, contractors, zoning decisions, early project
+signals and big projects, each record linked to the issuer's own page, `source_url`), and
+of a command line client that is not distributed yet.
 
-Both tools are thin HTTP clients of `https://api.buildingactivity.com`. You need an API key
+Both are thin HTTP clients of `https://api.buildingactivity.com`. Callers need an API key
 from [buildingactivity.com](https://buildingactivity.com/api).
 
-## Install
+## MCP server (hosted)
 
-```
-pipx install buildingactivity            # the CLI: `buildingactivity`
-pipx install 'buildingactivity[mcp]'     # adds the MCP server: `buildingactivity-mcp`
-```
-
-Or with uv: `uv tool install buildingactivity` (add `--with mcp --with uvicorn`, or install
-`'buildingactivity[mcp]'`). Python 3.11 or newer. The CLI needs only `requests`.
-
-## CLI
-
-```
-export BUILDINGACTIVITY_API_KEY=...          # or: buildingactivity config set-key (reads stdin)
-buildingactivity permits search --geo-id cty_06041 --tags solar --limit 20
-buildingactivity property --address "50 Barbaree Way, Tiburon, CA 94920"
-buildingactivity signals list --geo-id CA --large-only
-buildingactivity changes tail --geo-id cty_04013 --tags solar
-buildingactivity usage
-buildingactivity schema                      # every command, offline
-```
-
-Commands are generated from the API's OpenAPI document bundled with the package, so every
-API route and parameter has a command and a flag. JSON on stdout, JSON errors on stderr,
-exit codes 0 ok, 1 client error, 2 auth, 3 rate limited, 4 records used up, 5 server or
-network. Details: [docs/cli.md](docs/cli.md).
-
-## MCP server
-
-Hosted, nothing to install: `https://mcp.buildingactivity.com/mcp` with your key as an
-`X-API-Key` (or `Authorization: Bearer`) header. Clients that can only take a URL
-(ChatGPT connectors, Claude connectors without header support) use
+Customers connect to the hosted server; there is nothing to install. Endpoint:
+`https://mcp.buildingactivity.com/mcp`, with the API key as an `X-API-Key` header (or
+`Authorization: Bearer <key>`). Clients that can only take a URL (ChatGPT connectors,
+Claude connectors without request headers) use
 `https://mcp.buildingactivity.com/mcp/<your key>`; treat that URL as a secret.
-
-Local, over stdio (Claude Desktop, Cursor and most hosts):
-
-```json
-{"mcpServers": {"buildingactivity": {
-  "command": "uvx", "args": ["--from", "buildingactivity[mcp]", "buildingactivity-mcp"],
-  "env": {"BUILDINGACTIVITY_API_KEY": "<your key>"}}}}
-```
 
 18 tools with short schemas and compact answers (default page 10, every answer under
 4,000 tokens): permits, properties, addresses, contractors, areas, metrics, coverage,
 projects, decisions, early signals, the change feed, work tags and your usage. Setup for
 each client: [docs/connect.md](docs/connect.md); tools and answers:
 [docs/mcp.md](docs/mcp.md); running the hosted service: [docs/hosted.md](docs/hosted.md).
+
+## Command line client (not distributed)
+
+The code for a `buildingactivity` CLI lives in `src/buildingactivity/cli`, with its
+reference in [docs/cli.md](docs/cli.md). It is not published to PyPI or anywhere else, so
+no customer doc points at it; customers use the HTTP API or the hosted MCP server.
+
+## Not published to PyPI
+
+This package is not released to PyPI (owner decision). `pyproject.toml` carries the
+`Private :: Do Not Upload` classifier, which PyPI refuses on upload, and the release
+workflow builds and pushes the hosted MCP image only.
+
+## Development
+
+```
+python -m venv .venv && .venv/bin/pip install -e '.[mcp,dev]'
+.venv/bin/pytest -q
+```
 
 ## License
 
