@@ -68,7 +68,7 @@ def test_specsync_refuses_internal_markers(tmp_path, monkeypatch):
 
 ALLOWED = {"__init__.py", "cli/__init__.py", "cli/__main__.py", "cli/main.py",
            "cli/specsync.py", "cli/spec.json", "mcp/__init__.py", "mcp/__main__.py",
-           "mcp/server.py", "mcp/tools.py"}
+           "mcp/server.py", "mcp/tools.py", "mcp/usage.py"}
 # Words that would mean crawler, connector or storage code slipped into the client.
 FORBIDDEN = (r"\bimport sqlite3\b", r"\bpsycopg\b", r"\bconnectors?\.", r"\bplaywright\b",
              r"\bselenium\b", r"\bbeautifulsoup|\bbs4\b", r"permit_intel", r"/Volumes/",

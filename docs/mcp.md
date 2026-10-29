@@ -20,8 +20,10 @@ Running the hosted service: [hosted.md](hosted.md).
   secret; rotate the key if it leaks). The server forwards that key, so metering and
   limits apply per caller. A request without a key gets 401 before reaching MCP.
 - Keys never appear in a log line or a tool answer, and the HTTP access log is off (a key
-  can be in the path). The log (stderr) has one line per tool call: tool name, ok or the
-  error type, records charged.
+  can be in the path). Each tool call and each `initialize` writes one JSON usage event
+  (stderr, and a daily JSONL file on the hosted service): a sha256 reference to the key
+  (never the key), tool name, outcome, latency, records charged, argument names and sizes
+  (never values) and the MCP client's name and version. See docs/hosted.md, "Usage events".
 
 ## Answers
 
