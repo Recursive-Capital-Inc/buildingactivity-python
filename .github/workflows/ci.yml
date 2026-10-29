@@ -49,7 +49,8 @@ jobs:
           names = {n for n in zipfile.ZipFile(whl).namelist() if not n.split("/")[0].endswith(".dist-info")}
           want = {"buildingactivity/" + p for p in (
               "__init__.py", "cli/__init__.py", "cli/__main__.py", "cli/main.py", "cli/specsync.py",
-              "cli/spec.json", "mcp/__init__.py", "mcp/__main__.py", "mcp/server.py", "mcp/tools.py")}
+              "cli/spec.json", "mcp/__init__.py", "mcp/__main__.py", "mcp/server.py", "mcp/tools.py",
+              "mcp/usage.py")}
           assert names == want, sorted(names ^ want)
           print(whl, "ok:", len(names), "files")
           EOF
@@ -66,3 +67,22 @@ jobs:
             -H 'Content-Type: application/json' -d '{}' http://127.0.0.1:8765/mcp)
           test "$code" = 401
           docker rm -f mcp
+      - name: Usage events land in the mounted dir, read-only root, no key in the file
+        run: |
+          mkdir -p /tmp/usage && sudo chown 10001:10001 /tmp/usage
+          docker run -d --name mcp -p 8765:8765 --read-only --tmpfs /tmp \
+            -e BUILDINGACTIVITY_MCP_USAGE_DIR=/usage -v /tmp/usage:/usage buildingactivity-mcp:ci
+          for i in $(seq 1 20); do curl -fs http://127.0.0.1:8765/healthz && break; sleep 1; done
+          key=ci-fake-key-not-real-0123456789
+          h=(-H 'Host: mcp.buildingactivity.com' -H 'Content-Type: application/json'
+             -H 'Accept: application/json, text/event-stream' -H 'MCP-Protocol-Version: 2025-06-18')
+          curl -fs "${h[@]}" -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            "http://127.0.0.1:8765/mcp/$key" > /dev/null
+          curl -fs "${h[@]}" -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"no_such_tool","arguments":{"q":"secret-arg-value"}}}' \
+            "http://127.0.0.1:8765/mcp/$key" > /dev/null
+          docker rm -f mcp
+          sudo cat /tmp/usage/usage-*.jsonl
+          ref=$(printf %s "$key" | sha256sum | cut -c1-16)
+          sudo grep -q "\"event\":\"initialize\",\"key_ref\":\"$ref\",\"key_via\":\"path\",\"client_name\":\"ci\"" /tmp/usage/usage-*.jsonl
+          sudo grep -q "\"event\":\"tool_call\",\"key_ref\":\"$ref\"" /tmp/usage/usage-*.jsonl
+          ! sudo grep -rq -e "$key" -e secret-arg-value /tmp/usage
