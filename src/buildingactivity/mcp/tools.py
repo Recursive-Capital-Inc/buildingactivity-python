@@ -49,7 +49,10 @@ PROJECT_SORTS = ("newest", "value_desc")
 PROJECT_TYPES = ("data_center", "hospital", "stadium_arena", "school", "logistics_industrial",
                  "mixed_use", "multifamily", "office", "solar_farm", "energy_storage",
                  "infrastructure", "other")
-SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case")
+# The API's own signal sources; `national` is the group of every national source, and a
+# national source key (faa_oeaaa, pjm_queue, wy_wogcc_apd, ...) is passed through as is:
+# the API lists them in its 422 answer and the list grows with the store, so no enum.
+SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case", "national")
 SIGNAL_KINDS = ("site", "policy", "program", "other")
 KIND_TEXT = ("site: one place; policy: ordinance, moratorium, code/zoning change, "
              "ballot measure; program: plan over many sites (general plan, CIP); "
@@ -742,14 +745,16 @@ def search_decisions(api, a):
 
 
 @tool("search_signals",
-      "Early project signals (CEQA filings, council matters, planning cases), newest filed "
-      "first, with kind, stage, stated size, location, APNs, a short description and source_url.",
+      "Early signals, newest first: CEQA, council, planning; national (grid, FAA, "
+      "stormwater, drilling) via source/category/large_only. Kind, stage, size, location, "
+      "APNs, description, source_url.",
       {"geo_id": GEO_AREA,
        "q": _s('every word must appear in title or description, any order; whole words, '
                'no plurals (center misses centers); "quoted phrase" = adjacent'),
        "category": {"type": "array", "items": {"type": "string"},
                     "description": "e.g. ceqa_nod, ceqa_eir, rezoning, site_plan"},
-       "source": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_SOURCES)}},
+       "source": {"type": "array", "items": {"type": "string"},
+                  "description": ", ".join(SIGNAL_SOURCES) + " or a key (wy_wogcc_apd)"},
        "type": {"type": "array", "items": {"type": "string", "enum": list(PROJECT_TYPES)},
                 "description": "project type of the signal, text rules (beta)"},
        "kind": {"type": "array", "items": {"type": "string", "enum": list(SIGNAL_KINDS)},
