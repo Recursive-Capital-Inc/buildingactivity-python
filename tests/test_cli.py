@@ -159,6 +159,22 @@ def test_without_limit_one_page_is_fetched(env):
     assert "limit" not in s.calls[0][1]
 
 
+def test_limit_keeps_paging_through_an_empty_page_with_has_more(env):
+    # /v1/changes pages by scan window: a narrow filter can return an empty page and
+    # still have more to scan, so --limit must not stop at the first empty page
+    s = env["use"](Resp(200, {"items": [], "size": 0, "next_cursor": "10", "has_more": True}),
+                   Resp(200, {"items": [{"n": 1}], "size": 1, "next_cursor": None}))
+    rc, out, _err = run("changes", "list", "--contractor-id", "ctr_x", "--limit", "1")
+    body = json.loads(out)
+    assert rc == 0 and body["items"] == [{"n": 1}] and body["cli"] == {"pages": 2, "records": 1}
+    assert [c[1].get("cursor") for c in s.calls] == [None, "10"]
+    # an empty page that hands back its own cursor ends the walk instead of looping
+    s = env["use"](Resp(200, {"items": [], "next_cursor": "10", "has_more": True}),
+                   Resp(200, {"items": [], "next_cursor": "10", "has_more": True}))
+    rc, out, _err = run("changes", "list", "--contractor-id", "ctr_x", "--limit", "1")
+    assert rc == 0 and json.loads(out)["items"] == [] and len(s.calls) == 2
+
+
 def test_data_lists_paginate_too_and_one_result_commands_refuse_limit(env):
     env["use"](page([1], "2", key="data"), page([2], None, key="data"))
     rc, out, _err = run("geo", "counties", "list", "--state", "CA", "--limit", "all")

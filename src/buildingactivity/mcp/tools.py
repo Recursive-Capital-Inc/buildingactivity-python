@@ -49,10 +49,10 @@ PROJECT_SORTS = ("newest", "value_desc")
 PROJECT_TYPES = ("data_center", "hospital", "stadium_arena", "school", "logistics_industrial",
                  "mixed_use", "multifamily", "office", "solar_farm", "energy_storage",
                  "infrastructure", "other")
-# The API's own signal sources; `national` is the group of every national source, and a
-# national source key (faa_oeaaa, pjm_queue, wy_wogcc_apd, ...) is passed through as is:
-# the API lists them in its 422 answer and the list grows with the store, so no enum.
-SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case", "national")
+# The API's own local signal sources. A national source key (faa_oeaaa, pjm_queue,
+# wy_wogcc_apd, ...) is passed through as is: GET /v1/signals/sources lists every key
+# and the list grows with the store, so no enum (the API's 422 names them too).
+SIGNAL_SOURCES = ("ceqanet", "legistar", "planning_case")
 SIGNAL_KINDS = ("site", "policy", "program", "other")
 KIND_TEXT = ("site: one place; policy: ordinance, moratorium, code/zoning change, "
              "ballot measure; program: plan over many sites (general plan, CIP); "
