@@ -1,19 +1,15 @@
 # buildingactivity: the command line client
 
-**Not distributed.** This CLI is not published to PyPI or anywhere else, and customers
-are not told to install it. This page documents the code in `src/buildingactivity/cli`
-for maintainers; customers use the HTTP API or the hosted MCP server.
-
 A small CLI over the BuildingActivity API v1. Every command is generated from the OpenAPI
 document bundled with the package (`src/buildingactivity/cli/spec.json`, the /v1 part of
 the API's `/openapi.json`), so commands and flags always match the API. JSON goes to
 stdout, errors go to stderr as JSON, and the exit code says what happened. Stdlib plus
 `requests` only.
 
-## Running it from a checkout
+## Install
 
 ```
-pip install -e .                     # in a clone of this repository
+pipx install buildingactivity        # or: uv tool install buildingactivity
 ```
 
 `python -m buildingactivity.cli` runs the same thing.

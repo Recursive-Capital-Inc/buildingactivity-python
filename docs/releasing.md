@@ -1,21 +1,34 @@
 # Releasing
 
-This package is **not published to PyPI** (owner decision, 2026-10-28). `pyproject.toml`
-carries the `Private :: Do Not Upload` classifier, which PyPI refuses on upload, so an
-accidental `twine upload` fails. Do not remove it or add a PyPI publish job without a new
-owner decision.
+Releases go to PyPI as `buildingactivity` through trusted publishing (GitHub's OIDC
+token; no PyPI token is stored anywhere), and the hosted MCP image goes to GHCR.
 
-What a release does: `release.yml` runs when a GitHub release is published, checks the tag
-against the version, builds the wheel and sdist (kept as a workflow artifact), and pushes
-the hosted MCP image to GHCR as
-`ghcr.io/recursive-capital-inc/buildingactivity-mcp:<version>` and `:latest`.
+## One-time setup (owner)
 
-Production does not pull that image today: the prod droplet builds the image from
-`/srv/mcp/src` (see [hosted.md](hosted.md)).
+Steps 1, 2 and 4 were done on 2026-11-22 (owner decision of that date, which replaces the
+2026-10-28 decision not to publish): the repository is public, the PyPI account
+`recursivecapital` holds the publisher, and the `pypi` environment requires an owner review.
+
+1. Make the repository public: GitHub > Recursive-Capital-Inc/buildingactivity-python >
+   Settings > General > Danger Zone > Change visibility > Public. Check first that the
+   history holds only this package.
+2. PyPI: sign in at pypi.org (an account with 2FA, ideally an organization account for
+   Recursive Capital), then Your account > Publishing > Add a new pending publisher >
+   GitHub, with: PyPI project name `buildingactivity`, owner `Recursive-Capital-Inc`,
+   repository `buildingactivity-python`, workflow `release.yml`, environment `pypi`.
+   The project is created by the first successful upload.
+3. Optional dry run: the same at test.pypi.org with environment `testpypi`.
+4. GitHub environments: Settings > Environments > New environment `pypi` (and
+   `testpypi`); on `pypi` add yourself as a required reviewer so every publish waits for
+   one click.
+5. After the first image push, GHCR package `buildingactivity-mcp`: Package settings >
+   Change visibility (public, or keep private and give the production host a read token).
 
 ## Each release
 
 1. Bump `version` in `pyproject.toml`, merge.
 2. GitHub > Releases > Draft a new release, tag `v<version>` on main, publish.
-3. `release.yml` checks the tag against the version, builds, `twine check`s and pushes the
-   image.
+3. `release.yml` checks the tag against the version, builds, `twine check`s, waits for the
+   `pypi` environment approval, publishes, and pushes the image.
+4. `pipx install buildingactivity==<version>` from a clean machine and run
+   `buildingactivity --version`.

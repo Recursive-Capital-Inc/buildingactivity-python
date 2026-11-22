@@ -1,24 +1,39 @@
 # MCP server
 
-The BuildingActivity MCP server serves the API v1 to agent hosts over the Model Context
-Protocol. It is hosted at `https://mcp.buildingactivity.com/mcp` (streamable HTTP);
-customers connect to it and install nothing. It is a thin client of the HTTP API: every
-tool is a `GET /v1/...` with the caller's key, so auth, record metering, rate limits and
-the API's error shape apply unchanged. It never reads a database.
+`buildingactivity-mcp` serves the BuildingActivity API v1 to agent hosts over the Model
+Context Protocol, on stdio or streamable HTTP. It is a thin client of the HTTP API: every
+tool is a `GET /v1/...` with your key, so auth, record metering, rate limits and the API's
+error shape apply unchanged. It never reads a database.
 
 It is built to keep agent context small: 18 tools with short closed schemas (the whole
 tool list is about 3,700 tokens), compact rows instead of full objects, a default page of
-10, every answer under 4,000 tokens, and each caller's own key on every request.
+10, every answer under 4,000 tokens, and one key from the environment (stdio) or from
+each caller's own request (HTTP).
 
-Client setup (Claude, ChatGPT, Claude Code, Cursor, VS Code): [connect.md](connect.md).
-Running the hosted service: [hosted.md](hosted.md).
+## Install and run
+
+```
+pipx install 'buildingactivity[mcp]'
+export BUILDINGACTIVITY_API_KEY=<your key>
+buildingactivity-mcp                                  # stdio
+buildingactivity-mcp --transport http --port 8765     # streamable HTTP at http://127.0.0.1:8765/mcp
+```
+
+Or skip the install: `uvx --from 'buildingactivity[mcp]' buildingactivity-mcp`. The hosted
+server at `https://mcp.buildingactivity.com/mcp` runs the same code; client setup is in
+[connect.md](connect.md).
 
 ### Keys
 
-- Each caller sends its own key as `X-API-Key: <key>` or `Authorization: Bearer <key>`, or
-  in the URL as `/mcp/<key>` for clients that can only be given a URL (that URL is a
-  secret; rotate the key if it leaks). The server forwards that key, so metering and
-  limits apply per caller. A request without a key gets 401 before reaching MCP.
+- stdio: the key comes from `BUILDINGACTIVITY_API_KEY`. With no key set, every tool
+  answers `auth_error` without calling the API.
+- streamable HTTP: each caller sends its own key as `X-API-Key: <key>` or
+  `Authorization: Bearer <key>`, or in the URL as `/mcp/<key>` for clients that can only be
+  given a URL. The server forwards that key, so metering and limits apply per caller. A
+  request without a key gets 401 before reaching MCP. For a single-user local setup,
+  `--use-env-key` lets keyless requests use `BUILDINGACTIVITY_API_KEY` instead. The server
+  binds 127.0.0.1 by default (with the SDK's DNS rebinding protection); `--allowed-host`
+  names the public host when it runs behind a proxy.
 - Keys never appear in a log line or a tool answer, and the HTTP access log is off (a key
   can be in the path). Each tool call and each `initialize` writes one JSON usage event
   (stderr, and a daily JSONL file on the hosted service): a sha256 reference to the key
@@ -107,9 +122,8 @@ characters 35 to 3,942 tokens (`search_signals` the largest), all under the 4,00
   description, JSON Schema, handler), `call_tool(name, args, api) -> (answer, is_error)` and
   `Api` (base URL, key, any requests-style session).
 - `src/buildingactivity/mcp/server.py`: the SDK adapter (`build_server`, `http_app`,
-  `main`): stateless streamable HTTP with JSON responses (what the hosted service runs),
-  the key check, the `/mcp/<key>` path form and `/healthz`. The stdio transport is kept
-  for development and tests only and is not offered to customers.
+  `main`): stdio, and stateless streamable HTTP with JSON responses, the key check, the
+  `/mcp/<key>` path form and `/healthz`.
 - New tool: one `@tool` function calling a `/v1` route through `_fetch`, a compact row
   function, and entries in `CALLS`, `PATHS` and `ROUTES_OF` in the tests. The schema,
   fixture-server, budget and spec tests then cover it, including that every tool argument
