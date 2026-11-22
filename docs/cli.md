@@ -46,17 +46,21 @@ each flag with its description, allowed values and an example.
 | `permits search --geo-id cty_06041 --tags solar` | `GET /v1/permits/search` |
 | `permits search --geo-id CA --date-from 2026-09-01 --date-to 2026-09-30` | event date window (issued, else applied, else record date) |
 | `permits get pmt_dzptshzmc6mlibuavdrq` | `GET /v1/permits/{permit_id}` |
-| `permits batch --id pmt_a,pmt_b` | `GET /v1/permits?id=` |
+| `permits batch --id pmt_dzptshzmc6mlibuavdrq,pmt_v4qlwsjau66x6wkdbxgq` | `GET /v1/permits?id=` |
 | `addresses search --q "50 BARBAREE"`, `addresses get ID`, `addresses permits ID` | `/v1/addresses/...` |
 | `properties get ID`, `properties lookup ...`, `properties near ...`, `properties permits ID` | `/v1/properties/...` |
+| `parcels near --lat 34.0522 --lon -118.2437 --radius-m 200` | `GET /v1/parcels/near` (parcel boundaries where parcel data is loaded) |
 | `contractors search --geo-id cty_06041 --tags roofing`, `contractors lookup --license ...` | `/v1/contractors/...` |
 | `geo search --q Marin`, `geo states list`, `geo counties get cty_06041`, `geo zips get 94920` | `/v1/geo/...` |
-| `signals list --geo-id CA --large-only`, `signals get sig_...` | `/v1/signals...` |
+| `signals list --geo-id CA --large-only --date-from 2026-09-01`, `signals sources`, `signals get sig_...` | `/v1/signals...` |
 | `projects list --geo-id msa_31080 --min-value 50000000`, `projects get prj_...` | `/v1/projects...` |
 | `decisions search --geo-id cty_48113 --category rezoning` | `/v1/decisions/search` |
 | `metrics --geo-id cty_06041 --group-by month` | `GET /v1/metrics` |
 | `webhooks list`, `webhooks get ID`, `webhooks deliveries ID` | `GET /v1/webhooks...` (read only: create and delete webhooks with a POST or DELETE to the API) |
-| `meta coverage`, `meta release`, `lists tags`, `usage` | free routes |
+| `meta coverage`, `meta release`, `meta data-dictionary`, `lists tags`, `usage` | free routes |
+
+A statewide list with no date range can answer 400 `query_too_broad`; narrow it with
+`--date-from` and `--date-to` or a smaller geography (county, jurisdiction, ZIP).
 
 Extra commands:
 

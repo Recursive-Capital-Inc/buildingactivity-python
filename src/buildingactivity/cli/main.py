@@ -548,8 +548,8 @@ def execute(op, args, query, out=sys.stdout):
         items = list(body[lk])[:total] if total else list(body[lk])
         pages, nxt = 1, body.get("next_cursor")
         while nxt and (total is None or len(items) < total):
-            remaining = None if total is None else total - len(items)
-            q = {**query, "cursor": nxt}
+            cursor, remaining = nxt, None if total is None else total - len(items)
+            q = {**query, "cursor": cursor}
             size = _page_size(op, args, remaining)
             if size:
                 q["limit"] = size
@@ -557,7 +557,11 @@ def execute(op, args, query, out=sys.stdout):
             got = page.get(lk) or []
             items.extend(got[:remaining] if remaining else got)
             pages, nxt = pages + 1, page.get("next_cursor")
-            if not got:
+            # a narrow filter over a wide scan window can return an empty page and still
+            # have more to scan (/v1/changes says so with has_more); a page that repeats
+            # its own cursor ends the walk instead of looping
+            more = page["has_more"] if "has_more" in page else bool(got)
+            if not got and (not more or nxt in (None, cursor)):
                 break
         body = {**body, lk: items, "next_cursor": nxt}
         if "size" in body:

@@ -176,10 +176,12 @@ def test_enums_match_the_bundled_spec():
     desc = _param("/v1/contractors/search", "sort")["description"]
     assert set(T.CONTRACTOR_SORTS) == set(re.findall(r"[a-z]+_[a-z_]+", desc))
     assert set(T.PROJECT_SORTS) == _enum("/v1/projects", "sort")
-    # signal source has no enum (national source keys grow with the store): the spec's
-    # description names every key the tool lists
+    # signal source has no enum (the source list grows with the store): the spec names
+    # the local sources and points at the route that lists every key the tool takes
     desc = _param("/v1/signals", "source")["description"]
+    assert set(T.SIGNAL_SOURCES) == {"ceqanet", "legistar", "planning_case"}
     assert all(re.search(rf"\b{k}\b", desc) for k in T.SIGNAL_SOURCES)
+    assert "/v1/signals/sources" in desc
 
 
 # The /v1 routes each tool may call, and tool arguments that are not API parameters.
