@@ -1,7 +1,7 @@
 [project]
 name = "buildingactivity"
-version = "0.1.0"
-description = "Hosted MCP server and an undistributed command line client for the BuildingActivity building-permit API"
+version = "0.1.1"
+description = "Command line client and MCP server for the BuildingActivity building-permit API"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -16,8 +16,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Scientific/Engineering :: Information Analysis",
-    # Not published to PyPI (owner decision 2026-10-28): PyPI refuses uploads with this.
-    "Private :: Do Not Upload",
 ]
 dependencies = ["requests>=2.28"]
 

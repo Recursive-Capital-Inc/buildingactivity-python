@@ -1,8 +1,7 @@
 name: Release
-# When a GitHub release is published: build and check the package (kept as an artifact) and
-# push the hosted MCP image to GHCR. The tag must equal the version in pyproject.toml (v0.1.0
-# for 0.1.0). Nothing is published to PyPI or TestPyPI (owner decision 2026-10-28; the
-# package also carries the `Private :: Do Not Upload` classifier). Manual runs only build.
+# Publishes to PyPI with trusted publishing (no API token stored anywhere) when a GitHub
+# release is published, and pushes the hosted MCP image to GHCR. The tag must equal the
+# version in pyproject.toml (v0.1.0 for 0.1.0). Manual runs publish to TestPyPI only.
 on:
   release:
     types: [published]
@@ -27,6 +26,34 @@ jobs:
         with:
           name: dist
           path: dist/
+  testpypi:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+  pypi:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
   image:
     if: github.event_name == 'release'
     needs: build
